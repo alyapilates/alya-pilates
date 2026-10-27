@@ -478,6 +478,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
       box.addEventListener('click',e=>{const t=e.target.closest('button');if(t)pick(t.dataset.u)});
       o.querySelector('#lga').onclick=()=>{adminMode=!adminMode;render()};
       render();
+      try{if(sessionStorage.getItem('alya_kicked')){sessionStorage.removeItem('alya_kicked');m.textContent='Hesabına başka bir cihazdan giriş yapıldı, bu cihazdan çıkış yapıldı.'}}catch(e){}
       o.querySelector('#lgw').onclick=e=>{const s=pw.type==='password';pw.type=s?'text':'password';e.target.textContent=s?'Gizle':'Göster'};
       f.addEventListener('submit',async e=>{
         e.preventDefault();m.textContent='';
@@ -488,6 +489,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
           const {data,error}=await sb.auth.signInWithPassword({email:mail(u),password:PW(pw.value)});
           if(error||!data||!data.session){m.textContent=error&&/invalid|credentials/i.test(error.message||'')?'Şifre hatalı.':'Giriş yapılamadı: '+((error&&error.message)||'bilinmeyen hata');b.disabled=false;b.textContent='Giriş yap';pw.select();return}
           if(adminMode&&((data.user||data.session.user||{}).app_metadata||{}).role!=='admin'){await sb.auth.signOut();m.textContent='Bu hesapta yönetici yetkisi yok.';b.disabled=false;b.textContent='Giriş yap';return}
+          try{await sb.rpc('kick_other_sessions')}catch(e){}
           o.remove();resolve({session:data.session,admin:adminMode});
         }catch(x){m.textContent='Bağlantı kurulamadı. İnternetini kontrol et.';b.disabled=false;b.textContent='Giriş yap'}
       });
@@ -500,8 +502,9 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
     if(data&&data.error)throw new Error(data.error);
     return data;
   }
+  let manualOut=false;
   async function doLogout(sb){
-    clearAdminFlag();try{localStorage.removeItem('alya_skin')}catch(e){}
+    manualOut=true;clearAdminFlag();try{localStorage.removeItem('alya_skin')}catch(e){}
     try{await Promise.race([sb.auth.signOut({scope:'local'}),new Promise(r=>setTimeout(r,2500))])}catch(e){}
     try{Object.keys(localStorage).filter(k=>/^sb-.*-auth-token/.test(k)).forEach(k=>localStorage.removeItem(k))}catch(e){}
     location.reload();
@@ -591,7 +594,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
     if(session&&adminMode&&((session.user.app_metadata||{}).role!=='admin'))adminMode=false;
     if(!session){const r=await loginUI(sb);session=r.session;adminMode=r.admin;try{adminMode?sessionStorage.setItem('alya_admin','1'):sessionStorage.removeItem('alya_admin')}catch(e){}}
     loadSkin(sb);
-    sb.auth.onAuthStateChange(ev=>{if(ev==='SIGNED_OUT')setTimeout(()=>location.reload(),50)});
+    sb.auth.onAuthStateChange(ev=>{if(ev==='SIGNED_OUT'){if(!manualOut){try{sessionStorage.setItem('alya_kicked','1')}catch(e){}}setTimeout(()=>location.reload(),50)}});
     const usr=session&&session.user||{};const isAdmin=(usr.app_metadata||{}).role==='admin';
     const nm=(usr.user_metadata||{}).name||'';
     const doc=document.documentElement;
@@ -606,6 +609,16 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
     if(pb){if(pbar)pbar.style.display='flex';pb.querySelector('.pa').textContent=(nm||'?').trim().charAt(0).toLocaleUpperCase('tr-TR');pb.querySelector('.pn2').textContent=nm.split(' ')[0];pb.onclick=()=>profileModal(sb,usr,isAdmin,openAdmin)}
     document.addEventListener('click',e=>{const t=e.target&&e.target.closest&&e.target.closest('#lgo,#lgq');if(t)doLogout(sb)});
     if(adminMode&&isAdmin)openAdmin();
+    let kicked=false;
+    const chk=async()=>{
+      if(kicked||manualOut||document.hidden)return;
+      try{const {error}=await sb.auth.getUser();
+        if(error&&[400,401,403].includes(error.status||0)&&/session|refresh|jwt|not found|invalid/i.test(error.message||'')){kicked=true;try{sessionStorage.setItem('alya_kicked','1')}catch(e){};doLogout(sb)}}
+      catch(e){}
+    };
+    setInterval(chk,10000);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(chk,300)});
+    addEventListener('online',()=>setTimeout(chk,500));
     const L=new Set();let tm=0;
     const kick=l=>{clearTimeout(l.t);l.t=setTimeout(l.run,40)};
     const kickAll=()=>L.forEach(kick);
