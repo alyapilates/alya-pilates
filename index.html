@@ -311,7 +311,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
     <h2>Yedekleme</h2>
     <div class="empty" id="bki" style="padding:0 0 8px"></div>
     <div class="row"><button class="btn ghost" data-act="backup">Şimdi yedekle (Excel)</button><button class="btn ghost" data-act="restore">Excelden yükle</button></div>
-    <div class="row" style="margin-top:8px"><button class="btn ghost" data-act="demo10">10 deneme üyesi ekle</button></div>
+    
     <input type="file" id="rf" accept=".xlsx,.xls,.json,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
     <div id="bkl"></div>
     <div class="empty">Uygulama her 24 saatte bir kendi yedeğini alır (son 7 yedek bu cihazda tutulur). Excel yedeğini manuel almak istersen "Şimdi yedekle (Excel)"; aynı dosyayı "Excelden yükle" ile geri alabilirsin.</div>
@@ -527,7 +527,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
     const o=mk('ap','ovl pg','');
     const who=((session.user||{}).user_metadata||{}).name||'';
     o.innerHTML='<div class="pn"><img class="apl" alt="" src="'+logoSrc()+'"><div class="hd"><div><h2>Yönetici paneli</h2><div style="font-size:12px;color:var(--mut)">'+esc(who)+'</div></div><div style="display:flex;gap:6px"><button class="btn ghost" id="apa2">Uygulamaya geç</button><button class="btn ghost" id="lgo">Çıkış yap</button></div></div>'
-     +'<div class="card cd"><b style="font-size:14px">Yedekleme</b><div class="row"><button class="btn ghost" data-act="backup">Şimdi yedekle (Excel)</button><button class="btn ghost" data-act="restore">Excelden yükle</button></div><div class="row"><button class="btn ghost" data-act="demo10">10 deneme üyesi ekle</button></div><div class="ntx">Otomatik yedekleme kapalı. Yedek Excel dosyası olarak cihazına iner; aynı dosyayı "Excelden yükle" ile geri alabilirsin.</div></div>'
+     +'<div class="card cd"><b style="font-size:14px">Yedekleme</b><div class="row"><button class="btn ghost" data-act="backup">Şimdi yedekle (Excel)</button><button class="btn ghost" data-act="restore">Excelden yükle</button></div><div class="ntx">Otomatik yedekleme kapalı. Yedek Excel dosyası olarak cihazına iner; aynı dosyayı "Excelden yükle" ile geri alabilirsin.</div></div>'
      +'<div class="card cd"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font-size:14px">Kullanıcılar</b><button class="btn" id="apn" style="padding:8px 12px;font-size:14px">+ Yeni kullanıcı</button></div><div id="apl" class="empty" style="margin-top:8px">Yükleniyor…</div></div>'
      +'<div class="ms" id="apm"></div></div>';
     const L=o.querySelector('#apl'),M=o.querySelector('#apm');
