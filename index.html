@@ -247,13 +247,25 @@ h1{font-size:clamp(26px,9.5vw,38px)}
 #ml .pk{background:color-mix(in srgb,var(--ink) 4%,transparent);border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:10px}
 #ml .pk .top b{font-size:15px}
 #ml .bar{height:8px}
+
+/* renkli sekme ikonları */
+.tabs button .ti{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;transition:transform .15s,filter .15s,box-shadow .15s;filter:saturate(.8)}
+.tabs button .ti svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.tabs button .ti svg .f{fill:#fff;stroke:#fff;stroke-width:1.2}
+.tabs button .ti svg path.f[d*="l2.4 2.4"]{fill:none;stroke-width:2.4}
+.tabs button .t1{background:linear-gradient(145deg,#ffb23e,#ff5a2c);box-shadow:0 4px 10px rgba(255,90,44,.38)}
+.tabs button .t2{background:linear-gradient(145deg,#4fd2ff,#2f6bff);box-shadow:0 4px 10px rgba(47,107,255,.38)}
+.tabs button .t3{background:linear-gradient(145deg,#c66bff,#ff4f9a);box-shadow:0 4px 10px rgba(198,60,210,.38)}
+.tabs button .t4{background:linear-gradient(145deg,#37e6a0,#0aa5a0);box-shadow:0 4px 10px rgba(10,165,160,.38)}
+.tabs button:not(.on){opacity:1}
+.tabs button.on .ti{transform:translateY(-1px) scale(1.08);filter:saturate(1.15)}
 </style>
 </head>
 <body>
 <div class="wrap">
 <h1>ALYA <span>PİLATES</span></h1>
 <div id="sync" class="sync"></div>
-<nav class="tabs"><button data-tab="bugun"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 3v3M16 3v3M9 15l2 2 4-4"/></svg><span>PLAN</span></button><button data-tab="uye"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.6"/><path d="M17 14.2c2.7.2 4.5 2 4.5 4.8"/></svg><span>Üyeler</span></button><button data-tab="rapor"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="3.5" height="9" rx="1"/><rect x="10.2" y="4" width="3.5" height="16" rx="1"/><rect x="16.5" y="8" width="3.5" height="12" rx="1"/></svg><span>Rapor</span></button><button data-tab="takip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l2.5-6 4 12 2.5-6H21"/></svg><span>Takip</span></button></nav>
+<nav class="tabs"><button data-tab="bugun"><span class="ti t1"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3.2"/><path d="M3.5 10h17M8.2 3v4M15.8 3v4"/><path class="f" d="M8.6 15.2l2.4 2.4 4.6-4.8"/></svg></span><span>PLAN</span></button><button data-tab="uye"><span class="ti t2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="f" cx="9" cy="8.2" r="3.4"/><path class="f" d="M2.8 19.5c0-3.4 2.8-5.6 6.2-5.6s6.2 2.2 6.2 5.6z"/><circle class="f" cx="17.2" cy="9.2" r="2.5" opacity=".75"/><path class="f" d="M16.6 14.1c2.9-.1 4.9 1.7 4.9 5.4h-4.3c0-2-.3-3.7-.6-5.4z" opacity=".75"/></svg></span><span>Üyeler</span></button><button data-tab="rapor"><span class="ti t3"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="f" x="4.2" y="12" width="4" height="8" rx="1.3"/><rect class="f" x="10" y="4.5" width="4" height="15.5" rx="1.3"/><rect class="f" x="15.8" y="8.5" width="4" height="11.5" rx="1.3" opacity=".8"/></svg></span><span>Rapor</span></button><button data-tab="takip"><span class="ti t4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.8 12.5h4.1l2.3-5.6 4 10.8 2.4-5.2h5.6"/></svg></span><span>Takip</span></button></nav>
 
 <section id="bugun">
   <div class="nav"><button class="btn ghost" id="pd" aria-label="Önceki gün">‹</button><div class="mid"><b id="dl"></b><button class="btn ghost" id="tdy">Bugün</button></div><button class="btn ghost" id="nd" aria-label="Sonraki gün">›</button></div>
