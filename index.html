@@ -328,12 +328,35 @@ h1{font-size:clamp(26px,9.5vw,38px)}
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
+function dlBlob(blob,filename){
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);
+}
+function pdfSheet(blob,filename){
+  const file=new File([blob],filename,{type:'application/pdf'});
+  const o=document.createElement('div');o.id='pdfs';
+  o.style.cssText='position:fixed;inset:0;z-index:10000;background:rgba(10,16,32,.6);display:flex;align-items:flex-end;justify-content:center;padding:12px';
+  o.innerHTML='<div style="width:100%;max-width:420px;background:var(--card,#fff);color:var(--ink,#16202e);border:1px solid var(--line,#e1e5ea);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 20px 60px rgba(0,0,0,.35)"><div style="font-weight:800;font-size:17px">PDF hazır ✅</div><div id="pdfn" style="font-size:13px;color:var(--mut,#6a7585);word-break:break-all"></div><button id="pdfw" style="font:inherit;font-weight:700;font-size:16px;padding:13px;border:0;border-radius:14px;background:#25D366;color:#fff;cursor:pointer">WhatsApp\'ta gönder</button><button id="pdfd" class="btn ghost" style="padding:11px;font-size:15px">İndir</button><button id="pdfx" class="btn ghost" style="padding:9px;font-size:14px;border:0">Kapat</button><div id="pdfm" style="font-size:12px;color:var(--mut,#6a7585);min-height:16px"></div></div>';
+  document.body.appendChild(o);
+  o.querySelector('#pdfn').textContent=filename;
+  const msg=t=>{o.querySelector('#pdfm').textContent=t};
+  const close=()=>o.remove();
+  o.querySelector('#pdfx').onclick=close;o.addEventListener('click',e=>{if(e.target===o)close()});
+  o.querySelector('#pdfd').onclick=()=>{dlBlob(blob,filename);msg('İndirildi.')};
+  o.querySelector('#pdfw').onclick=async()=>{
+    try{
+      if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:filename});close();return}
+    }catch(e){if(e&&e.name==='AbortError')return}
+    dlBlob(blob,filename);
+    msg('Bu cihazda doğrudan paylaşım yok. PDF indirildi, WhatsApp\'ta 📎 ile ekleyebilirsin.');
+    try{window.open('https://web.whatsapp.com/','_blank')}catch(e){}
+  };
+}
 window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename,data})=>{
   const ext=(filename.split('.').pop()||'').toLowerCase();
   const type=ext==='xlsx'?'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':ext==='pdf'?'application/pdf':'application/octet-stream';
   const blob=data instanceof Blob?data:new Blob([data],{type});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
-  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);
+  if(ext==='pdf')pdfSheet(blob,filename);else dlBlob(blob,filename);
 }}:null};
 (function(){
   const $=s=>document.querySelector(s);
