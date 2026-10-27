@@ -281,7 +281,7 @@ h1{font-size:clamp(26px,9.5vw,38px)}
     <h2>Yedekleme</h2>
     <div class="empty" id="bki" style="padding:0 0 8px"></div>
     <div class="row"><button class="btn ghost" data-act="backup">Şimdi yedekle (Excel)</button><button class="btn ghost" data-act="restore">Excelden yükle</button></div>
-    <div class="row" style="margin-top:8px"><button class="btn ghost" data-act="demo10">10 deneme üyesi ekle</button><button class="btn ghost" id="adm" style="display:none">Yönetici paneli</button><button class="btn ghost" id="lgo">Çıkış yap</button></div>
+    <div class="row" style="margin-top:8px"><button class="btn ghost" data-act="demo10">10 deneme üyesi ekle</button><button class="btn ghost" id="lgo">Çıkış yap</button></div>
     <input type="file" id="rf" accept=".xlsx,.xls,.json,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
     <div id="bkl"></div>
     <div class="empty">Uygulama her 24 saatte bir kendi yedeğini alır (son 7 yedek bu cihazda tutulur). Excel yedeğini manuel almak istersen "Şimdi yedekle (Excel)"; aynı dosyayı "Excelden yükle" ile geri alabilirsin.</div>
@@ -350,10 +350,12 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
 #lgf .lgp button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;font-size:13px;color:#7a8696;padding:8px;cursor:pointer}
 #lgf .lgb{font:inherit;font-weight:700;font-size:16px;padding:13px;border:0;border-radius:14px;background:#EE5A28;color:#fff;cursor:pointer;transition:filter .15s}
 #lgf .lgb:hover{filter:brightness(1.06)}#lgf .lgb:disabled{opacity:.6;cursor:default}
+#lgf .lga{border:0;background:none;font:inherit;font-size:13px;color:#7a8696;cursor:pointer;padding:6px;margin:-4px auto -6px;text-decoration:underline;text-underline-offset:3px}#lgf .lga:hover{color:#2BA3DC}
+#lgf.adm .lgs{color:#EE5A28;font-weight:700}
 #lgm{color:#c0392b;font-size:13px;min-height:18px;text-align:center}
-#ap{position:fixed;inset:0;z-index:9998;background:rgba(15,21,32,.55);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}
+#ap{position:fixed;inset:0;z-index:9998;background:radial-gradient(1200px 600px at 80% -10%,#fde3d8 0,transparent 60%),radial-gradient(900px 500px at -10% 110%,#d7eefa 0,transparent 60%),var(--bg);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}
 #ap .pn{width:100%;max-width:520px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:16px;margin:auto 0}
-#ap h2{margin:0;font-size:18px}#ap .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#ap h2{margin:0;font-size:18px}#ap .apl{display:block;width:84px;height:84px;margin:0 auto 6px;border-radius:50%}#ap .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 #ap .u{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;background:var(--bg)}
 #ap .u .t{display:flex;align-items:center;gap:8px;flex-wrap:wrap}#ap .u .t b{font-size:15px}
 #ap .u .a{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
@@ -370,22 +372,31 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
   function loginUI(sb){
     return new Promise(async resolve=>{
       const o=document.createElement('div');o.id='lg';
-      o.innerHTML='<form id="lgf" autocomplete="on"><img class="lgl" alt="Alya Studio" src="'+logoSrc()+'"><div class="lgt">ALYA PİLATES</div><div class="lgd"><i></i><b></b><i></i></div><div class="lgs">Ders takip paneli</div><div class="lgu" id="lgu"></div><div class="lgp"><input id="lgp" type="password" placeholder="Şifre" autocomplete="current-password" required><button type="button" id="lgw">Göster</button></div><button class="lgb" type="submit" id="lgb">Giriş yap</button><div id="lgm" role="alert"></div></form>';
+      o.innerHTML='<form id="lgf" autocomplete="on"><img class="lgl" alt="Alya Studio" src="'+logoSrc()+'"><div class="lgt">ALYA PİLATES</div><div class="lgd"><i></i><b></b><i></i></div><div class="lgs">Ders takip paneli</div><div class="lgu" id="lgu"></div><div class="lgp"><input id="lgp" type="password" placeholder="Şifre" autocomplete="current-password" required><button type="button" id="lgw">Göster</button></div><button class="lgb" type="submit" id="lgb">Giriş yap</button><div id="lgm" role="alert"></div><button type="button" class="lga" id="lga">Yönetici girişi</button></form>';
       document.body.appendChild(o);
       const f=o.querySelector('#lgf'),m=o.querySelector('#lgm'),b=o.querySelector('#lgb'),box=o.querySelector('#lgu'),pw=o.querySelector('#lgp');
       let sel='';
       const pick=u=>{sel=u;box.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.u===u));try{localStorage.setItem('lg_u',u)}catch(e){};pw.focus()};
-      let list=[];
-      try{const {data}=await sb.rpc('login_users');list=data||[]}catch(e){}
+      let all=[],list=[],adminMode=false;
+      try{const {data}=await sb.rpc('login_list');all=data||[]}catch(e){}
+      const render=()=>{
+        list=adminMode?all.filter(x=>x.is_admin):all;sel='';
+        f.classList.toggle('adm',adminMode);
+        o.querySelector('.lgs').textContent=adminMode?'Yönetici girişi':'Ders takip paneli';
+        o.querySelector('#lga').textContent=adminMode?'← Kullanıcı girişi':'Yönetici girişi';
+        m.textContent='';pw.value='';
       if(list.length){
         box.innerHTML=list.map(x=>'<button type="button" data-u="'+esc(x.username)+'"><span class="av">'+esc(ini(x.name))+'</span>'+esc(x.name)+'</button>').join('');
-        box.addEventListener('click',e=>{const t=e.target.closest('button');if(t)pick(t.dataset.u)});
         let last='';try{last=localStorage.getItem('lg_u')||''}catch(e){}
         if(list.length===1)sel=list[0].username;
         if(last&&list.some(x=>x.username===last))pick(last);else if(sel)pick(sel);
       }else{
         box.innerHTML='<div class="lgp"><input id="lgx" placeholder="Kullanıcı adı" autocomplete="username" autocapitalize="none"></div>';
       }
+      };
+      box.addEventListener('click',e=>{const t=e.target.closest('button');if(t)pick(t.dataset.u)});
+      o.querySelector('#lga').onclick=()=>{adminMode=!adminMode;render()};
+      render();
       o.querySelector('#lgw').onclick=e=>{const s=pw.type==='password';pw.type=s?'text':'password';e.target.textContent=s?'Gizle':'Göster'};
       f.addEventListener('submit',async e=>{
         e.preventDefault();m.textContent='';
@@ -395,10 +406,11 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
         try{
           const {data,error}=await sb.auth.signInWithPassword({email:mail(u),password:pw.value});
           if(error||!data||!data.session){m.textContent=error&&/invalid|credentials/i.test(error.message||'')?'Şifre hatalı.':'Giriş yapılamadı: '+((error&&error.message)||'bilinmeyen hata');b.disabled=false;b.textContent='Giriş yap';pw.select();return}
-          o.remove();resolve(data.session);
+          if(adminMode&&((data.user||data.session.user||{}).app_metadata||{}).role!=='admin'){await sb.auth.signOut();m.textContent='Bu hesapta yönetici yetkisi yok.';b.disabled=false;b.textContent='Giriş yap';return}
+          o.remove();resolve({session:data.session,admin:adminMode});
         }catch(x){m.textContent='Bağlantı kurulamadı. İnternetini kontrol et.';b.disabled=false;b.textContent='Giriş yap'}
       });
-      if(!list.length)setTimeout(()=>{const x=o.querySelector('#lgx');x&&x.focus()},50);else if(!sel)setTimeout(()=>{},0);
+      if(!list.length)setTimeout(()=>{const x=o.querySelector('#lgx');x&&x.focus()},50);
     });
   }
   async function call(sb,body){
@@ -407,15 +419,15 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
     if(data&&data.error)throw new Error(data.error);
     return data;
   }
-  function adminPanel(sb,meId){
-    if(document.getElementById('ap'))return;
-    const o=document.createElement('div');o.id='ap';
-    o.innerHTML='<div class="pn"><div class="hd"><h2>Yönetici paneli</h2><button class="btn ghost" id="apx">Kapat</button></div><div id="apl" class="empty">Yükleniyor…</div><div class="card" style="margin:10px 0 0"><b style="font-size:14px">Yeni kullanıcı</b><div class="nu"><input id="apn" placeholder="Ad soyad"><input id="app" type="text" placeholder="Şifre (en az 6 karakter)" autocomplete="off"><label class="k"><input type="checkbox" id="apa"> Yönetici olsun</label><button class="btn" id="apc">Kullanıcı ekle</button></div></div><div class="ms" id="apm"></div></div>';
+  function adminPage(sb,session){
+    const o=document.createElement('div');o.id='ap';o.className='pg';
+    const who=((session.user||{}).user_metadata||{}).name||'';
+    o.innerHTML='<div class="pn"><img class="apl" alt="" src="'+logoSrc()+'"><div class="hd"><div><h2>Yönetici paneli</h2><div style="font-size:12px;color:var(--mut)">'+esc(who)+'</div></div><div style="display:flex;gap:6px"><button class="btn ghost" id="apa2">Uygulamaya geç</button><button class="btn ghost" id="apx">Çıkış yap</button></div></div><div id="apl" class="empty">Yükleniyor…</div><div class="card" style="margin:10px 0 0"><b style="font-size:14px">Yeni kullanıcı</b><div class="nu"><input id="apn" placeholder="Ad soyad"><input id="app" type="text" placeholder="Şifre (en az 6 karakter)" autocomplete="off"><label class="k"><input type="checkbox" id="apa"> Yönetici olsun</label><button class="btn" id="apc">Kullanıcı ekle</button></div></div><div class="ms" id="apm"></div></div>';
     document.body.appendChild(o);
     const L=o.querySelector('#apl'),M=o.querySelector('#apm');
     const say=(t,bad)=>{M.textContent=t;M.style.color=bad?'var(--bad)':'var(--ok)'};
-    const close=()=>o.remove();
-    o.querySelector('#apx').onclick=close;o.addEventListener('click',e=>{if(e.target===o)close()});
+    o.querySelector('#apx').onclick=()=>{try{sessionStorage.removeItem('alya_admin')}catch(x){}sb.auth.signOut().finally(()=>location.reload())};
+    o.querySelector('#apa2').onclick=()=>{try{sessionStorage.removeItem('alya_admin')}catch(x){}location.reload()};
     async function load(){
       try{
         const {users}=await call(sb,{action:'list'});
@@ -461,13 +473,17 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
     const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
     window._sb=sb;
     let {data:{session}}=await sb.auth.getSession();
-    if(!session)session=await loginUI(sb);
+    let adminMode=false;
+    try{adminMode=sessionStorage.getItem('alya_admin')==='1'}catch(e){}
+    if(session&&adminMode&&((session.user.app_metadata||{}).role!=='admin'))adminMode=false;
+    if(!session){const r=await loginUI(sb);session=r.session;adminMode=r.admin;try{adminMode?sessionStorage.setItem('alya_admin','1'):sessionStorage.removeItem('alya_admin')}catch(e){}}
+    if(adminMode){adminPage(sb,session);return new Promise(()=>{})}
     sb.auth.onAuthStateChange(ev=>{if(ev==='SIGNED_OUT')location.reload()});
     const usr=session&&session.user||{};const isAdmin=(usr.app_metadata||{}).role==='admin';
     const nm=(usr.user_metadata||{}).name||'';
-    const sync=()=>{const lo=document.getElementById('lgo');const lt='Çıkış yap ('+nm.split(' ')[0]+')';if(lo&&nm&&lo.textContent!==lt)lo.textContent=lt;const ad=document.getElementById('adm');if(ad&&isAdmin&&ad.style.display!=='')ad.style.display=''};
+    const sync=()=>{const lo=document.getElementById('lgo');const lt='Çıkış yap ('+nm.split(' ')[0]+')';if(lo&&nm&&lo.textContent!==lt)lo.textContent=lt;};
     sync();new MutationObserver(sync).observe(document.body,{childList:true,subtree:true});
-    document.addEventListener('click',e=>{const t=e.target;if(!t)return;if(t.id==='lgo'){sb.auth.signOut().finally(()=>location.reload())}else if(t.id==='adm'&&isAdmin){adminPanel(sb,usr.id)}});
+    document.addEventListener('click',e=>{const t=e.target;if(!t)return;if(t.id==='lgo'){try{sessionStorage.removeItem('alya_admin')}catch(x){}sb.auth.signOut().finally(()=>location.reload())}});
     const L=new Set();let tm=0;
     const kick=l=>{clearTimeout(l.t);l.t=setTimeout(l.run,150)};
     const kickAll=()=>L.forEach(kick);
