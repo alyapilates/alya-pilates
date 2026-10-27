@@ -557,10 +557,11 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
     if(document.getElementById('ap'))return;
     const o=mk('ap','ovl pg','');
     const who=((session.user||{}).user_metadata||{}).name||'';
+    const isMgr=((session.user||{}).app_metadata||{}).log_viewer===true;
     o.innerHTML='<div class="pn"><img class="apl" alt="" src="'+logoSrc()+'"><div class="hd"><div><h2>Yönetici paneli</h2><div style="font-size:12px;color:var(--mut)">'+esc(who)+'</div></div><div style="display:flex;gap:6px"><button class="btn ghost" id="apa2">Uygulamaya geç</button><button class="btn ghost" id="lgo">Çıkış yap</button></div></div>'
      +'<div class="card cd"><b style="font-size:14px">Yedekleme</b><div class="row"><button class="btn ghost" data-act="backup">Şimdi yedekle (Excel)</button><button class="btn ghost" data-act="restore">Excelden yükle</button></div><div class="ntx">Otomatik yedekleme kapalı. Yedek Excel dosyası olarak cihazına iner; aynı dosyayı "Excelden yükle" ile geri alabilirsin.</div></div>'
      +(((session.user||{}).app_metadata||{}).log_viewer===true?'<div class="card cd"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font-size:14px">Hareketler</b><button class="btn ghost" id="aph">Hareketleri göster</button></div><div class="ntx">Sistemde kimin ne zaman ne yaptığını gösterir. Sadece Batuhan ve admin hesabı görebilir.</div></div>':'')
-     +'<div class="card cd"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font-size:14px">Kullanıcılar</b><button class="btn" id="apn" style="padding:8px 12px;font-size:14px">+ Yeni kullanıcı</button></div><div id="apl" class="empty" style="margin-top:8px">Yükleniyor…</div></div>'
+     +'<div class="card cd"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font-size:14px">Kullanıcılar</b>'+(isMgr?'<button class="btn" id="apn" style="padding:8px 12px;font-size:14px">+ Yeni kullanıcı</button>':'')+'</div><div id="apl" class="empty" style="margin-top:8px">Yükleniyor…</div></div>'
      +'<div class="ms" id="apm"></div></div>';
     const L=o.querySelector('#apl'),M=o.querySelector('#apm');
     const say=(t,bad)=>{M.textContent=t;M.style.color=bad?'var(--bad)':'var(--ok)'};
@@ -570,7 +571,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
       try{
         const {users}=await call(sb,{action:'list'});
         L.className='';
-        L.innerHTML=users.map(u=>'<div class="u" data-id="'+esc(u.id)+'" data-me="'+(u.me?1:0)+'" data-n="'+esc(u.name)+'"><div class="t"><b>'+esc(u.name)+'</b>'+(u.owner?'<span class="tg ad">Ana yönetici</span>':u.role==='admin'?'<span class="tg ad">Yönetici</span>':'<span class="tg">Salt okunur</span>')+(u.me?'<span class="tg">Sen</span>':'')+'<span style="color:var(--mut);font-size:12px">@'+esc(u.username)+'</span></div><label class="sl">Tema <select data-a="skin">'+SKINS.map(s=>'<option value="'+s.k+'"'+(s.k===(u.skin||'')?' selected':'')+'>'+esc(s.n)+'</option>').join('')+'</select></label><div class="a">'+((u.owner&&!u.me)?'':'<button class="btn ghost" data-a="pw">Şifre değiştir</button>')+((u.me||u.owner)?'':'<button class="btn ghost" data-a="role" data-r="'+(u.role==='admin'?'user':'admin')+'">'+(u.role==='admin'?'Salt okunur yap':'Yönetici yap')+'</button><button class="btn ghost" data-a="del" style="color:var(--bad)">Sil</button>')+'</div></div>').join('');
+        L.innerHTML=users.map(u=>'<div class="u" data-id="'+esc(u.id)+'" data-me="'+(u.me?1:0)+'" data-n="'+esc(u.name)+'"><div class="t"><b>'+esc(u.name)+'</b>'+(u.owner?'<span class="tg ad">Ana yönetici</span>':u.role==='admin'?'<span class="tg ad">Yönetici</span>':'<span class="tg">Salt okunur</span>')+(u.me?'<span class="tg">Sen</span>':'')+'<span style="color:var(--mut);font-size:12px">@'+esc(u.username)+'</span></div><label class="sl">Tema <select data-a="skin">'+SKINS.map(s=>'<option value="'+s.k+'"'+(s.k===(u.skin||'')?' selected':'')+'>'+esc(s.n)+'</option>').join('')+'</select></label><div class="a">'+((u.owner&&!u.me)?'':'<button class="btn ghost" data-a="pw">Şifre değiştir</button>')+((u.me||u.owner||!isMgr)?'':'<button class="btn ghost" data-a="role" data-r="'+(u.role==='admin'?'user':'admin')+'">'+(u.role==='admin'?'Salt okunur yap':'Yönetici yap')+'</button><button class="btn ghost" data-a="del" style="color:var(--bad)">Sil</button>')+'</div></div>').join('');
       }catch(x){L.textContent='Liste alınamadı: '+x.message}
     }
     L.addEventListener('change',async e=>{
@@ -590,15 +591,15 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
           r.querySelector('button').onclick=save;r.querySelector('input').addEventListener('keydown',ev=>{if(ev.key==='Enter')save()});
         }else if(a==='role'){await call(sb,{action:'role',id,role:t.dataset.r});say('Yetki güncellendi (kullanıcı yeniden girişte geçerli olur).');load()}
         else if(a==='del'){
-          const d=dialog('<h2>Kullanıcıyı sil</h2><div style="margin:8px 0;font-size:14px"><b>'+esc(card.dataset.n)+'</b> silinecek. Onaylamak için ana yöneticinin (Batuhan) şifresini gir.</div><input id="dlp" type="password" maxlength="8" placeholder="Ana yönetici şifresi" autocomplete="off" style="width:100%;box-sizing:border-box"><div class="ms" id="dlm" style="color:var(--bad)"></div><div class="row end" style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" id="dlc">İptal</button><button class="btn" id="dlo" style="background:var(--bad);color:#fff">Sil</button></div>');
+          const d=dialog('<h2>Kullanıcıyı sil</h2><div style="margin:8px 0;font-size:14px"><b>'+esc(card.dataset.n)+'</b> silinecek. Onaylamak için kendi şifreni gir.</div><input id="dlp" type="password" maxlength="8" placeholder="Şifren" autocomplete="off" style="width:100%;box-sizing:border-box"><div class="ms" id="dlm" style="color:var(--bad)"></div><div class="row end" style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" id="dlc">İptal</button><button class="btn" id="dlo" style="background:var(--bad);color:#fff">Sil</button></div>');
           const dm=d.querySelector('#dlm'),pi=d.querySelector('#dlp');pi.focus();
           d.querySelector('#dlc').onclick=()=>d.remove();
-          const go=async()=>{dm.textContent='';try{await call(sb,{action:'delete',id,ownerPassword:pi.value});d.remove();say('Kullanıcı silindi.');load()}catch(x){dm.textContent=x.message}};
+          const go=async()=>{dm.textContent='';try{await call(sb,{action:'delete',id,myPassword:pi.value});d.remove();say('Kullanıcı silindi.');load()}catch(x){dm.textContent=x.message}};
           d.querySelector('#dlo').onclick=go;pi.addEventListener('keydown',ev=>{if(ev.key==='Enter')go()});
         }
       }catch(x){say(x.message,1)}
     });
-    o.querySelector('#apn').onclick=()=>{
+    const apn=o.querySelector('#apn');if(apn)apn.onclick=()=>{
       const d=dialog('<h2>Yeni kullanıcı</h2><div class="nu"><input id="nun" placeholder="Ad soyad" autocomplete="off"><input id="nup" type="text" placeholder="Şifre (4-8 karakter)" maxlength="8" autocomplete="off"><label class="k"><input type="checkbox" id="nua" checked> Yönetici olsun (kapalıysa salt okunur)</label></div><div class="ms" id="num" style="color:var(--bad)"></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn ghost" id="nuc">İptal</button><button class="btn" id="nuo">Ekle</button></div>');
       const nm=d.querySelector('#num');d.querySelector('#nun').focus();
       d.querySelector('#nuc').onclick=()=>d.remove();
