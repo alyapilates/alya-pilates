@@ -273,6 +273,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 </head>
 <body>
 <div class="wrap">
+<button id="prof" type="button" aria-label="Profil"><span>?</span></button>
 <h1>ALYA <span>PİLATES</span></h1>
 <div id="sync" class="sync"></div>
 <nav class="tabs"><button data-tab="bugun"><span class="ti t1"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3.2"/><path d="M3.5 10h17M8.2 3v4M15.8 3v4"/><path class="f" d="M8.6 15.2l2.4 2.4 4.6-4.8"/></svg></span><span>PLAN</span></button><button data-tab="uye"><span class="ti t2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="f" cx="9" cy="8.2" r="3.4"/><path class="f" d="M2.8 19.5c0-3.4 2.8-5.6 6.2-5.6s6.2 2.2 6.2 5.6z"/><circle class="f" cx="17.2" cy="9.2" r="2.5" opacity=".75"/><path class="f" d="M16.6 14.1c2.9-.1 4.9 1.7 4.9 5.4h-4.3c0-2-.3-3.7-.6-5.4z" opacity=".75"/></svg></span><span>Üyeler</span></button><button data-tab="rapor"><span class="ti t3"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="f" x="4.2" y="12" width="4" height="8" rx="1.3"/><rect class="f" x="10" y="4.5" width="4" height="15.5" rx="1.3"/><rect class="f" x="15.8" y="8.5" width="4" height="11.5" rx="1.3" opacity=".8"/></svg></span><span>Rapor</span></button><button data-tab="takip"><span class="ti t4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.8 12.5h4.1l2.3-5.6 4 10.8 2.4-5.2h5.6"/></svg></span><span>Takip</span></button></nav>
@@ -306,11 +307,11 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
   <input id="mq" type="search" placeholder="Üye ara">
   <div class="card" id="ml"></div>
   <div class="card" id="nrc" hidden><details id="nrd" class="hd" style="border:0;margin:0"><summary id="nrs"></summary><div id="nrl"></div></details></div>
-  <div class="card" id="bkc">
+  <div class="card" id="bkc" style="display:none">
     <h2>Yedekleme</h2>
     <div class="empty" id="bki" style="padding:0 0 8px"></div>
     <div class="row"><button class="btn ghost" data-act="backup">Şimdi yedekle (Excel)</button><button class="btn ghost" data-act="restore">Excelden yükle</button></div>
-    <div class="row" style="margin-top:8px"><button class="btn ghost" data-act="demo10">10 deneme üyesi ekle</button><button class="btn ghost" id="lgo">Çıkış yap</button></div>
+    <div class="row" style="margin-top:8px"><button class="btn ghost" data-act="demo10">10 deneme üyesi ekle</button></div>
     <input type="file" id="rf" accept=".xlsx,.xls,.json,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
     <div id="bkl"></div>
     <div class="empty">Uygulama her 24 saatte bir kendi yedeğini alır (son 7 yedek bu cihazda tutulur). Excel yedeğini manuel almak istersen "Şimdi yedekle (Excel)"; aynı dosyayı "Excelden yükle" ile geri alabilirsin.</div>
@@ -409,17 +410,26 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
 #lgf .lgb:hover{filter:brightness(1.08)}#lgf .lgb:active{transform:translateY(1px)}#lgf .lgb:disabled{opacity:.6;cursor:default}
 #lgf .lga{border:0;background:none;font:inherit;font-size:13px;color:rgba(255,255,255,.55);cursor:pointer;padding:6px;margin:-4px auto -6px;text-decoration:underline;text-underline-offset:3px}#lgf .lga:hover{color:#7fd0f5}
 #lgm{color:#ff9a8a;font-size:13px;min-height:18px;text-align:center}
-#ap{position:fixed;inset:0;z-index:9998;background:radial-gradient(1200px 600px at 80% -10%,#fde3d8 0,transparent 60%),radial-gradient(900px 500px at -10% 110%,#d7eefa 0,transparent 60%),var(--bg);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}
-#ap .pn{width:100%;max-width:520px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:16px;margin:auto 0}
-#ap h2{margin:0;font-size:18px}#ap .apl{display:block;width:84px;height:84px;margin:0 auto 6px;border-radius:50%}#ap .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-#ap .u{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;background:var(--bg)}
-#ap .u .t{display:flex;align-items:center;gap:8px;flex-wrap:wrap}#ap .u .t b{font-size:15px}
-#ap .u .a{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-#ap .u .pw{display:flex;gap:6px;margin-top:8px}#ap .u .pw input{flex:1}
-#ap .nu{display:flex;flex-direction:column;gap:8px;margin-top:6px}#ap .nu label.k{display:flex;gap:6px;align-items:center;font-size:14px}
-#ap .sk{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}#ap .skb{display:flex;align-items:center;gap:10px;font:inherit;font-weight:700;font-size:15px;padding:8px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;text-align:left}#ap .skb.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}#ap .skp{flex:none;width:38px;height:38px;border-radius:10px;border:1px solid rgba(128,128,128,.3)}
-#ap .ms{font-size:13px;min-height:18px;margin-top:8px}
-#ap .tg.ad{color:#EE5A28;border-color:#EE5A28}
+.ovl{position:fixed;inset:0;z-index:9998;background:rgba(10,16,32,.6);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}
+.ovl.pg{background:radial-gradient(1200px 600px at 80% -10%,rgba(238,90,40,.18) 0,transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(43,163,220,.18) 0,transparent 60%),var(--bg)}
+.ovl.dlg{z-index:10003;align-items:center}
+.ovl .pn{width:100%;max-width:520px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:16px;margin:auto 0}
+.ovl h2{margin:0;font-size:18px}.ovl .apl{display:block;width:84px;height:84px;margin:0 auto 6px;border-radius:50%}.ovl .hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.ovl .u{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;background:var(--bg)}
+.ovl .u .t{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.ovl .u .t b{font-size:15px}
+.ovl .u .a{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.ovl .u .pw{display:flex;gap:6px;margin-top:8px}.ovl .u .pw input{flex:1}
+.ovl .nu{display:flex;flex-direction:column;gap:8px;margin-top:6px}.ovl .nu label.k{display:flex;gap:6px;align-items:center;font-size:14px}
+.ovl .sk{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.ovl .skb{display:flex;align-items:center;gap:10px;font:inherit;font-weight:700;font-size:15px;padding:8px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;text-align:left}.ovl .skb.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}.ovl .skp{flex:none;width:38px;height:38px;border-radius:10px;border:1px solid rgba(128,128,128,.3)}
+.ovl .ms{font-size:13px;min-height:18px;margin-top:8px}
+.ovl .tg.ad{color:#EE5A28;border-color:#EE5A28}
+.ovl .cd{margin:0 0 10px}.ovl .cd .row{margin-top:8px}.ovl .cd .ntx{font-size:12px;color:var(--mut);margin-top:8px}
+.wrap{position:relative}
+#prof{display:none;position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);right:8px;z-index:30;width:38px;height:38px;border-radius:50%;border:2px solid var(--ink);background:linear-gradient(135deg,#2BA3DC,#EE5A28);color:#fff;font-weight:800;font-size:18px;cursor:pointer;padding:0;align-items:center;justify-content:center;font-family:var(--fd,sans-serif)}
+#utoast{z-index:10010!important}
+.rotoast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);transform:translateX(-50%);z-index:10020;background:#16202e;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
+html.ro #fcard,html.ro [data-act=addDay],html.ro [data-act=add],html.ro [data-act^=del],html.ro [data-act=nrPick],html.ro [data-act=frz],html.ro [data-act=conv],html.ro [data-act=packFor]{display:none!important}
+html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none}
 `;
   document.head.appendChild(css);
   const SKINS=[{k:'',n:'Klasik',a:'#c6ff2e',b:'#0c0f12',m:'#eceee8'},{k:'alya',n:'Alya',a:'#EE5A28',b:'#0a1020',m:'#0a1020'},{k:'gunbatimi',n:'Gün Batımı',a:'#ff4f93',b:'#22113a',m:'#150a20'},{k:'okyanus',n:'Okyanus',a:'#10c8b5',b:'#e4f3f6',m:'#e4f3f6'}];
@@ -429,7 +439,7 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
     try{k?localStorage.setItem('alya_skin',k):localStorage.removeItem('alya_skin')}catch(e){}
     const mt=document.querySelector('meta[name=theme-color]'),s=SKINS.find(x=>x.k===k);if(mt&&s)mt.content=s.m;
   }
-  async function loadSkin(sb){try{const {data}=await sb.from('docs').select('data').eq('path','cfg/theme').maybeSingle();applySkin(data&&data.data&&data.data.name||'')}catch(e){}}
+  async function loadSkin(sb){try{const {data}=await sb.auth.getUser();applySkin(((data&&data.user&&data.user.user_metadata)||{}).skin||'')}catch(e){}}
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const logoSrc=()=>{try{return typeof LOGO!=='undefined'?LOGO:''}catch(e){return ''}};
   const mail=u=>u+'@alya.app';
@@ -485,25 +495,44 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
     if(data&&data.error)throw new Error(data.error);
     return data;
   }
+  function skinPicker(sb,host,say){
+    const draw=()=>{const cur=document.documentElement.getAttribute('data-skin')||'';host.innerHTML=SKINS.map(s=>'<button type="button" class="skb'+(s.k===cur?' on':'')+'" data-k="'+s.k+'"><span class="skp" style="background:linear-gradient(135deg,'+s.b+' 52%,'+s.a+' 52%)"></span><span>'+esc(s.n)+'</span></button>').join('')};
+    draw();
+    host.onclick=async e=>{const t=e.target.closest('.skb');if(!t)return;const k=t.dataset.k;applySkin(k);draw();
+      try{const {error}=await sb.auth.updateUser({data:{skin:k}});if(error)throw error;say('Temanız kaydedildi (sadece senin hesabında).')}catch(x){say('Tema kaydedilemedi: '+x.message,1)}};
+  }
+  let rot=0;function roToast(){let t=document.getElementById('rot');if(!t){t=document.createElement('div');t.id='rot';t.className='rotoast';document.body.appendChild(t)}t.textContent='Salt okunur hesap: değişiklik yapılamaz.';t.style.opacity=1;clearTimeout(rot);rot=setTimeout(()=>{t.style.opacity=0},2200)}
+  const mk=(id,cls,html)=>{const o=document.createElement('div');o.id=id;o.className=cls;o.innerHTML=html;document.body.appendChild(o);return o};
+  const clearAdminFlag=()=>{try{sessionStorage.removeItem('alya_admin')}catch(x){}};
+  function profileModal(sb,usr,isAdmin,openAdmin){
+    if(document.getElementById('pm'))return;
+    const nm=(usr.user_metadata||{}).name||'';
+    const o=mk('pm','ovl','<div class="pn" style="max-width:420px"><div class="hd"><div><h2>'+esc(nm)+'</h2><div style="font-size:12px;color:var(--mut)">'+(isAdmin?'Yönetici':'Salt okunur hesap')+'</div></div><button class="btn ghost" id="pmx">Kapat</button></div><div class="card cd"><b style="font-size:14px">Temam</b><div class="sk" id="pmsk"></div></div>'+(isAdmin?'<button class="btn" id="pma" style="width:100%;margin-bottom:8px">Yönetici paneli</button>':'')+'<button class="btn ghost" id="lgo" style="width:100%;padding:11px;font-size:15px">Çıkış yap</button><div class="ms" id="pmm"></div></div>');
+    const M=o.querySelector('#pmm');const say=(t,bad)=>{M.textContent=t;M.style.color=bad?'var(--bad)':'var(--ok)'};
+    skinPicker(sb,o.querySelector('#pmsk'),say);
+    const close=()=>o.remove();
+    o.querySelector('#pmx').onclick=close;o.addEventListener('click',e=>{if(e.target===o)close()});
+    const pa=o.querySelector('#pma');if(pa)pa.onclick=()=>{close();openAdmin()};
+  }
+  function dialog(html){const o=mk('dlg'+Date.now(),'ovl dlg','<div class="pn" style="max-width:380px">'+html+'</div>');o.addEventListener('click',e=>{if(e.target===o)o.remove()});return o}
   function adminPage(sb,session){
-    const o=document.createElement('div');o.id='ap';o.className='pg';
+    if(document.getElementById('ap'))return;
+    const o=mk('ap','ovl pg','');
     const who=((session.user||{}).user_metadata||{}).name||'';
-    o.innerHTML='<div class="pn"><img class="apl" alt="" src="'+logoSrc()+'"><div class="hd"><div><h2>Yönetici paneli</h2><div style="font-size:12px;color:var(--mut)">'+esc(who)+'</div></div><div style="display:flex;gap:6px"><button class="btn ghost" id="apa2">Uygulamaya geç</button><button class="btn ghost" id="apx">Çıkış yap</button></div></div><div class="card" style="margin:0 0 10px"><b style="font-size:14px">Tema</b><div class="sk" id="apsk"></div></div><div id="apl" class="empty">Yükleniyor…</div><div class="card" style="margin:10px 0 0"><b style="font-size:14px">Yeni kullanıcı</b><div class="nu"><input id="apn" placeholder="Ad soyad"><input id="app" type="text" placeholder="Şifre (4-8 karakter)" maxlength="8" autocomplete="off"><label class="k"><input type="checkbox" id="apa"> Yönetici olsun</label><button class="btn" id="apc">Kullanıcı ekle</button></div></div><div class="ms" id="apm"></div></div>';
-    document.body.appendChild(o);
+    o.innerHTML='<div class="pn"><img class="apl" alt="" src="'+logoSrc()+'"><div class="hd"><div><h2>Yönetici paneli</h2><div style="font-size:12px;color:var(--mut)">'+esc(who)+'</div></div><div style="display:flex;gap:6px"><button class="btn ghost" id="apa2">Uygulamaya geç</button><button class="btn ghost" id="lgo">Çıkış yap</button></div></div>'
+     +'<div class="card cd"><b style="font-size:14px">Temam</b><div class="sk" id="apsk"></div></div>'
+     +'<div class="card cd"><b style="font-size:14px">Yedekleme</b><div class="row"><button class="btn ghost" data-act="backup">Şimdi yedekle (Excel)</button><button class="btn ghost" data-act="restore">Excelden yükle</button></div><div class="row"><button class="btn ghost" data-act="demo10">10 deneme üyesi ekle</button></div><div class="ntx">Otomatik yedekleme kapalı. Yedek Excel dosyası olarak cihazına iner; aynı dosyayı "Excelden yükle" ile geri alabilirsin.</div></div>'
+     +'<div class="card cd"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font-size:14px">Kullanıcılar</b><button class="btn" id="apn" style="padding:8px 12px;font-size:14px">+ Yeni kullanıcı</button></div><div id="apl" class="empty" style="margin-top:8px">Yükleniyor…</div></div>'
+     +'<div class="ms" id="apm"></div></div>';
     const L=o.querySelector('#apl'),M=o.querySelector('#apm');
-    const SK=o.querySelector('#apsk');
-    const drawSk=()=>{const cur=document.documentElement.getAttribute('data-skin')||'';SK.innerHTML=SKINS.map(s=>'<button type="button" class="skb'+(s.k===cur?' on':'')+'" data-k="'+s.k+'"><span class="skp" style="background:linear-gradient(135deg,'+s.b+' 52%,'+s.a+' 52%)"></span><span>'+esc(s.n)+'</span></button>').join('')};
-    drawSk();
-    SK.addEventListener('click',async e=>{const t=e.target.closest('.skb');if(!t)return;const k=t.dataset.k;applySkin(k);drawSk();
-      try{const {error}=await sb.rpc('merge_doc',{p_path:'cfg/theme',p_patch:{name:k}});if(error)throw error;say('Tema kaydedildi, tüm cihazlarda uygulanır.')}catch(x){say('Tema kaydedilemedi: '+x.message,1)}});
     const say=(t,bad)=>{M.textContent=t;M.style.color=bad?'var(--bad)':'var(--ok)'};
-    o.querySelector('#apx').onclick=()=>{try{sessionStorage.removeItem('alya_admin')}catch(x){}sb.auth.signOut().finally(()=>location.reload())};
-    o.querySelector('#apa2').onclick=()=>{try{sessionStorage.removeItem('alya_admin')}catch(x){}location.reload()};
+    skinPicker(sb,o.querySelector('#apsk'),say);
+    o.querySelector('#apa2').onclick=()=>{clearAdminFlag();o.remove()};
     async function load(){
       try{
         const {users}=await call(sb,{action:'list'});
         L.className='';
-        L.innerHTML=users.map(u=>'<div class="u" data-id="'+esc(u.id)+'"><div class="t"><b>'+esc(u.name)+'</b>'+(u.role==='admin'?'<span class="tg ad">Yönetici</span>':'<span class="tg">Kullanıcı</span>')+(u.me?'<span class="tg">Sen</span>':'')+'<span style="color:var(--mut);font-size:12px">@'+esc(u.username)+'</span></div><div class="a"><button class="btn ghost" data-a="pw">Şifre değiştir</button>'+(u.me?'':'<button class="btn ghost" data-a="role" data-r="'+(u.role==='admin'?'user':'admin')+'">'+(u.role==='admin'?'Yöneticiliği al':'Yönetici yap')+'</button><button class="btn ghost" data-a="del" style="color:var(--bad)">Sil</button>')+'</div></div>').join('');
+        L.innerHTML=users.map(u=>'<div class="u" data-id="'+esc(u.id)+'" data-n="'+esc(u.name)+'"><div class="t"><b>'+esc(u.name)+'</b>'+(u.owner?'<span class="tg ad">Ana yönetici</span>':u.role==='admin'?'<span class="tg ad">Yönetici</span>':'<span class="tg">Salt okunur</span>')+(u.me?'<span class="tg">Sen</span>':'')+'<span style="color:var(--mut);font-size:12px">@'+esc(u.username)+'</span></div><div class="a">'+((u.owner&&!u.me)?'':'<button class="btn ghost" data-a="pw">Şifre değiştir</button>')+((u.me||u.owner)?'':'<button class="btn ghost" data-a="role" data-r="'+(u.role==='admin'?'user':'admin')+'">'+(u.role==='admin'?'Salt okunur yap':'Yönetici yap')+'</button><button class="btn ghost" data-a="del" style="color:var(--bad)">Sil</button>')+'</div></div>').join('');
       }catch(x){L.textContent='Liste alınamadı: '+x.message}
     }
     L.addEventListener('click',async e=>{
@@ -517,14 +546,21 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
           card.appendChild(r);r.querySelector('input').focus();
           const save=async()=>{try{await call(sb,{action:'password',id,password:r.querySelector('input').value});say('Şifre güncellendi.');r.remove()}catch(x){say(x.message,1)}};
           r.querySelector('button').onclick=save;r.querySelector('input').addEventListener('keydown',ev=>{if(ev.key==='Enter')save()});
-        }else if(a==='role'){await call(sb,{action:'role',id,role:t.dataset.r});say('Yetki güncellendi.');load()}
-        else if(a==='del'){if(!confirm('Bu kullanıcı silinsin mi? Üyelik verileri silinmez, sadece giriş hesabı kalkar.'))return;await call(sb,{action:'delete',id});say('Kullanıcı silindi.');load()}
+        }else if(a==='role'){await call(sb,{action:'role',id,role:t.dataset.r});say('Yetki güncellendi (kullanıcı yeniden girişte geçerli olur).');load()}
+        else if(a==='del'){
+          const d=dialog('<h2>Kullanıcıyı sil</h2><div style="margin:8px 0;font-size:14px"><b>'+esc(card.dataset.n)+'</b> silinecek. Onaylamak için ana yöneticinin (Batuhan) şifresini gir.</div><input id="dlp" type="password" maxlength="8" placeholder="Ana yönetici şifresi" autocomplete="off" style="width:100%;box-sizing:border-box"><div class="ms" id="dlm" style="color:var(--bad)"></div><div class="row end" style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" id="dlc">İptal</button><button class="btn" id="dlo" style="background:var(--bad);color:#fff">Sil</button></div>');
+          const dm=d.querySelector('#dlm'),pi=d.querySelector('#dlp');pi.focus();
+          d.querySelector('#dlc').onclick=()=>d.remove();
+          const go=async()=>{dm.textContent='';try{await call(sb,{action:'delete',id,ownerPassword:pi.value});d.remove();say('Kullanıcı silindi.');load()}catch(x){dm.textContent=x.message}};
+          d.querySelector('#dlo').onclick=go;pi.addEventListener('keydown',ev=>{if(ev.key==='Enter')go()});
+        }
       }catch(x){say(x.message,1)}
     });
-    o.querySelector('#apc').onclick=async()=>{
-      try{await call(sb,{action:'create',name:o.querySelector('#apn').value,password:o.querySelector('#app').value,role:o.querySelector('#apa').checked?'admin':'user'});
-        o.querySelector('#apn').value='';o.querySelector('#app').value='';o.querySelector('#apa').checked=false;say('Kullanıcı eklendi.');load()}
-      catch(x){say(x.message,1)}
+    o.querySelector('#apn').onclick=()=>{
+      const d=dialog('<h2>Yeni kullanıcı</h2><div class="nu"><input id="nun" placeholder="Ad soyad" autocomplete="off"><input id="nup" type="text" placeholder="Şifre (4-8 karakter)" maxlength="8" autocomplete="off"><label class="k"><input type="checkbox" id="nua" checked> Yönetici olsun (kapalıysa salt okunur)</label></div><div class="ms" id="num" style="color:var(--bad)"></div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn ghost" id="nuc">İptal</button><button class="btn" id="nuo">Ekle</button></div>');
+      const nm=d.querySelector('#num');d.querySelector('#nun').focus();
+      d.querySelector('#nuc').onclick=()=>d.remove();
+      d.querySelector('#nuo').onclick=async()=>{nm.textContent='';try{await call(sb,{action:'create',name:d.querySelector('#nun').value,password:d.querySelector('#nup').value,role:d.querySelector('#nua').checked?'admin':'user'});d.remove();say('Kullanıcı eklendi.');load()}catch(x){nm.textContent=x.message}};
     };
     load();
   }
@@ -549,15 +585,22 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
     if(session&&adminMode&&((session.user.app_metadata||{}).role!=='admin'))adminMode=false;
     if(!session){const r=await loginUI(sb);session=r.session;adminMode=r.admin;try{adminMode?sessionStorage.setItem('alya_admin','1'):sessionStorage.removeItem('alya_admin')}catch(e){}}
     loadSkin(sb);
-    if(adminMode){adminPage(sb,session);return new Promise(()=>{})}
     sb.auth.onAuthStateChange(ev=>{if(ev==='SIGNED_OUT')location.reload()});
     const usr=session&&session.user||{};const isAdmin=(usr.app_metadata||{}).role==='admin';
     const nm=(usr.user_metadata||{}).name||'';
-    const sync=()=>{const lo=document.getElementById('lgo');const lt='Çıkış yap ('+nm.split(' ')[0]+')';if(lo&&nm&&lo.textContent!==lt)lo.textContent=lt;};
-    sync();new MutationObserver(sync).observe(document.body,{childList:true,subtree:true});
-    document.addEventListener('click',e=>{const t=e.target;if(!t)return;if(t.id==='lgo'){try{sessionStorage.removeItem('alya_admin')}catch(x){}sb.auth.signOut().finally(()=>location.reload())}});
+    const doc=document.documentElement;
+    if(!isAdmin){
+      doc.classList.add('ro');
+      const READ=new Set(['per','sort','detail','closeD','memPdf','tkOpen','tkDet','tkTab','tkBack','tkRep','tkRepGo','tkClose','tkMet','moreM','noop']);
+      document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-act]');if(!b||b.closest('#pm'))return;if(!READ.has(b.dataset.act)){e.stopImmediatePropagation();e.preventDefault();roToast()}},true);
+      document.addEventListener('focusin',e=>{const t=e.target;if(t&&t.closest&&t.closest('#tkd')&&/INPUT|TEXTAREA|SELECT/.test(t.tagName)){t.blur();roToast()}},true);
+    }
+    const pb=document.getElementById('prof');
+    const openAdmin=()=>adminPage(sb,{user:usr});
+    if(pb){pb.style.display='flex';pb.querySelector('span').textContent=(nm||'?').trim().charAt(0).toLocaleUpperCase('tr-TR');pb.onclick=()=>profileModal(sb,usr,isAdmin,openAdmin)}
+    document.addEventListener('click',e=>{const t=e.target;if(t&&t.id==='lgo'){clearAdminFlag();try{localStorage.removeItem('alya_skin')}catch(x){}sb.auth.signOut().finally(()=>location.reload())}});
+    if(adminMode&&isAdmin)openAdmin();
     const L=new Set();let tm=0;
-    L.add({match:x=>x==='cfg/theme',t:0,run:()=>loadSkin(sb)});
     const kick=l=>{clearTimeout(l.t);l.t=setTimeout(l.run,40)};
     const kickAll=()=>L.forEach(kick);
     sb.channel('docs-sync').on('postgres_changes',{event:'*',schema:'public',table:'docs'},p=>{
@@ -569,7 +612,7 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
     probe();setInterval(()=>{if(!document.hidden)probe()},5000);
     document.addEventListener('visibilitychange',()=>{if(!document.hidden)kickAll()});
     addEventListener('online',kickAll);
-    const patch=async(path,p)=>{const {error}=await sb.rpc('merge_doc',{p_path:path,p_patch:p});if(error)throw err(error)};
+    const patch=async(path,p)=>{if(!isAdmin)return;const {error}=await sb.rpc('merge_doc',{p_path:path,p_patch:p});if(error)throw err(error)};
     return {
       doc:path=>({
         update:p=>patch(path,p),
@@ -1383,20 +1426,13 @@ function abGet(){try{const a=JSON.parse(localStorage.getItem(AK)||'[]');return A
 function abPut(a){
   for(;;){try{localStorage.setItem(AK,JSON.stringify(a));return}catch(e){if(a.length<=1)return;a.shift()}}
 }
-function autoBackup(force){
-  if(!S.members.length&&!S.sessions.length)return;
-  const a=abGet(),last=a.length?a[a.length-1].t:0;
-  if(!force&&Date.now()-last<864e5)return;
-  a.push({t:Date.now(),d:{members:S.members,packages:S.packages,sessions:S.sessions,meas:S.meas||[]}});
-  while(a.length>7)a.shift();
-  abPut(a);if(!$('#uye').hidden)renderBk();
-}
+function autoBackup(){}
 function renderBk(){
   const a=abGet(),f=t=>{const d=new Date(t);return fmt(iso(d))+' '+pad(d.getHours())+':'+pad(d.getMinutes())};
   $('#bki').textContent=a.length?'Son otomatik yedek: '+f(a[a.length-1].t):'Henüz otomatik yedek yok.';
   $('#bkl').innerHTML=a.slice().reverse().map((x,k)=>`<div class="wr" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${f(x.t)} · ${x.d.members.length} üye</span><span><button class="bx" data-act="abRestore" data-i="${a.length-1-k}">Yükle</button> <button class="bx" data-act="delB" data-i="${a.length-1-k}">Sil</button></span></div>`).join('');
 }
-setTimeout(()=>autoBackup(),20000);setInterval(()=>autoBackup(),30*60*1000);
+try{localStorage.removeItem(AK)}catch(e){}
 const XM={key:'members',sh:'Üyeler',cols:[['id','Kod'],['name','Ad Soyad'],['tel','Telefon'],['age','Yaş'],['hh','Boy (cm)'],['sx','Cinsiyet (k/e)'],['hp','Sağlık problemleri'],['ms','Multisport (1)']]};
 const XP={key:'packages',sh:'Paketler',cols:[['id','Kod'],['memberId','Üye kodu'],['$n','Üye'],['type','Tür'],['total','Ders'],['price','Fiyat'],['date','Tarih'],['carry','Devir'],['fz','Dondurma'],['note','Not']]};
 const XS={key:'sessions',sh:'Dersler',cols:[['id','Kod'],['date','Tarih'],['time','Saat'],['type','Tür'],['$ns','Üyeler'],['memberIds','Üye kodları'],['att','Katılım (JSON)'],['note','Notlar (JSON)']]};
