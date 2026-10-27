@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ALYA PİLATES</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a1020">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Alya">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -332,27 +339,31 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
   const $=s=>document.querySelector(s);
   const css=document.createElement('style');
   css.textContent=`
-#lg{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto;background:radial-gradient(1200px 600px at 80% -10%,#fde3d8 0,transparent 60%),radial-gradient(900px 500px at -10% 110%,#d7eefa 0,transparent 60%),#f7f4ef;font-family:"Barlow","Bricolage Grotesque",system-ui,sans-serif;color:#16202e}
-#lgf{width:100%;max-width:380px;background:#fff;border-radius:24px;padding:26px 24px 22px;box-shadow:0 18px 50px rgba(30,60,90,.14),0 2px 6px rgba(30,60,90,.06);display:flex;flex-direction:column;gap:14px;color-scheme:light}
-#lgf .lgl{width:132px;height:132px;display:block;margin:-6px auto -4px}
-#lgf .lgt{text-align:center;font-family:'Playfair Display','Times New Roman',serif;font-style:italic;font-weight:700;font-size:28px;letter-spacing:.05em;color:#2BA3DC;line-height:1.1}
-#lgf .lgd{display:flex;align-items:center;justify-content:center;gap:8px;margin:-6px 0 0}
-#lgf .lgd i{display:block;height:1.5px;width:44px;background:#EE5A28}#lgf .lgd b{display:block;width:6px;height:6px;background:#EE5A28;transform:rotate(45deg)}
-#lgf .lgs{text-align:center;font-size:12px;color:#7a8696;letter-spacing:.08em;text-transform:uppercase;margin-top:-4px}
+#lg{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto;font-family:"Barlow","Bricolage Grotesque",system-ui,sans-serif;color:#fff;background:repeating-linear-gradient(115deg,rgba(255,255,255,.035) 0 2px,transparent 2px 26px),radial-gradient(720px 460px at 100% -5%,rgba(238,90,40,.55),transparent 62%),radial-gradient(760px 520px at -10% 105%,rgba(43,163,220,.5),transparent 62%),#0a1020}
+#lgf{width:100%;max-width:380px;background:rgba(255,255,255,.07);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);border-radius:28px;padding:26px 22px 20px;box-shadow:0 24px 70px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:14px;color-scheme:dark}
+#lgf .lgr{width:122px;height:122px;border-radius:50%;padding:4px;margin:0 auto;background:conic-gradient(from 210deg,#EE5A28,#FFA24A,#2BA3DC,#7fd0f5,#EE5A28);box-shadow:0 10px 40px rgba(238,90,40,.45),0 0 0 6px rgba(255,255,255,.06)}
+#lgf .lgl{width:100%;height:100%;display:block;border-radius:50%;background:#fff;object-fit:cover}
+#lgf .lgt{text-align:center;font-family:"Barlow Condensed","Barlow",sans-serif;font-style:italic;font-weight:800;font-size:58px;line-height:.95;letter-spacing:.04em;text-transform:uppercase;margin-top:4px;background:linear-gradient(90deg,#fff 0,#9fdcf8 55%,#ffb48a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 4px 14px rgba(43,163,220,.35))}
+#lgf .lgt2{display:flex;align-items:center;justify-content:center;gap:10px;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:700;font-size:15px;letter-spacing:.42em;text-indent:.42em;color:#FF8A4C;margin-top:-6px}
+#lgf .lgt2 i{display:block;width:28px;height:3px;border-radius:2px;background:linear-gradient(90deg,#EE5A28,#2BA3DC);transform:skewX(-30deg)}
+#lgf .lgs{text-align:center;font-size:12px;color:rgba(255,255,255,.55);letter-spacing:.16em;text-transform:uppercase;margin:-2px 0 2px}
+#lgf.adm .lgs{color:#7fd0f5;font-weight:700}
 #lgf .lgu{display:flex;flex-direction:column;gap:8px}
-#lgf .lgu button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;font-weight:600;font-size:16px;padding:11px 14px;border-radius:14px;border:1.5px solid #e3e8ee;background:#fff;color:#16202e;cursor:pointer;transition:border-color .15s,background .15s}
-#lgf .lgu button:hover{border-color:#2BA3DC}
-#lgf .lgu button.on{border-color:#2BA3DC;background:#eef8fd}
-#lgf .lgu .av{flex:none;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2BA3DC,#EE5A28);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+#lgf .lgu button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;font-weight:600;font-size:16px;padding:10px 14px;border-radius:16px;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;transition:border-color .15s,background .15s,transform .1s}
+#lgf .lgu button:hover{border-color:rgba(255,255,255,.35)}
+#lgf .lgu button:active{transform:scale(.99)}
+#lgf .lgu button.on{border-color:#FF7A3C;background:linear-gradient(90deg,rgba(238,90,40,.28),rgba(43,163,220,.18))}
+#lgf .lgu .av{flex:none;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#2BA3DC,#EE5A28);color:#fff;display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:19px}
 #lgf .lgp{position:relative}
-#lgf .lgp input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:13px 46px 13px 14px;border-radius:14px;border:1.5px solid #e3e8ee;background:#fff;color:#16202e}
-#lgf .lgp input:focus{outline:none;border-color:#2BA3DC;box-shadow:0 0 0 3px rgba(43,163,220,.18)}
-#lgf .lgp button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;font-size:13px;color:#7a8696;padding:8px;cursor:pointer}
-#lgf .lgb{font:inherit;font-weight:700;font-size:16px;padding:13px;border:0;border-radius:14px;background:#EE5A28;color:#fff;cursor:pointer;transition:filter .15s}
-#lgf .lgb:hover{filter:brightness(1.06)}#lgf .lgb:disabled{opacity:.6;cursor:default}
-#lgf .lga{border:0;background:none;font:inherit;font-size:13px;color:#7a8696;cursor:pointer;padding:6px;margin:-4px auto -6px;text-decoration:underline;text-underline-offset:3px}#lgf .lga:hover{color:#2BA3DC}
-#lgf.adm .lgs{color:#EE5A28;font-weight:700}
-#lgm{color:#c0392b;font-size:13px;min-height:18px;text-align:center}
+#lgf .lgp input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:13px 54px 13px 15px;border-radius:16px;border:1.5px solid rgba(255,255,255,.16);background:rgba(0,0,0,.3);color:#fff}
+#lgf .lgp input::placeholder{color:rgba(255,255,255,.45)}
+#lgf .lgp input:focus{outline:none;border-color:#2BA3DC;box-shadow:0 0 0 3px rgba(43,163,220,.25)}
+#lgf .lgp input:-webkit-autofill{-webkit-text-fill-color:#fff;box-shadow:0 0 0 100px #0f1830 inset}
+#lgf .lgp button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;font-size:13px;color:rgba(255,255,255,.6);padding:8px;cursor:pointer}
+#lgf .lgb{font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:20px;letter-spacing:.14em;text-transform:uppercase;padding:13px;border:0;border-radius:16px;background:linear-gradient(100deg,#FF8A1E,#EE5A28 55%,#E8366A);color:#fff;cursor:pointer;box-shadow:0 10px 28px rgba(238,90,40,.45);transition:filter .15s,transform .1s}
+#lgf .lgb:hover{filter:brightness(1.08)}#lgf .lgb:active{transform:translateY(1px)}#lgf .lgb:disabled{opacity:.6;cursor:default}
+#lgf .lga{border:0;background:none;font:inherit;font-size:13px;color:rgba(255,255,255,.55);cursor:pointer;padding:6px;margin:-4px auto -6px;text-decoration:underline;text-underline-offset:3px}#lgf .lga:hover{color:#7fd0f5}
+#lgm{color:#ff9a8a;font-size:13px;min-height:18px;text-align:center}
 #ap{position:fixed;inset:0;z-index:9998;background:radial-gradient(1200px 600px at 80% -10%,#fde3d8 0,transparent 60%),radial-gradient(900px 500px at -10% 110%,#d7eefa 0,transparent 60%),var(--bg);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}
 #ap .pn{width:100%;max-width:520px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:16px;margin:auto 0}
 #ap h2{margin:0;font-size:18px}#ap .apl{display:block;width:84px;height:84px;margin:0 auto 6px;border-radius:50%}#ap .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -368,11 +379,12 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const logoSrc=()=>{try{return typeof LOGO!=='undefined'?LOGO:''}catch(e){return ''}};
   const mail=u=>u+'@alya.app';
+  const PW=p=>'alya.'+p;
   const ini=n=>(n||'?').trim().charAt(0).toLocaleUpperCase('tr-TR');
   function loginUI(sb){
     return new Promise(async resolve=>{
       const o=document.createElement('div');o.id='lg';
-      o.innerHTML='<form id="lgf" autocomplete="on"><img class="lgl" alt="Alya Studio" src="'+logoSrc()+'"><div class="lgt">ALYA PİLATES</div><div class="lgd"><i></i><b></b><i></i></div><div class="lgs">Ders takip paneli</div><div class="lgu" id="lgu"></div><div class="lgp"><input id="lgp" type="password" placeholder="Şifre" autocomplete="current-password" required><button type="button" id="lgw">Göster</button></div><button class="lgb" type="submit" id="lgb">Giriş yap</button><div id="lgm" role="alert"></div><button type="button" class="lga" id="lga">Yönetici girişi</button></form>';
+      o.innerHTML='<form id="lgf" autocomplete="on"><div class="lgr"><img class="lgl" alt="Alya Studio" src="'+logoSrc()+'"></div><div class="lgt">ALYA</div><div class="lgt2"><i></i>PİLATES<i></i></div><div class="lgs">Ders takip paneli</div><div class="lgu" id="lgu"></div><div class="lgp"><input id="lgp" type="password" placeholder="Şifre" maxlength="8" autocomplete="current-password" required><button type="button" id="lgw">Göster</button></div><button class="lgb" type="submit" id="lgb">Giriş yap</button><div id="lgm" role="alert"></div><button type="button" class="lga" id="lga">Yönetici girişi</button></form>';
       document.body.appendChild(o);
       const f=o.querySelector('#lgf'),m=o.querySelector('#lgm'),b=o.querySelector('#lgb'),box=o.querySelector('#lgu'),pw=o.querySelector('#lgp');
       let sel='';
@@ -404,7 +416,7 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
         if(!u){m.textContent='Önce kullanıcıyı seç.';return}
         b.disabled=true;b.textContent='Giriş yapılıyor…';
         try{
-          const {data,error}=await sb.auth.signInWithPassword({email:mail(u),password:pw.value});
+          const {data,error}=await sb.auth.signInWithPassword({email:mail(u),password:PW(pw.value)});
           if(error||!data||!data.session){m.textContent=error&&/invalid|credentials/i.test(error.message||'')?'Şifre hatalı.':'Giriş yapılamadı: '+((error&&error.message)||'bilinmeyen hata');b.disabled=false;b.textContent='Giriş yap';pw.select();return}
           if(adminMode&&((data.user||data.session.user||{}).app_metadata||{}).role!=='admin'){await sb.auth.signOut();m.textContent='Bu hesapta yönetici yetkisi yok.';b.disabled=false;b.textContent='Giriş yap';return}
           o.remove();resolve({session:data.session,admin:adminMode});
@@ -422,7 +434,7 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
   function adminPage(sb,session){
     const o=document.createElement('div');o.id='ap';o.className='pg';
     const who=((session.user||{}).user_metadata||{}).name||'';
-    o.innerHTML='<div class="pn"><img class="apl" alt="" src="'+logoSrc()+'"><div class="hd"><div><h2>Yönetici paneli</h2><div style="font-size:12px;color:var(--mut)">'+esc(who)+'</div></div><div style="display:flex;gap:6px"><button class="btn ghost" id="apa2">Uygulamaya geç</button><button class="btn ghost" id="apx">Çıkış yap</button></div></div><div id="apl" class="empty">Yükleniyor…</div><div class="card" style="margin:10px 0 0"><b style="font-size:14px">Yeni kullanıcı</b><div class="nu"><input id="apn" placeholder="Ad soyad"><input id="app" type="text" placeholder="Şifre (en az 6 karakter)" autocomplete="off"><label class="k"><input type="checkbox" id="apa"> Yönetici olsun</label><button class="btn" id="apc">Kullanıcı ekle</button></div></div><div class="ms" id="apm"></div></div>';
+    o.innerHTML='<div class="pn"><img class="apl" alt="" src="'+logoSrc()+'"><div class="hd"><div><h2>Yönetici paneli</h2><div style="font-size:12px;color:var(--mut)">'+esc(who)+'</div></div><div style="display:flex;gap:6px"><button class="btn ghost" id="apa2">Uygulamaya geç</button><button class="btn ghost" id="apx">Çıkış yap</button></div></div><div id="apl" class="empty">Yükleniyor…</div><div class="card" style="margin:10px 0 0"><b style="font-size:14px">Yeni kullanıcı</b><div class="nu"><input id="apn" placeholder="Ad soyad"><input id="app" type="text" placeholder="Şifre (4-8 karakter)" maxlength="8" autocomplete="off"><label class="k"><input type="checkbox" id="apa"> Yönetici olsun</label><button class="btn" id="apc">Kullanıcı ekle</button></div></div><div class="ms" id="apm"></div></div>';
     document.body.appendChild(o);
     const L=o.querySelector('#apl'),M=o.querySelector('#apm');
     const say=(t,bad)=>{M.textContent=t;M.style.color=bad?'var(--bad)':'var(--ok)'};
@@ -442,7 +454,7 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
         if(a==='pw'){
           let r=card.querySelector('.pw');
           if(r){r.remove();return}
-          r=document.createElement('div');r.className='pw';r.innerHTML='<input type="text" placeholder="Yeni şifre (en az 6)" autocomplete="off"><button class="btn">Kaydet</button>';
+          r=document.createElement('div');r.className='pw';r.innerHTML='<input type="text" placeholder="Yeni şifre (4-8)" maxlength="8" autocomplete="off"><button class="btn">Kaydet</button>';
           card.appendChild(r);r.querySelector('input').focus();
           const save=async()=>{try{await call(sb,{action:'password',id,password:r.querySelector('input').value});say('Şifre güncellendi.');r.remove()}catch(x){say(x.message,1)}};
           r.querySelector('button').onclick=save;r.querySelector('input').addEventListener('keydown',ev=>{if(ev.key==='Enter')save()});
