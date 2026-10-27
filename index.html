@@ -275,7 +275,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 <div class="wrap">
 <h1>ALYA <span>PİLATES</span></h1>
 <div id="sync" class="sync"></div>
-<div id="profbar"><button id="prof" type="button" aria-label="Profil ve tema"><span class="pa">?</span><span class="pn2"></span><span class="pt">· Tema</span></button><button id="lgq" type="button">Çıkış</button></div>
+<div id="profbar"><button id="prof" type="button" aria-label="Profil"><span class="pa">?</span><span class="pn2"></span></button><button id="lgq" type="button">Çıkış</button></div>
 <nav class="tabs"><button data-tab="bugun"><span class="ti t1"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3.2"/><path d="M3.5 10h17M8.2 3v4M15.8 3v4"/><path class="f" d="M8.6 15.2l2.4 2.4 4.6-4.8"/></svg></span><span>PLAN</span></button><button data-tab="uye"><span class="ti t2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="f" cx="9" cy="8.2" r="3.4"/><path class="f" d="M2.8 19.5c0-3.4 2.8-5.6 6.2-5.6s6.2 2.2 6.2 5.6z"/><circle class="f" cx="17.2" cy="9.2" r="2.5" opacity=".75"/><path class="f" d="M16.6 14.1c2.9-.1 4.9 1.7 4.9 5.4h-4.3c0-2-.3-3.7-.6-5.4z" opacity=".75"/></svg></span><span>Üyeler</span></button><button data-tab="rapor"><span class="ti t3"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="f" x="4.2" y="12" width="4" height="8" rx="1.3"/><rect class="f" x="10" y="4.5" width="4" height="15.5" rx="1.3"/><rect class="f" x="15.8" y="8.5" width="4" height="11.5" rx="1.3" opacity=".8"/></svg></span><span>Rapor</span></button><button data-tab="takip"><span class="ti t4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.8 12.5h4.1l2.3-5.6 4 10.8 2.4-5.2h5.6"/></svg></span><span>Takip</span></button></nav>
 
 <section id="bugun">
@@ -421,6 +421,7 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
 .ovl .u .pw{display:flex;gap:6px;margin-top:8px}.ovl .u .pw input{flex:1}
 .ovl .nu{display:flex;flex-direction:column;gap:8px;margin-top:6px}.ovl .nu label.k{display:flex;gap:6px;align-items:center;font-size:14px}
 .ovl .sk{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.ovl .skb{display:flex;align-items:center;gap:10px;font:inherit;font-weight:700;font-size:15px;padding:8px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;text-align:left}.ovl .skb.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}.ovl .skp{flex:none;width:38px;height:38px;border-radius:10px;border:1px solid rgba(128,128,128,.3)}
+.ovl .sl{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--mut)}.ovl .sl select{font:inherit;font-size:14px;padding:6px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
 .ovl .ms{font-size:13px;min-height:18px;margin-top:8px}
 .ovl .tg.ad{color:#EE5A28;border-color:#EE5A28}
 .ovl .cd{margin:0 0 10px}.ovl .cd .row{margin-top:8px}.ovl .cd .ntx{font-size:12px;color:var(--mut);margin-top:8px}
@@ -499,12 +500,6 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
     if(data&&data.error)throw new Error(data.error);
     return data;
   }
-  function skinPicker(sb,host,say){
-    const draw=()=>{const cur=document.documentElement.getAttribute('data-skin')||'';host.innerHTML=SKINS.map(s=>'<button type="button" class="skb'+(s.k===cur?' on':'')+'" data-k="'+s.k+'"><span class="skp" style="background:linear-gradient(135deg,'+s.b+' 52%,'+s.a+' 52%)"></span><span>'+esc(s.n)+'</span></button>').join('')};
-    draw();
-    host.onclick=async e=>{const t=e.target.closest('.skb');if(!t)return;const k=t.dataset.k;applySkin(k);draw();
-      try{const {error}=await sb.auth.updateUser({data:{skin:k}});if(error)throw error;say('Temanız kaydedildi (sadece senin hesabında).')}catch(x){say('Tema kaydedilemedi: '+x.message,1)}};
-  }
   async function doLogout(sb){
     clearAdminFlag();try{localStorage.removeItem('alya_skin')}catch(e){}
     try{await Promise.race([sb.auth.signOut({scope:'local'}),new Promise(r=>setTimeout(r,2500))])}catch(e){}
@@ -517,9 +512,8 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
   function profileModal(sb,usr,isAdmin,openAdmin){
     if(document.getElementById('pm'))return;
     const nm=(usr.user_metadata||{}).name||'';
-    const o=mk('pm','ovl','<div class="pn" style="max-width:420px"><div class="hd"><div><h2>'+esc(nm)+'</h2><div style="font-size:12px;color:var(--mut)">'+(isAdmin?'Yönetici':'Salt okunur hesap')+'</div></div><button class="btn ghost" id="pmx">Kapat</button></div><div class="card cd"><b style="font-size:14px">Temam</b><div class="sk" id="pmsk"></div></div>'+(isAdmin?'<button class="btn" id="pma" style="width:100%;margin-bottom:8px">Yönetici paneli</button>':'')+'<button class="btn ghost" id="lgo" style="width:100%;padding:11px;font-size:15px">Çıkış yap</button><div class="ms" id="pmm"></div></div>');
+    const o=mk('pm','ovl','<div class="pn" style="max-width:420px"><div class="hd"><div><h2>'+esc(nm)+'</h2><div style="font-size:12px;color:var(--mut)">'+(isAdmin?'Yönetici':'Salt okunur hesap')+'</div></div><button class="btn ghost" id="pmx">Kapat</button></div>'+(isAdmin?'<button class="btn" id="pma" style="width:100%;margin-bottom:8px">Yönetici paneli</button>':'')+'<button class="btn ghost" id="lgo" style="width:100%;padding:11px;font-size:15px">Çıkış yap</button><div class="ms" id="pmm"></div></div>');
     const M=o.querySelector('#pmm');const say=(t,bad)=>{M.textContent=t;M.style.color=bad?'var(--bad)':'var(--ok)'};
-    skinPicker(sb,o.querySelector('#pmsk'),say);
     const close=()=>o.remove();
     o.querySelector('#pmx').onclick=close;o.addEventListener('click',e=>{if(e.target===o)close()});
     const pa=o.querySelector('#pma');if(pa)pa.onclick=()=>{close();openAdmin()};
@@ -530,21 +524,23 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
     const o=mk('ap','ovl pg','');
     const who=((session.user||{}).user_metadata||{}).name||'';
     o.innerHTML='<div class="pn"><img class="apl" alt="" src="'+logoSrc()+'"><div class="hd"><div><h2>Yönetici paneli</h2><div style="font-size:12px;color:var(--mut)">'+esc(who)+'</div></div><div style="display:flex;gap:6px"><button class="btn ghost" id="apa2">Uygulamaya geç</button><button class="btn ghost" id="lgo">Çıkış yap</button></div></div>'
-     +'<div class="card cd"><b style="font-size:14px">Temam</b><div class="sk" id="apsk"></div></div>'
      +'<div class="card cd"><b style="font-size:14px">Yedekleme</b><div class="row"><button class="btn ghost" data-act="backup">Şimdi yedekle (Excel)</button><button class="btn ghost" data-act="restore">Excelden yükle</button></div><div class="row"><button class="btn ghost" data-act="demo10">10 deneme üyesi ekle</button></div><div class="ntx">Otomatik yedekleme kapalı. Yedek Excel dosyası olarak cihazına iner; aynı dosyayı "Excelden yükle" ile geri alabilirsin.</div></div>'
      +'<div class="card cd"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font-size:14px">Kullanıcılar</b><button class="btn" id="apn" style="padding:8px 12px;font-size:14px">+ Yeni kullanıcı</button></div><div id="apl" class="empty" style="margin-top:8px">Yükleniyor…</div></div>'
      +'<div class="ms" id="apm"></div></div>';
     const L=o.querySelector('#apl'),M=o.querySelector('#apm');
     const say=(t,bad)=>{M.textContent=t;M.style.color=bad?'var(--bad)':'var(--ok)'};
-    skinPicker(sb,o.querySelector('#apsk'),say);
     o.querySelector('#apa2').onclick=()=>{clearAdminFlag();o.remove()};
     async function load(){
       try{
         const {users}=await call(sb,{action:'list'});
         L.className='';
-        L.innerHTML=users.map(u=>'<div class="u" data-id="'+esc(u.id)+'" data-n="'+esc(u.name)+'"><div class="t"><b>'+esc(u.name)+'</b>'+(u.owner?'<span class="tg ad">Ana yönetici</span>':u.role==='admin'?'<span class="tg ad">Yönetici</span>':'<span class="tg">Salt okunur</span>')+(u.me?'<span class="tg">Sen</span>':'')+'<span style="color:var(--mut);font-size:12px">@'+esc(u.username)+'</span></div><div class="a">'+((u.owner&&!u.me)?'':'<button class="btn ghost" data-a="pw">Şifre değiştir</button>')+((u.me||u.owner)?'':'<button class="btn ghost" data-a="role" data-r="'+(u.role==='admin'?'user':'admin')+'">'+(u.role==='admin'?'Salt okunur yap':'Yönetici yap')+'</button><button class="btn ghost" data-a="del" style="color:var(--bad)">Sil</button>')+'</div></div>').join('');
+        L.innerHTML=users.map(u=>'<div class="u" data-id="'+esc(u.id)+'" data-me="'+(u.me?1:0)+'" data-n="'+esc(u.name)+'"><div class="t"><b>'+esc(u.name)+'</b>'+(u.owner?'<span class="tg ad">Ana yönetici</span>':u.role==='admin'?'<span class="tg ad">Yönetici</span>':'<span class="tg">Salt okunur</span>')+(u.me?'<span class="tg">Sen</span>':'')+'<span style="color:var(--mut);font-size:12px">@'+esc(u.username)+'</span></div><div class="a"><label class="sl">Tema <select data-a="skin">'+SKINS.map(s=>'<option value="'+s.k+'"'+(s.k===(u.skin||'')?' selected':'')+'>'+esc(s.n)+'</option>').join('')+'</select></label>'+((u.owner&&!u.me)?'':'<button class="btn ghost" data-a="pw">Şifre değiştir</button>')+((u.me||u.owner)?'':'<button class="btn ghost" data-a="role" data-r="'+(u.role==='admin'?'user':'admin')+'">'+(u.role==='admin'?'Salt okunur yap':'Yönetici yap')+'</button><button class="btn ghost" data-a="del" style="color:var(--bad)">Sil</button>')+'</div></div>').join('');
       }catch(x){L.textContent='Liste alınamadı: '+x.message}
     }
+    L.addEventListener('change',async e=>{
+      const s=e.target.closest('select[data-a=skin]');if(!s)return;const card=s.closest('.u');
+      try{await call(sb,{action:'skin',id:card.dataset.id,skin:s.value});if(card.dataset.me==='1')applySkin(s.value);say('Tema kaydedildi.')}catch(x){say(x.message,1)}
+    });
     L.addEventListener('click',async e=>{
       const t=e.target.closest('button');if(!t||!t.dataset.a)return;
       const card=t.closest('.u');const id=card.dataset.id;const a=t.dataset.a;
