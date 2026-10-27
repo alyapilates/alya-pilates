@@ -240,11 +240,6 @@ h1{font-size:clamp(26px,9.5vw,38px)}
 #ml .pk{background:color-mix(in srgb,var(--ink) 4%,transparent);border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:10px}
 #ml .pk .top b{font-size:15px}
 #ml .bar{height:8px}
-
-#lg{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px}
-#lgf{width:100%;max-width:340px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:12px}
-#lgf h1{margin:0 0 4px;text-align:center}#lgf label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mut)}
-#lgf input{width:100%}#lgm{color:var(--bad);font-size:13px;min-height:18px}
 </style>
 </head>
 <body>
@@ -286,7 +281,7 @@ h1{font-size:clamp(26px,9.5vw,38px)}
     <h2>Yedekleme</h2>
     <div class="empty" id="bki" style="padding:0 0 8px"></div>
     <div class="row"><button class="btn ghost" data-act="backup">Şimdi yedekle (Excel)</button><button class="btn ghost" data-act="restore">Excelden yükle</button></div>
-    <div class="row" style="margin-top:8px"><button class="btn ghost" data-act="demo10">10 deneme üyesi ekle</button><button class="btn ghost" id="lgo">Çıkış yap</button></div>
+    <div class="row" style="margin-top:8px"><button class="btn ghost" data-act="demo10">10 deneme üyesi ekle</button><button class="btn ghost" id="adm" style="display:none">Yönetici paneli</button><button class="btn ghost" id="lgo">Çıkış yap</button></div>
     <input type="file" id="rf" accept=".xlsx,.xls,.json,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
     <div id="bkl"></div>
     <div class="empty">Uygulama her 24 saatte bir kendi yedeğini alır (son 7 yedek bu cihazda tutulur). Excel yedeğini manuel almak istersen "Şimdi yedekle (Excel)"; aynı dosyayı "Excelden yükle" ile geri alabilirsin.</div>
@@ -335,22 +330,120 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
 }}:null};
 (function(){
   const $=s=>document.querySelector(s);
+  const css=document.createElement('style');
+  css.textContent=`
+#lg{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto;background:radial-gradient(1200px 600px at 80% -10%,#fde3d8 0,transparent 60%),radial-gradient(900px 500px at -10% 110%,#d7eefa 0,transparent 60%),#f7f4ef;font-family:"Barlow","Bricolage Grotesque",system-ui,sans-serif;color:#16202e}
+#lgf{width:100%;max-width:380px;background:#fff;border-radius:24px;padding:26px 24px 22px;box-shadow:0 18px 50px rgba(30,60,90,.14),0 2px 6px rgba(30,60,90,.06);display:flex;flex-direction:column;gap:14px;color-scheme:light}
+#lgf .lgl{width:132px;height:132px;display:block;margin:-6px auto -4px}
+#lgf .lgt{text-align:center;font-family:'Playfair Display','Times New Roman',serif;font-style:italic;font-weight:700;font-size:28px;letter-spacing:.05em;color:#2BA3DC;line-height:1.1}
+#lgf .lgd{display:flex;align-items:center;justify-content:center;gap:8px;margin:-6px 0 0}
+#lgf .lgd i{display:block;height:1.5px;width:44px;background:#EE5A28}#lgf .lgd b{display:block;width:6px;height:6px;background:#EE5A28;transform:rotate(45deg)}
+#lgf .lgs{text-align:center;font-size:12px;color:#7a8696;letter-spacing:.08em;text-transform:uppercase;margin-top:-4px}
+#lgf .lgu{display:flex;flex-direction:column;gap:8px}
+#lgf .lgu button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;font-weight:600;font-size:16px;padding:11px 14px;border-radius:14px;border:1.5px solid #e3e8ee;background:#fff;color:#16202e;cursor:pointer;transition:border-color .15s,background .15s}
+#lgf .lgu button:hover{border-color:#2BA3DC}
+#lgf .lgu button.on{border-color:#2BA3DC;background:#eef8fd}
+#lgf .lgu .av{flex:none;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#2BA3DC,#EE5A28);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+#lgf .lgp{position:relative}
+#lgf .lgp input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:13px 46px 13px 14px;border-radius:14px;border:1.5px solid #e3e8ee;background:#fff;color:#16202e}
+#lgf .lgp input:focus{outline:none;border-color:#2BA3DC;box-shadow:0 0 0 3px rgba(43,163,220,.18)}
+#lgf .lgp button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;font-size:13px;color:#7a8696;padding:8px;cursor:pointer}
+#lgf .lgb{font:inherit;font-weight:700;font-size:16px;padding:13px;border:0;border-radius:14px;background:#EE5A28;color:#fff;cursor:pointer;transition:filter .15s}
+#lgf .lgb:hover{filter:brightness(1.06)}#lgf .lgb:disabled{opacity:.6;cursor:default}
+#lgm{color:#c0392b;font-size:13px;min-height:18px;text-align:center}
+#ap{position:fixed;inset:0;z-index:9998;background:rgba(15,21,32,.55);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}
+#ap .pn{width:100%;max-width:520px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:16px;margin:auto 0}
+#ap h2{margin:0;font-size:18px}#ap .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#ap .u{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;background:var(--bg)}
+#ap .u .t{display:flex;align-items:center;gap:8px;flex-wrap:wrap}#ap .u .t b{font-size:15px}
+#ap .u .a{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+#ap .u .pw{display:flex;gap:6px;margin-top:8px}#ap .u .pw input{flex:1}
+#ap .nu{display:flex;flex-direction:column;gap:8px;margin-top:6px}#ap .nu label.k{display:flex;gap:6px;align-items:center;font-size:14px}
+#ap .ms{font-size:13px;min-height:18px;margin-top:8px}
+#ap .tg.ad{color:#EE5A28;border-color:#EE5A28}
+`;
+  document.head.appendChild(css);
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const logoSrc=()=>{try{return typeof LOGO!=='undefined'?LOGO:''}catch(e){return ''}};
+  const mail=u=>u+'@alya.app';
+  const ini=n=>(n||'?').trim().charAt(0).toLocaleUpperCase('tr-TR');
   function loginUI(sb){
-    return new Promise(resolve=>{
+    return new Promise(async resolve=>{
       const o=document.createElement('div');o.id='lg';
-      o.innerHTML='<form id="lgf" autocomplete="on"><h1>ALYA <span>PİLATES</span></h1><label>E-posta<input id="lge" type="email" autocomplete="username" required></label><label>Şifre<input id="lgp" type="password" autocomplete="current-password" required></label><button class="btn" type="submit" id="lgb">Giriş yap</button><div id="lgm" role="alert"></div></form>';
+      o.innerHTML='<form id="lgf" autocomplete="on"><img class="lgl" alt="Alya Studio" src="'+logoSrc()+'"><div class="lgt">ALYA PİLATES</div><div class="lgd"><i></i><b></b><i></i></div><div class="lgs">Ders takip paneli</div><div class="lgu" id="lgu"></div><div class="lgp"><input id="lgp" type="password" placeholder="Şifre" autocomplete="current-password" required><button type="button" id="lgw">Göster</button></div><button class="lgb" type="submit" id="lgb">Giriş yap</button><div id="lgm" role="alert"></div></form>';
       document.body.appendChild(o);
-      const f=o.querySelector('#lgf'),m=o.querySelector('#lgm'),b=o.querySelector('#lgb');
+      const f=o.querySelector('#lgf'),m=o.querySelector('#lgm'),b=o.querySelector('#lgb'),box=o.querySelector('#lgu'),pw=o.querySelector('#lgp');
+      let sel='';
+      const pick=u=>{sel=u;box.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.u===u));try{localStorage.setItem('lg_u',u)}catch(e){};pw.focus()};
+      let list=[];
+      try{const {data}=await sb.rpc('login_users');list=data||[]}catch(e){}
+      if(list.length){
+        box.innerHTML=list.map(x=>'<button type="button" data-u="'+esc(x.username)+'"><span class="av">'+esc(ini(x.name))+'</span>'+esc(x.name)+'</button>').join('');
+        box.addEventListener('click',e=>{const t=e.target.closest('button');if(t)pick(t.dataset.u)});
+        let last='';try{last=localStorage.getItem('lg_u')||''}catch(e){}
+        if(list.length===1)sel=list[0].username;
+        if(last&&list.some(x=>x.username===last))pick(last);else if(sel)pick(sel);
+      }else{
+        box.innerHTML='<div class="lgp"><input id="lgx" placeholder="Kullanıcı adı" autocomplete="username" autocapitalize="none"></div>';
+      }
+      o.querySelector('#lgw').onclick=e=>{const s=pw.type==='password';pw.type=s?'text':'password';e.target.textContent=s?'Gizle':'Göster'};
       f.addEventListener('submit',async e=>{
-        e.preventDefault();m.textContent='';b.disabled=true;b.textContent='Giriş yapılıyor…';
+        e.preventDefault();m.textContent='';
+        const u=sel||((o.querySelector('#lgx')||{}).value||'').trim().toLowerCase();
+        if(!u){m.textContent='Önce kullanıcıyı seç.';return}
+        b.disabled=true;b.textContent='Giriş yapılıyor…';
         try{
-          const {data,error}=await sb.auth.signInWithPassword({email:o.querySelector('#lge').value.trim(),password:o.querySelector('#lgp').value});
-          if(error||!data||!data.session){m.textContent=error&&/invalid|credentials/i.test(error.message||'')?'E-posta ya da şifre hatalı.':'Giriş yapılamadı: '+((error&&error.message)||'bilinmeyen hata');b.disabled=false;b.textContent='Giriş yap';return}
+          const {data,error}=await sb.auth.signInWithPassword({email:mail(u),password:pw.value});
+          if(error||!data||!data.session){m.textContent=error&&/invalid|credentials/i.test(error.message||'')?'Şifre hatalı.':'Giriş yapılamadı: '+((error&&error.message)||'bilinmeyen hata');b.disabled=false;b.textContent='Giriş yap';pw.select();return}
           o.remove();resolve(data.session);
         }catch(x){m.textContent='Bağlantı kurulamadı. İnternetini kontrol et.';b.disabled=false;b.textContent='Giriş yap'}
       });
-      setTimeout(()=>{const e=o.querySelector('#lge');e&&e.focus()},50);
+      if(!list.length)setTimeout(()=>{const x=o.querySelector('#lgx');x&&x.focus()},50);else if(!sel)setTimeout(()=>{},0);
     });
+  }
+  async function call(sb,body){
+    const {data,error}=await sb.functions.invoke('admin-users',{body});
+    if(error){let msg=error.message;try{const j=await error.context.json();if(j&&j.error)msg=j.error}catch(e){}throw new Error(msg)}
+    if(data&&data.error)throw new Error(data.error);
+    return data;
+  }
+  function adminPanel(sb,meId){
+    if(document.getElementById('ap'))return;
+    const o=document.createElement('div');o.id='ap';
+    o.innerHTML='<div class="pn"><div class="hd"><h2>Yönetici paneli</h2><button class="btn ghost" id="apx">Kapat</button></div><div id="apl" class="empty">Yükleniyor…</div><div class="card" style="margin:10px 0 0"><b style="font-size:14px">Yeni kullanıcı</b><div class="nu"><input id="apn" placeholder="Ad soyad"><input id="app" type="text" placeholder="Şifre (en az 6 karakter)" autocomplete="off"><label class="k"><input type="checkbox" id="apa"> Yönetici olsun</label><button class="btn" id="apc">Kullanıcı ekle</button></div></div><div class="ms" id="apm"></div></div>';
+    document.body.appendChild(o);
+    const L=o.querySelector('#apl'),M=o.querySelector('#apm');
+    const say=(t,bad)=>{M.textContent=t;M.style.color=bad?'var(--bad)':'var(--ok)'};
+    const close=()=>o.remove();
+    o.querySelector('#apx').onclick=close;o.addEventListener('click',e=>{if(e.target===o)close()});
+    async function load(){
+      try{
+        const {users}=await call(sb,{action:'list'});
+        L.className='';
+        L.innerHTML=users.map(u=>'<div class="u" data-id="'+esc(u.id)+'"><div class="t"><b>'+esc(u.name)+'</b>'+(u.role==='admin'?'<span class="tg ad">Yönetici</span>':'<span class="tg">Kullanıcı</span>')+(u.me?'<span class="tg">Sen</span>':'')+'<span style="color:var(--mut);font-size:12px">@'+esc(u.username)+'</span></div><div class="a"><button class="btn ghost" data-a="pw">Şifre değiştir</button>'+(u.me?'':'<button class="btn ghost" data-a="role" data-r="'+(u.role==='admin'?'user':'admin')+'">'+(u.role==='admin'?'Yöneticiliği al':'Yönetici yap')+'</button><button class="btn ghost" data-a="del" style="color:var(--bad)">Sil</button>')+'</div></div>').join('');
+      }catch(x){L.textContent='Liste alınamadı: '+x.message}
+    }
+    L.addEventListener('click',async e=>{
+      const t=e.target.closest('button');if(!t||!t.dataset.a)return;
+      const card=t.closest('.u');const id=card.dataset.id;const a=t.dataset.a;
+      try{
+        if(a==='pw'){
+          let r=card.querySelector('.pw');
+          if(r){r.remove();return}
+          r=document.createElement('div');r.className='pw';r.innerHTML='<input type="text" placeholder="Yeni şifre (en az 6)" autocomplete="off"><button class="btn">Kaydet</button>';
+          card.appendChild(r);r.querySelector('input').focus();
+          const save=async()=>{try{await call(sb,{action:'password',id,password:r.querySelector('input').value});say('Şifre güncellendi.');r.remove()}catch(x){say(x.message,1)}};
+          r.querySelector('button').onclick=save;r.querySelector('input').addEventListener('keydown',ev=>{if(ev.key==='Enter')save()});
+        }else if(a==='role'){await call(sb,{action:'role',id,role:t.dataset.r});say('Yetki güncellendi.');load()}
+        else if(a==='del'){if(!confirm('Bu kullanıcı silinsin mi? Üyelik verileri silinmez, sadece giriş hesabı kalkar.'))return;await call(sb,{action:'delete',id});say('Kullanıcı silindi.');load()}
+      }catch(x){say(x.message,1)}
+    });
+    o.querySelector('#apc').onclick=async()=>{
+      try{await call(sb,{action:'create',name:o.querySelector('#apn').value,password:o.querySelector('#app').value,role:o.querySelector('#apa').checked?'admin':'user'});
+        o.querySelector('#apn').value='';o.querySelector('#app').value='';o.querySelector('#apa').checked=false;say('Kullanıcı eklendi.');load()}
+      catch(x){say(x.message,1)}
+    };
+    load();
   }
   async function fetchAll(sb,prefix){
     const out=[];
@@ -370,7 +463,11 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
     let {data:{session}}=await sb.auth.getSession();
     if(!session)session=await loginUI(sb);
     sb.auth.onAuthStateChange(ev=>{if(ev==='SIGNED_OUT')location.reload()});
-    document.addEventListener('click',e=>{const t=e.target;if(t&&t.id==='lgo'){sb.auth.signOut().finally(()=>location.reload())}});
+    const usr=session&&session.user||{};const isAdmin=(usr.app_metadata||{}).role==='admin';
+    const nm=(usr.user_metadata||{}).name||'';
+    const sync=()=>{const lo=document.getElementById('lgo');const lt='Çıkış yap ('+nm.split(' ')[0]+')';if(lo&&nm&&lo.textContent!==lt)lo.textContent=lt;const ad=document.getElementById('adm');if(ad&&isAdmin&&ad.style.display!=='')ad.style.display=''};
+    sync();new MutationObserver(sync).observe(document.body,{childList:true,subtree:true});
+    document.addEventListener('click',e=>{const t=e.target;if(!t)return;if(t.id==='lgo'){sb.auth.signOut().finally(()=>location.reload())}else if(t.id==='adm'&&isAdmin){adminPanel(sb,usr.id)}});
     const L=new Set();let tm=0;
     const kick=l=>{clearTimeout(l.t);l.t=setTimeout(l.run,150)};
     const kickAll=()=>L.forEach(kick);
