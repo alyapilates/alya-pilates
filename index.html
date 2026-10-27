@@ -273,9 +273,9 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 </head>
 <body>
 <div class="wrap">
-<button id="prof" type="button" aria-label="Profil"><span>?</span></button>
 <h1>ALYA <span>PİLATES</span></h1>
 <div id="sync" class="sync"></div>
+<div id="profbar"><button id="prof" type="button" aria-label="Profil ve tema"><span class="pa">?</span><span class="pn2"></span><span class="pt">· Tema</span></button><button id="lgq" type="button">Çıkış</button></div>
 <nav class="tabs"><button data-tab="bugun"><span class="ti t1"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3.2"/><path d="M3.5 10h17M8.2 3v4M15.8 3v4"/><path class="f" d="M8.6 15.2l2.4 2.4 4.6-4.8"/></svg></span><span>PLAN</span></button><button data-tab="uye"><span class="ti t2"><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="f" cx="9" cy="8.2" r="3.4"/><path class="f" d="M2.8 19.5c0-3.4 2.8-5.6 6.2-5.6s6.2 2.2 6.2 5.6z"/><circle class="f" cx="17.2" cy="9.2" r="2.5" opacity=".75"/><path class="f" d="M16.6 14.1c2.9-.1 4.9 1.7 4.9 5.4h-4.3c0-2-.3-3.7-.6-5.4z" opacity=".75"/></svg></span><span>Üyeler</span></button><button data-tab="rapor"><span class="ti t3"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="f" x="4.2" y="12" width="4" height="8" rx="1.3"/><rect class="f" x="10" y="4.5" width="4" height="15.5" rx="1.3"/><rect class="f" x="15.8" y="8.5" width="4" height="11.5" rx="1.3" opacity=".8"/></svg></span><span>Rapor</span></button><button data-tab="takip"><span class="ti t4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.8 12.5h4.1l2.3-5.6 4 10.8 2.4-5.2h5.6"/></svg></span><span>Takip</span></button></nav>
 
 <section id="bugun">
@@ -425,7 +425,11 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
 .ovl .tg.ad{color:#EE5A28;border-color:#EE5A28}
 .ovl .cd{margin:0 0 10px}.ovl .cd .row{margin-top:8px}.ovl .cd .ntx{font-size:12px;color:var(--mut);margin-top:8px}
 .wrap{position:relative}
-#prof{display:none;position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);right:8px;z-index:30;width:38px;height:38px;border-radius:50%;border:2px solid var(--ink);background:linear-gradient(135deg,#2BA3DC,#EE5A28);color:#fff;font-weight:800;font-size:18px;cursor:pointer;padding:0;align-items:center;justify-content:center;font-family:var(--fd,sans-serif)}
+#profbar{display:none;align-items:center;gap:8px;margin:0 0 12px;flex-wrap:wrap}
+#prof{display:flex;align-items:center;gap:8px;padding:4px 14px 4px 4px;border-radius:99px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+#prof .pa{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2BA3DC,#EE5A28);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px}
+#prof .pt{font-size:12px;color:var(--mut);font-weight:600}
+#lgq{border:1.5px solid var(--line);background:none;color:var(--mut);font:inherit;font-weight:600;font-size:13px;padding:7px 12px;border-radius:99px;cursor:pointer}
 #utoast{z-index:10010!important}
 .rotoast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 90px);transform:translateX(-50%);z-index:10020;background:#16202e;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
 html.ro #fcard,html.ro [data-act=addDay],html.ro [data-act=add],html.ro [data-act^=del],html.ro [data-act=nrPick],html.ro [data-act=frz],html.ro [data-act=conv],html.ro [data-act=packFor]{display:none!important}
@@ -500,6 +504,12 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
     draw();
     host.onclick=async e=>{const t=e.target.closest('.skb');if(!t)return;const k=t.dataset.k;applySkin(k);draw();
       try{const {error}=await sb.auth.updateUser({data:{skin:k}});if(error)throw error;say('Temanız kaydedildi (sadece senin hesabında).')}catch(x){say('Tema kaydedilemedi: '+x.message,1)}};
+  }
+  async function doLogout(sb){
+    clearAdminFlag();try{localStorage.removeItem('alya_skin')}catch(e){}
+    try{await Promise.race([sb.auth.signOut({scope:'local'}),new Promise(r=>setTimeout(r,2500))])}catch(e){}
+    try{Object.keys(localStorage).filter(k=>/^sb-.*-auth-token/.test(k)).forEach(k=>localStorage.removeItem(k))}catch(e){}
+    location.reload();
   }
   let rot=0;function roToast(){let t=document.getElementById('rot');if(!t){t=document.createElement('div');t.id='rot';t.className='rotoast';document.body.appendChild(t)}t.textContent='Salt okunur hesap: değişiklik yapılamaz.';t.style.opacity=1;clearTimeout(rot);rot=setTimeout(()=>{t.style.opacity=0},2200)}
   const mk=(id,cls,html)=>{const o=document.createElement('div');o.id=id;o.className=cls;o.innerHTML=html;document.body.appendChild(o);return o};
@@ -585,7 +595,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
     if(session&&adminMode&&((session.user.app_metadata||{}).role!=='admin'))adminMode=false;
     if(!session){const r=await loginUI(sb);session=r.session;adminMode=r.admin;try{adminMode?sessionStorage.setItem('alya_admin','1'):sessionStorage.removeItem('alya_admin')}catch(e){}}
     loadSkin(sb);
-    sb.auth.onAuthStateChange(ev=>{if(ev==='SIGNED_OUT')location.reload()});
+    sb.auth.onAuthStateChange(ev=>{if(ev==='SIGNED_OUT')setTimeout(()=>location.reload(),50)});
     const usr=session&&session.user||{};const isAdmin=(usr.app_metadata||{}).role==='admin';
     const nm=(usr.user_metadata||{}).name||'';
     const doc=document.documentElement;
@@ -595,10 +605,10 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
       document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-act]');if(!b||b.closest('#pm'))return;if(!READ.has(b.dataset.act)){e.stopImmediatePropagation();e.preventDefault();roToast()}},true);
       document.addEventListener('focusin',e=>{const t=e.target;if(t&&t.closest&&t.closest('#tkd')&&/INPUT|TEXTAREA|SELECT/.test(t.tagName)){t.blur();roToast()}},true);
     }
-    const pb=document.getElementById('prof');
+    const pb=document.getElementById('prof'),pbar=document.getElementById('profbar');
     const openAdmin=()=>adminPage(sb,{user:usr});
-    if(pb){pb.style.display='flex';pb.querySelector('span').textContent=(nm||'?').trim().charAt(0).toLocaleUpperCase('tr-TR');pb.onclick=()=>profileModal(sb,usr,isAdmin,openAdmin)}
-    document.addEventListener('click',e=>{const t=e.target;if(t&&t.id==='lgo'){clearAdminFlag();try{localStorage.removeItem('alya_skin')}catch(x){}sb.auth.signOut().finally(()=>location.reload())}});
+    if(pb){if(pbar)pbar.style.display='flex';pb.querySelector('.pa').textContent=(nm||'?').trim().charAt(0).toLocaleUpperCase('tr-TR');pb.querySelector('.pn2').textContent=nm.split(' ')[0];pb.onclick=()=>profileModal(sb,usr,isAdmin,openAdmin)}
+    document.addEventListener('click',e=>{const t=e.target&&e.target.closest&&e.target.closest('#lgo,#lgq');if(t)doLogout(sb)});
     if(adminMode&&isAdmin)openAdmin();
     const L=new Set();let tm=0;
     const kick=l=>{clearTimeout(l.t);l.t=setTimeout(l.run,40)};
