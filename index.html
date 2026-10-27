@@ -525,29 +525,33 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
   function dialog(html){const o=mk('dlg'+Date.now(),'ovl dlg','<div class="pn" style="max-width:380px">'+html+'</div>');o.addEventListener('click',e=>{if(e.target===o)o.remove()});return o}
   function activityView(sb){
     if(document.getElementById('hv'))return;
-    const o=mk('hv','ovl dlg','<div class="pn" style="max-width:560px;align-self:flex-start;margin:0 auto"><div class="hd"><h2>Hareketler</h2><div style="display:flex;gap:6px"><button class="btn ghost" id="hvr">Yenile</button><button class="btn ghost" id="hvx">Kapat</button></div></div><select id="hvu" style="width:100%;margin-bottom:8px"><option value="">Tüm kullanıcılar</option></select><div id="hvl" class="empty">Yükleniyor…</div><button class="btn ghost" id="hvm" style="width:100%;margin-top:8px;display:none">Daha eski hareketler</button></div>');
+    const o=mk('hv','ovl dlg','<div class="pn" style="max-width:560px;align-self:flex-start;margin:0 auto"><div class="hd"><h2>Hareketler</h2><div style="display:flex;gap:6px"><button class="btn ghost" id="hvr">Yenile</button><button class="btn ghost" id="hvx">Kapat</button></div></div><input id="hvq" type="search" placeholder="İsim veya olay ara (örn. Ayşe, ders, silindi)" style="width:100%;box-sizing:border-box;margin-bottom:8px" autocomplete="off"><div id="hvl" class="empty">Yükleniyor…</div><button class="btn ghost" id="hvm" style="width:100%;margin-top:8px;display:none">Daha eski hareketler</button></div>');
     o.style.alignItems='flex-start';
-    const L=o.querySelector('#hvl'),U=o.querySelector('#hvu'),MB=o.querySelector('#hvm');
-    let rows=[],from=0,more=false;
+    const L=o.querySelector('#hvl'),Q=o.querySelector('#hvq'),MB=o.querySelector('#hvm');
+    let rows=[],from=0,seq=0,tmr=0;
     const pd=s=>String(s).replace(/(\d{4})-(\d{2})-(\d{2})/g,'$3.$2.$1');
     const draw=()=>{
-      const f=U.value;const list=rows.filter(r=>!f||r.user_name===f);
-      if(!list.length){L.className='empty';L.textContent='Henüz hareket yok.';return}
+      if(!rows.length){L.className='empty';L.textContent=Q.value.trim()?'Aramaya uyan hareket yok.':'Henüz hareket yok.';return}
       L.className='';let day='',h='';
-      list.forEach(r=>{const d=new Date(r.at);const dk=d.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      rows.forEach(r=>{const d=new Date(r.at);const dk=d.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
         if(dk!==day){day=dk;h+='<div style="font-weight:800;font-size:13px;margin:12px 0 6px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em">'+esc(dk)+'</div>'}
-        const col=r.kind==='giris'?'#2BA3DC':r.kind==='kullanici'?'#EE5A28':'var(--ok)';
-        h+='<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)"><span style="flex:none;width:6px;border-radius:3px;background:'+col+'"></span><div style="min-width:0;flex:1"><div style="font-size:12px;color:var(--mut)">'+esc(d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}))+' · <b style="color:var(--ink)">'+esc(r.user_name||'Sistem')+'</b></div><div style="font-size:14px;word-break:break-word">'+esc(pd(r.text))+'</div></div></div>'});
+        h+='<div style="padding:8px 0;border-bottom:1px solid var(--line)"><div style="font-size:12px;color:var(--mut)">'+esc(d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}))+'</div><div style="font-size:15px;line-height:1.35;word-break:break-word"><b style="color:var(--ok)">'+esc(r.user_name||'Sistem')+'</b> <span style="color:var(--bad);font-weight:600">'+esc(pd(r.text))+'</span></div></div>'});
       L.innerHTML=h;
     };
-    const fill=()=>{const cur=U.value;const names=[...new Set(rows.map(r=>r.user_name).filter(Boolean))];U.innerHTML='<option value="">Tüm kullanıcılar</option>'+names.map(n=>'<option'+(n===cur?' selected':'')+'>'+esc(n)+'</option>').join('')};
     async function load(reset){
-      if(reset){rows=[];from=0}
-      try{const {data,error}=await sb.from('activity').select('at,user_name,kind,text').order('at',{ascending:false}).range(from,from+99);if(error)throw error;
-        rows=rows.concat(data||[]);from+=100;more=(data||[]).length===100;fill();draw();MB.style.display=more?'block':'none'}
-      catch(x){L.className='empty';L.textContent='Hareketler alınamadı: '+(x.message||x)}
+      const my=++seq;
+      if(reset){rows=[];from=0;L.className='empty';L.textContent='Yükleniyor…'}
+      try{
+        let q=sb.from('activity').select('at,user_name,kind,text').neq('kind','eski').not('text','like','Tema değiştirildi%');
+        const s=Q.value.trim().replace(/[,()*%\\]/g,' ').replace(/\s+/g,' ');
+        if(s)q=q.or('user_name.ilike.%'+s+'%,text.ilike.%'+s+'%');
+        const {data,error}=await q.order('at',{ascending:false}).range(from,from+99);
+        if(my!==seq)return;if(error)throw error;
+        rows=rows.concat(data||[]);from+=100;draw();MB.style.display=(data||[]).length===100?'block':'none'}
+      catch(x){if(my!==seq)return;L.className='empty';L.textContent='Hareketler alınamadı: '+(x.message||x)}
     }
-    U.onchange=draw;MB.onclick=()=>load(false);
+    Q.addEventListener('input',()=>{clearTimeout(tmr);tmr=setTimeout(()=>load(true),300)});
+    MB.onclick=()=>load(false);
     o.querySelector('#hvr').onclick=()=>load(true);
     o.querySelector('#hvx').onclick=()=>o.remove();
     o.addEventListener('click',e=>{if(e.target===o)o.remove()});
