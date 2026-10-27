@@ -520,13 +520,15 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
     sync();new MutationObserver(sync).observe(document.body,{childList:true,subtree:true});
     document.addEventListener('click',e=>{const t=e.target;if(!t)return;if(t.id==='lgo'){try{sessionStorage.removeItem('alya_admin')}catch(x){}sb.auth.signOut().finally(()=>location.reload())}});
     const L=new Set();let tm=0;
-    const kick=l=>{clearTimeout(l.t);l.t=setTimeout(l.run,150)};
+    const kick=l=>{clearTimeout(l.t);l.t=setTimeout(l.run,40)};
     const kickAll=()=>L.forEach(kick);
     sb.channel('docs-sync').on('postgres_changes',{event:'*',schema:'public',table:'docs'},p=>{
       const path=(p.new&&p.new.path)||(p.old&&p.old.path)||'';
       L.forEach(l=>{if(!path||l.match(path))kick(l)});
-    }).subscribe();
-    setInterval(kickAll,60000);
+    }).subscribe(st=>{if(st==='SUBSCRIBED')kickAll()});
+    let lastSig='';
+    const probe=async()=>{try{const {data,error}=await sb.from('docs').select('path,updated_at').order('updated_at',{ascending:false}).limit(1);if(error)return;const g=data&&data[0]?data[0].path+'@'+data[0].updated_at:'';if(lastSig&&g!==lastSig)kickAll();lastSig=g}catch(e){}};
+    probe();setInterval(()=>{if(!document.hidden)probe()},5000);
     document.addEventListener('visibilitychange',()=>{if(!document.hidden)kickAll()});
     addEventListener('online',kickAll);
     const patch=async(path,p)=>{const {error}=await sb.rpc('merge_doc',{p_path:path,p_patch:p});if(error)throw err(error)};
@@ -1194,7 +1196,7 @@ let needRender=false,DB=null,syncTimer=0,syncing=false,pendingSync=false,rt=0,re
 const C=o=>JSON.stringify(o,function(k,v){if(v&&typeof v==='object'&&!Array.isArray(v))return Object.keys(v).sort().reduce((a,y)=>{a[y]=v[y];return a},{});if(v===''||v===0||v===false||v==null||(Array.isArray(v)&&!v.length))return undefined;return v});
 const clean=o=>{const c=Object.assign({},o);delete c.x;return c};
 const wkOf=d=>iso(monday(parse(d)));
-function setSync(t,c){const e=$('#sync');if(!e)return;e.textContent=(c==='err'?'⚠ ':'☁ ')+t;e.className='sync '+(c||'')}
+function setSync(t,c){const e=$('#sync');if(!e)return;if(c==='err'){e.textContent='⚠ '+t;e.className='sync err'}else{e.textContent='';e.className='sync'}}
 function flatLocal(){
   const F={},add=(key,path,f,k,o)=>{F[key]={path,f,k,o,v:C(o)}};
   S.members.forEach(m=>add('m:'+m.id,'cfg/m','m',m.id,clean(m)));
@@ -1321,7 +1323,7 @@ function snapAll(name,filter){
 setInterval(()=>{if(needRender&&!uiBusy()){needRender=false;render()}},800);
 async function initCloud(){
   try{DB=await window.sbConnect()}catch(e){DB=null}
-  if(!DB){setSync('Yalnızca bu cihazda saklanıyor','');return}
+  if(!DB){setSync('Bulut bağlantısı yok, veriler yalnızca bu cihazda','err');return}
   setSync('Bulut bağlanıyor…','');
   const err=e=>setSync('Bulut hatası: '+((e&&e.code)||''),'err');
   DB.doc('cfg/m').onSnapshot(s=>{if(s.exists)docs['cfg/m']=s.data();else delete docs['cfg/m'];ready.c=1;clearTimeout(rcT);rcT=setTimeout(doReconcile,80)},err);
