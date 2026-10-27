@@ -535,7 +535,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
       L.className='';let day='',h='';
       rows.forEach(r=>{const d=new Date(r.at);const dk=d.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
         if(dk!==day){day=dk;h+='<div style="font-weight:800;font-size:13px;margin:12px 0 6px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em">'+esc(dk)+'</div>'}
-        h+='<div style="padding:8px 0;border-bottom:1px solid var(--line)"><div style="font-size:12px;color:var(--mut)">'+esc(d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}))+'</div><div style="font-size:15px;line-height:1.35;word-break:break-word"><b style="color:var(--ok)">'+esc(r.user_name||'Sistem')+'</b> <span style="color:var(--bad);font-weight:600">'+esc(pd(r.text))+'</span></div></div>'});
+        h+='<div style="padding:8px 0;border-bottom:1px solid var(--line)"><div style="font-size:12px;color:var(--mut)">'+esc(d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}))+'</div><div style="font-size:15px;line-height:1.35;word-break:break-word"><span class="hn" style="color:var(--ok);font-weight:400">'+esc(r.user_name||'Sistem')+'</span> <span class="ha" style="color:var(--ink);font-weight:300;font-style:italic">'+esc(pd(r.text))+'</span></div></div>'});
       L.innerHTML=h;
     };
     async function load(reset){
