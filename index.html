@@ -8,6 +8,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0a1020">
+<script>try{var __k=localStorage.getItem("alya_skin");if(__k)document.documentElement.setAttribute("data-skin",__k)}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Alya">
@@ -259,6 +260,15 @@ h1{font-size:clamp(26px,9.5vw,38px)}
 .tabs button .t4{background:linear-gradient(145deg,#37e6a0,#0aa5a0);box-shadow:0 4px 10px rgba(10,165,160,.38)}
 .tabs button:not(.on){opacity:1}
 .tabs button.on .ti{transform:translateY(-1px) scale(1.08);filter:saturate(1.15)}
+
+/* temalar (yönetici panelinden seçilir) */
+html[data-skin]:root body{background-attachment:fixed}
+html[data-skin="alya"]:root{--bg:#0a1020;--card:#121b33;--ink:#f2f6fb;--mut:#93a3bf;--line:#243252;--acc:#EE5A28;--onacc:#fff;--ok:#3ddc97;--bad:#ff6b5a;--warn:#ffb02e;color-scheme:dark}
+html[data-skin="alya"]:root body{background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.03) 0 2px,transparent 2px 26px),radial-gradient(700px 440px at 100% 0,rgba(238,90,40,.30),transparent 62%),radial-gradient(760px 520px at 0 100%,rgba(43,163,220,.28),transparent 62%)}
+html[data-skin="gunbatimi"]:root{--bg:#150a20;--card:#22113a;--ink:#fff1ea;--mut:#b9a0c9;--line:#3a2257;--acc:#ff4f93;--onacc:#fff;--ok:#43e0a0;--bad:#ff7a66;--warn:#ffb347;color-scheme:dark}
+html[data-skin="gunbatimi"]:root body{background-image:radial-gradient(720px 460px at 100% 0,rgba(255,79,147,.32),transparent 62%),radial-gradient(760px 520px at 0 100%,rgba(255,170,60,.20),transparent 62%)}
+html[data-skin="okyanus"]:root{--bg:#e4f3f6;--card:#fff;--ink:#07303a;--mut:#4f6f78;--line:#cde2e7;--acc:#10c8b5;--onacc:#032b30;--ok:#12935a;--bad:#d93a2b;--warn:#d98a00;color-scheme:light}
+html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px at 100% 0,rgba(16,200,181,.28),transparent 62%),radial-gradient(760px 520px at 0 100%,rgba(47,130,255,.18),transparent 62%)}
 </style>
 </head>
 <body>
@@ -407,10 +417,19 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
 #ap .u .a{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 #ap .u .pw{display:flex;gap:6px;margin-top:8px}#ap .u .pw input{flex:1}
 #ap .nu{display:flex;flex-direction:column;gap:8px;margin-top:6px}#ap .nu label.k{display:flex;gap:6px;align-items:center;font-size:14px}
+#ap .sk{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}#ap .skb{display:flex;align-items:center;gap:10px;font:inherit;font-weight:700;font-size:15px;padding:8px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;text-align:left}#ap .skb.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}#ap .skp{flex:none;width:38px;height:38px;border-radius:10px;border:1px solid rgba(128,128,128,.3)}
 #ap .ms{font-size:13px;min-height:18px;margin-top:8px}
 #ap .tg.ad{color:#EE5A28;border-color:#EE5A28}
 `;
   document.head.appendChild(css);
+  const SKINS=[{k:'',n:'Klasik',a:'#c6ff2e',b:'#0c0f12',m:'#eceee8'},{k:'alya',n:'Alya',a:'#EE5A28',b:'#0a1020',m:'#0a1020'},{k:'gunbatimi',n:'Gün Batımı',a:'#ff4f93',b:'#22113a',m:'#150a20'},{k:'okyanus',n:'Okyanus',a:'#10c8b5',b:'#e4f3f6',m:'#e4f3f6'}];
+  function applySkin(k){
+    k=SKINS.some(x=>x.k===k)?k:'';
+    const r=document.documentElement;if(k)r.setAttribute('data-skin',k);else r.removeAttribute('data-skin');
+    try{k?localStorage.setItem('alya_skin',k):localStorage.removeItem('alya_skin')}catch(e){}
+    const mt=document.querySelector('meta[name=theme-color]'),s=SKINS.find(x=>x.k===k);if(mt&&s)mt.content=s.m;
+  }
+  async function loadSkin(sb){try{const {data}=await sb.from('docs').select('data').eq('path','cfg/theme').maybeSingle();applySkin(data&&data.data&&data.data.name||'')}catch(e){}}
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const logoSrc=()=>{try{return typeof LOGO!=='undefined'?LOGO:''}catch(e){return ''}};
   const mail=u=>u+'@alya.app';
@@ -469,9 +488,14 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
   function adminPage(sb,session){
     const o=document.createElement('div');o.id='ap';o.className='pg';
     const who=((session.user||{}).user_metadata||{}).name||'';
-    o.innerHTML='<div class="pn"><img class="apl" alt="" src="'+logoSrc()+'"><div class="hd"><div><h2>Yönetici paneli</h2><div style="font-size:12px;color:var(--mut)">'+esc(who)+'</div></div><div style="display:flex;gap:6px"><button class="btn ghost" id="apa2">Uygulamaya geç</button><button class="btn ghost" id="apx">Çıkış yap</button></div></div><div id="apl" class="empty">Yükleniyor…</div><div class="card" style="margin:10px 0 0"><b style="font-size:14px">Yeni kullanıcı</b><div class="nu"><input id="apn" placeholder="Ad soyad"><input id="app" type="text" placeholder="Şifre (4-8 karakter)" maxlength="8" autocomplete="off"><label class="k"><input type="checkbox" id="apa"> Yönetici olsun</label><button class="btn" id="apc">Kullanıcı ekle</button></div></div><div class="ms" id="apm"></div></div>';
+    o.innerHTML='<div class="pn"><img class="apl" alt="" src="'+logoSrc()+'"><div class="hd"><div><h2>Yönetici paneli</h2><div style="font-size:12px;color:var(--mut)">'+esc(who)+'</div></div><div style="display:flex;gap:6px"><button class="btn ghost" id="apa2">Uygulamaya geç</button><button class="btn ghost" id="apx">Çıkış yap</button></div></div><div class="card" style="margin:0 0 10px"><b style="font-size:14px">Tema</b><div class="sk" id="apsk"></div></div><div id="apl" class="empty">Yükleniyor…</div><div class="card" style="margin:10px 0 0"><b style="font-size:14px">Yeni kullanıcı</b><div class="nu"><input id="apn" placeholder="Ad soyad"><input id="app" type="text" placeholder="Şifre (4-8 karakter)" maxlength="8" autocomplete="off"><label class="k"><input type="checkbox" id="apa"> Yönetici olsun</label><button class="btn" id="apc">Kullanıcı ekle</button></div></div><div class="ms" id="apm"></div></div>';
     document.body.appendChild(o);
     const L=o.querySelector('#apl'),M=o.querySelector('#apm');
+    const SK=o.querySelector('#apsk');
+    const drawSk=()=>{const cur=document.documentElement.getAttribute('data-skin')||'';SK.innerHTML=SKINS.map(s=>'<button type="button" class="skb'+(s.k===cur?' on':'')+'" data-k="'+s.k+'"><span class="skp" style="background:linear-gradient(135deg,'+s.b+' 52%,'+s.a+' 52%)"></span><span>'+esc(s.n)+'</span></button>').join('')};
+    drawSk();
+    SK.addEventListener('click',async e=>{const t=e.target.closest('.skb');if(!t)return;const k=t.dataset.k;applySkin(k);drawSk();
+      try{const {error}=await sb.rpc('merge_doc',{p_path:'cfg/theme',p_patch:{name:k}});if(error)throw error;say('Tema kaydedildi, tüm cihazlarda uygulanır.')}catch(x){say('Tema kaydedilemedi: '+x.message,1)}});
     const say=(t,bad)=>{M.textContent=t;M.style.color=bad?'var(--bad)':'var(--ok)'};
     o.querySelector('#apx').onclick=()=>{try{sessionStorage.removeItem('alya_admin')}catch(x){}sb.auth.signOut().finally(()=>location.reload())};
     o.querySelector('#apa2').onclick=()=>{try{sessionStorage.removeItem('alya_admin')}catch(x){}location.reload()};
@@ -524,6 +548,7 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
     try{adminMode=sessionStorage.getItem('alya_admin')==='1'}catch(e){}
     if(session&&adminMode&&((session.user.app_metadata||{}).role!=='admin'))adminMode=false;
     if(!session){const r=await loginUI(sb);session=r.session;adminMode=r.admin;try{adminMode?sessionStorage.setItem('alya_admin','1'):sessionStorage.removeItem('alya_admin')}catch(e){}}
+    loadSkin(sb);
     if(adminMode){adminPage(sb,session);return new Promise(()=>{})}
     sb.auth.onAuthStateChange(ev=>{if(ev==='SIGNED_OUT')location.reload()});
     const usr=session&&session.user||{};const isAdmin=(usr.app_metadata||{}).role==='admin';
@@ -532,6 +557,7 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
     sync();new MutationObserver(sync).observe(document.body,{childList:true,subtree:true});
     document.addEventListener('click',e=>{const t=e.target;if(!t)return;if(t.id==='lgo'){try{sessionStorage.removeItem('alya_admin')}catch(x){}sb.auth.signOut().finally(()=>location.reload())}});
     const L=new Set();let tm=0;
+    L.add({match:x=>x==='cfg/theme',t:0,run:()=>loadSkin(sb)});
     const kick=l=>{clearTimeout(l.t);l.t=setTimeout(l.run,40)};
     const kickAll=()=>L.forEach(kick);
     sb.channel('docs-sync').on('postgres_changes',{event:'*',schema:'public',table:'docs'},p=>{
