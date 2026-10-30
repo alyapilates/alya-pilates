@@ -63,6 +63,10 @@ input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid v
 #bugun .mn{font-size:16px}#bugun .mb{font-size:13px}
 #bugun .gk,#bugun .gy{width:40px;height:40px;font-size:18px;border-radius:10px}
 #bugun .nt{font-size:13px;padding:3px 6px;max-width:none}
+.tm{border:0;background:none;color:inherit;padding:0;margin:0;font:inherit;cursor:pointer;border-bottom:1.5px dotted var(--mut);line-height:1.1}
+.pm,.gm{flex:none;min-width:22px;height:22px;border-radius:7px;border:1.5px solid;background:transparent;font-weight:800;font-size:15px;line-height:1;padding:0 4px;cursor:pointer}
+.pm{border-color:var(--ok);color:var(--ok)}.gm{border-color:var(--bad);color:var(--bad)}
+#bugun .pm,#bugun .gm{min-width:32px;height:32px;border-radius:10px;font-size:20px}
 .gridwrap{border:1px solid var(--line);border-radius:14px;background:var(--card);margin-bottom:14px}
 .gs{overflow:auto;max-height:70vh;border-radius:14px}
 .grid{display:grid;grid-template-columns:44px repeat(7,minmax(max-content,1fr));width:max-content;min-width:100%}
@@ -746,11 +750,12 @@ function rowHtml(s,mid){
   const m=mem(mid);if(!m)return '';
   const a=s.att[mid],b=rem(s,mid),af=cnt(a)?b-1:b,n=(s.note&&s.note[mid])||'';
   const tot=stats(mid,s.type).tot,isMs=!!m.ms;let lab=cnt(a)?b+'→'+af:b,mcl=cls(af)+'-t';if(isMs){const c0=msBefore(s,mid);lab=a==='k'?c0+'→'+(c0+1):c0;mcl='ms'}
-  return `<div class="mr"><span class="mn">${esc(m.name)}${isMs?'<span class="rn" style="color:var(--mut)">Multisport</span>':''}${tot&&af<=2?`<span class="rn">${af<=0?'Paket bitti':'Yenile'}</span>`:''}</span><small class="mb ${mcl}" title="${isMs?'Girilen ders':'Kalan ders'}">${lab}</small><button class="gk ${a==='k'?'on':''}" data-act="setk" data-id="${s.id}" data-m="${mid}" aria-label="Geldi">✓</button><button class="gy ${a==='y'?'on':''}" data-act="sety" data-id="${s.id}" data-m="${mid}" aria-label="Gelmedi">✕</button></div>`+
+  return `<div class="mr">${s.type==='grup'?`<button class="gm" data-act="delMem" data-id="${s.id}" data-m="${mid}" aria-label="Gruptan çıkar">−</button>`:''}<span class="mn">${esc(m.name)}${isMs?'<span class="rn" style="color:var(--mut)">Multisport</span>':''}${tot&&af<=2?`<span class="rn">${af<=0?'Paket bitti':'Yenile'}</span>`:''}</span><small class="mb ${mcl}" title="${isMs?'Girilen ders':'Kalan ders'}">${lab}</small><button class="gk ${a==='k'?'on':''}" data-act="setk" data-id="${s.id}" data-m="${mid}" aria-label="Geldi">✓</button><button class="gy ${a==='y'?'on':''}" data-act="sety" data-id="${s.id}" data-m="${mid}" aria-label="Gelmedi">✕</button></div>`+
     (a==='y'?`<button class="nt" data-act="note" data-id="${s.id}" data-m="${mid}">${n?'💬 '+esc(n):'+ Not yaz'}</button>`:'');
 }
 function sesHtml(s){
-  return `<div class="blk" data-act="noop"><div class="bh"><b>${s.time}</b>${s.type==='grup'?'<span class="tg">Grup</span>':'<span class="tg">Bireysel</span>'}<button class="bx" data-act="delS" data-id="${s.id}" aria-label="Dersi sil">×</button></div>${s.memberIds.map(m=>rowHtml(s,m)).join('')}</div>`;
+  const g=s.type==='grup';
+  return `<div class="blk" data-act="noop"><div class="bh"><button class="tm" data-act="editT" data-id="${s.id}" aria-label="Saati değiştir"><b>${s.time}</b></button>${g?'<span class="tg">Grup</span>':'<span class="tg">Bireysel</span>'}${g?`<button class="pm" data-act="addM" data-id="${s.id}" aria-label="Gruba kişi ekle">+</button>`:''}<button class="bx" data-act="delS" data-id="${s.id}" aria-label="Dersi sil">×</button></div>${s.memberIds.map(m=>rowHtml(s,m)).join('')}</div>`;
 }
 
 function renderBugun(){
@@ -895,6 +900,41 @@ $('#addS').onclick=()=>{
   S.sessions.push({id:uid(),date:d,time:t,type:selType,memberIds:sel.slice(),att:{},note:{}});
   day=parse(d);week=monday(day);$('#modal').hidden=true;render();
 };
+
+/* Dersin saatini değiştir / gruba kişi ekle */
+function openEditT(id){
+  const s=S.sessions.find(x=>x.id===id);if(!s)return;
+  $('#mdb').innerHTML=`<h2 style="margin:0 0 4px">Saati değiştir</h2><div class="empty" style="padding:0 0 10px">${fmt(s.date)} · ${TN(s.type)}</div><label style="display:flex;flex-direction:column;font-size:12px;color:var(--mut);gap:3px">Saat<input id="etv" type="time" value="${esc(s.time)}"></label><div class="row end" style="margin-top:12px"><button class="btn ghost" data-act="tkClose">Vazgeç</button><button class="btn" data-act="saveT" data-id="${s.id}">Kaydet</button></div>`;
+  $('#md').hidden=false;try{$('#etv').focus({preventScroll:true})}catch(e){}
+}
+function saveT(id){
+  const s=S.sessions.find(x=>x.id===id),t=$('#etv')&&$('#etv').value;if(!s)return;
+  if(!t){alert('Saat seçin.');return}
+  if(t===s.time){$('#md').hidden=true;return}
+  if(s.type==='bireysel'){
+    const mn=x=>{const [h,m]=x.split(':').map(Number);return h*60+m};
+    const c=S.sessions.find(x=>x!==s&&x.type==='bireysel'&&x.date===s.date&&Math.abs(mn(x.time)-mn(t))<60);
+    if(c){alert(`${c.time} saatinde zaten bireysel ders var (${(mem(c.memberIds[0])||{}).name||''}). Ders 1 saat sürer.`);return}
+  }
+  snap('Saat değişti');s.time=t;$('#md').hidden=true;render();
+}
+let amId=null;
+function amList(){
+  const s=S.sessions.find(x=>x.id===amId);if(!s)return '';
+  const q=nf((($('#amq')||{}).value||'').trim());
+  const ms=S.members.filter(m=>hasPk(m,'grup')&&!s.memberIds.includes(m.id)&&nf(m.name).includes(q));
+  return ms.length?ms.map(m=>{const pk=S.packages.filter(p=>p.memberId===m.id&&p.type==='grup'),fz=!m.ms&&pk.every(p=>p.fz);
+    return `<button class="pi" data-act="amPick" data-id="${m.id}" ${fz?'disabled style="opacity:.5"':''}><span>${esc(m.name)}</span><small>${fz?'dondurulmuş':m.ms?'multisport · '+msCount(m.id)+' ders':'kalan '+stats(m.id,'grup').left}</small></button>`}).join(''):'<div class="empty">Eklenecek üye yok.</div>';
+}
+function openAddM(id){
+  const s=S.sessions.find(x=>x.id===id);if(!s)return;amId=id;
+  $('#mdb').innerHTML=`<h2 style="margin:0 0 4px">Gruba kişi ekle</h2><div class="empty" style="padding:0 0 8px">${fmt(s.date)} · ${s.time} · Grup</div><input id="amq" type="search" placeholder="Üye ara" style="width:100%"><div class="pl" id="aml"></div><div class="row end"><button class="btn" data-act="tkClose">Bitti</button></div>`;
+  $('#aml').innerHTML=amList();$('#amq').oninput=()=>{$('#aml').innerHTML=amList()};$('#md').hidden=false;
+}
+function amPick(mid){
+  const s=S.sessions.find(x=>x.id===amId);if(!s||s.memberIds.includes(mid))return;
+  snap('Gruba eklendi');s.memberIds.push(mid);render();$('#aml').innerHTML=amList();
+}
 
 /* Üye + paket tek form */
 $('#fd').value=iso(new Date());
@@ -1605,7 +1645,7 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b)return;
   const a=b.dataset.act,id=b.dataset.id;
   if((a.startsWith('del')||a==='abRestore'||a==='conv')&&b.dataset.armed!=='1'){
-    b.dataset.armed='1';const old=b.textContent;b.textContent=b.classList.contains('bx')&&a!=='abRestore'&&a!=='conv'?'Sil?':'Emin misin?';b.style.cssText='background:var(--bad);color:#fff;border-color:var(--bad)';
+    b.dataset.armed='1';const old=b.textContent;b.textContent=(b.classList.contains('bx')||b.classList.contains('gm'))&&a!=='abRestore'&&a!=='conv'?'Sil?':'Emin misin?';b.style.cssText='background:var(--bad);color:#fff;border-color:var(--bad)';
     setTimeout(()=>{if(b.isConnected){b.dataset.armed='';b.textContent=old;b.style.cssText=''}},3000);return;
   }
   if(a==='noop')return;
@@ -1617,6 +1657,10 @@ document.addEventListener('click',e=>{
   if(a==='note'){openBub(id,b.dataset.m);return}
   if(a==='add'){openAdd(b.dataset.d,b.dataset.t);return}
   if(a==='addDay'){openAdd(iso(day),'10:00');return}
+  if(a==='editT'){openEditT(id);return}
+  if(a==='saveT'){saveT(id);return}
+  if(a==='addM'){openAddM(id);return}
+  if(a==='amPick'){amPick(id);return}
   if(a==='ty'){selType=b.dataset.ty;sel=[];document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x.dataset.ty===selType));$('#pl').innerHTML=pickHtml();return}
   if(a==='pick'){if(selType==='grup'){sel=sel.includes(id)?sel.filter(x=>x!==id):[...sel,id]}else sel=[id];$('#pl').innerHTML=pickHtml();return}
   if(a==='packFor'){const m=mem(id);$('#fn').value=m.name;window.scrollTo({top:0,behavior:'smooth'});$('#fc').focus();return}
@@ -1674,6 +1718,13 @@ document.addEventListener('click',e=>{
   }
   if(a==='moreM'){memLim+=100;render();return}
   if(a==='delAll'){snap('Tüm veriler silindi');S={members:[],packages:[],sessions:[],meas:[]};try{localStorage.removeItem(AK)}catch(e){}memLim=50;render();renderBk();return}
+  if(a==='delMem'){
+    const s=S.sessions.find(x=>x.id===id),m=b.dataset.m;if(!s)return;
+    snap('Gruptan çıkarıldı');
+    s.memberIds=s.memberIds.filter(x=>x!==m);if(s.att)delete s.att[m];if(s.note)delete s.note[m];
+    if(!s.memberIds.length)S.sessions=S.sessions.filter(x=>x!==s);
+    render();return;
+  }
   if(a==='delS'){snap('Ders silindi');S.sessions=S.sessions.filter(x=>x.id!==id)}
   else if(a==='delP'){snap('Paket silindi');S.packages=S.packages.filter(x=>x.id!==id)}
   else if(a==='delMs'){snap('Ölçüm silindi');S.meas=S.meas.filter(x=>x.id!==id)}
