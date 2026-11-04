@@ -357,7 +357,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.17';
+const APP_VER='1.18';
 try{if(/[?&]v=/.test(location.search))history.replaceState(null,'',location.pathname+location.hash)}catch(e){}
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
@@ -2087,6 +2087,7 @@ setTab('bugun');initCloud();
 .ytb .yn{min-width:150px}
 .yrm1{flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid color-mix(in srgb,var(--bad) 45%,transparent);background:color-mix(in srgb,var(--bad) 10%,transparent);color:var(--bad);font-size:20px;font-weight:800;line-height:1;display:flex;align-items:center;justify-content:center;padding:0 0 2px;cursor:pointer}
 .yrm1:active{transform:scale(.9)}
+.ytb td.yna{background:none}
 </style>
 <script>
 (function(){
@@ -2447,11 +2448,11 @@ setTab('bugun');initCloud();
     if(!ms.length)return nav+'<div class="em" style="padding:14px 8px">Bu gruba henüz üye eklenmedi.'+(C&&C.isAdmin?' “Düzenle” ile ekleyebilirsin.':'')+'</div>';
     const cd=cols.map(k=>{const d=addD(ws,k);return {k,iso:isoD(d),d,grp:(g.d||[]).includes(k)}});
     const head='<tr><th class="yn">Üye</th>'+cd.map(c=>'<th class="'+(c.iso===tdy?'ytd':'')+(c.grp?'':' yxc')+'"><b>'+GUN[c.k]+'</b><small>'+c.d.getDate()+' '+AYK[c.d.getMonth()]+'</small></th>').join('')+'</tr>';
-    const rows=ms.map(x=>{const ex=exOf(g,x.id);
+    const rows=ms.map(x=>{const ex=exOf(g,x.id),days=ex||g.d||[];
       return '<tr class="'+(ex?'gwx':'')+'"><td class="yn"><div class="ynw">'+(C&&C.isAdmin?'<button type="button" class="yrm1" data-rm="'+esc(x.id)+'" aria-label="'+esc(x.ad)+' gruptan çıkar">−</button>':'')+'<div class="ynt" data-id="'+esc(x.id)+'"><b>'+(ex?'⚠ ':'')+esc(x.ad)+'</b>'+(ex?'<small>'+esc(pairName(ex))+'</small>':'')+'</div></div></td>'
-        +cd.map(c=>{const v=yGet(gid,c.iso,x.id),fut=c.iso>tdy;
-          return '<td><button type="button" class="ybx'+(v===1?' y1':v===0?' y0':'')+'"'+(fut||!(C&&C.isAdmin)?' disabled':'')+' data-yc="'+esc(x.id)+'|'+c.iso+'" aria-label="'+esc(x.ad)+' '+GUNF[c.k]+'">'+(v===1?'✓':v===0?'✕':'')+'</button></td>'}).join('')+'</tr>'}).join('');
-    const foot='<tr class="yft"><td class="yn">Gelen</td>'+cd.map(c=>{const exp=ms;const n=exp.filter(x=>yGet(gid,c.iso,x.id)===1).length;return '<td><b>'+n+'</b>/'+exp.length+'</td>'}).join('')+'</tr>';
+        +cd.map(c=>{if(!days.includes(c.k))return '<td class="yna"></td>';const v=yGet(gid,c.iso,x.id);
+          return '<td><button type="button" class="ybx'+(v===1?' y1':v===0?' y0':'')+'"'+(!(C&&C.isAdmin)?' disabled':'')+' data-yc="'+esc(x.id)+'|'+c.iso+'" aria-label="'+esc(x.ad)+' '+GUNF[c.k]+'">'+(v===1?'✓':v===0?'✕':'')+'</button></td>'}).join('')+'</tr>'}).join('');
+    const foot='<tr class="yft"><td class="yn">Gelen</td>'+cd.map(c=>{const exp=ms.filter(x=>(exOf(g,x.id)||g.d||[]).includes(c.k));const n=exp.filter(x=>yGet(gid,c.iso,x.id)===1).length;return '<td><b>'+n+'</b>/'+exp.length+'</td>'}).join('')+'</tr>';
     return nav+'<div class="ytw"><table class="ytb"><thead>'+head+'</thead><tbody>'+rows+foot+'</tbody></table></div>';
   }
 
