@@ -354,7 +354,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.10';
+const APP_VER='1.11';
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
@@ -2130,7 +2130,11 @@ setTab('bugun');initCloud();
     const d=root.querySelector('.dmo');if(!d)return;
     if(!(C&&C.isAdmin&&C.sb)){d.innerHTML='';return}
     const n=list().filter(x=>x.demo).length;
-    d.innerHTML='<span>Deneme verisi</span>'+(n?'<button type="button" class="dl" data-dm="del">'+n+' deneme üyeyi sil</button>':'<button type="button" data-dm="add">20 deneme üye ekle</button>');
+    d.innerHTML='<span>Deneme verisi</span>'+(n?'<button type="button" class="dl" data-dm="del">'+n+' deneme üyeyi sil</button>':'<button type="button" data-dm="add">50 deneme üye ekle</button>');
+  }
+  function drawAfis(){
+    const d=root.querySelector('.gaf');if(!d)return;
+    d.innerHTML=C&&C.isAdmin&&C.sb&&!afisLoaded()?'<span>Afişteki program</span><button type="button" data-af="1">Programı yükle</button>':'';
   }
   function drawG(){
     const all=groups(),di=dayIdx();
@@ -2140,8 +2144,9 @@ setTab('bugun');initCloud();
     root.querySelector('.pgr .achp').innerHTML=['',...branches()].map(b=>'<button type="button" data-gf="'+esc(b)+'" class="'+(gflt===b?'on':'')+'">'+(b?esc(b):'Tümü')+'</button>').join('');
     const by={};ls.forEach(g=>{const k=pairKey(g.d);(by[k]=by[k]||[]).push(g)});
     const keys=Object.keys(by).sort((a,b)=>{const x=a.split('-').map(Number),y=b.split('-').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){if(x[i]==null)return -1;if(y[i]==null)return 1;if(x[i]!==y[i])return x[i]-y[i]}return 0});
+    drawAfis();
     const box=root.querySelector('.pgr .gls');
-    if(!keys.length){box.innerHTML=all.length?'<div class="em"><b>Bu branşta grup yok</b>Filtreyi değiştir.</div>':'<div class="em"><b>Henüz grup yok</b>'+(C&&C.isAdmin?'Alttaki “Yeni grup” ile gün çiftini ve saatini belirleyerek ilk grubu oluştur.':'Gruplar yönetici tarafından eklenir.')+'</div>';return}
+    if(!keys.length){box.innerHTML=all.length?'<div class="em"><b>Bu branşta grup yok</b>Filtreyi değiştir.</div>':'<div class="em"><b>Henüz grup yok</b>'+(C&&C.isAdmin?'Alttaki “Yeni grup” ile günleri ve saati belirleyerek grup oluştur ya da aşağıdan afişteki programı yükle.':'Gruplar yönetici tarafından eklenir.')+'</div>';return}
     box.innerHTML=keys.map(k=>{
       const d=k.split('-').map(Number),now=d.includes(di);
       const rows=by[k].sort((a,b)=>(hm(a.s)||0)-(hm(b.s)||0)).map((g,i)=>{
@@ -2156,7 +2161,7 @@ setTab('bugun');initCloud();
     root.innerHTML='<div class="w"><div class="atop"><div class="ttl"><b>Alya Akademi</b><span>Sporcu takibi</span></div><button class="ib" data-a="br" title="Branş değiştir">⇄ Branş</button>'+(C&&C.profile?'<button class="ib aav" data-a="pr" aria-label="Profil">☰</button>':'')+'</div>'
       +'<div class="atab" role="tablist"><button type="button" data-t="u" class="on">Üyeler</button><button type="button" data-t="g">Gruplar</button></div>'
       +'<div class="pu"><div class="st"></div><input class="q" type="search" placeholder="İsim, TC veya telefon ara" autocomplete="off"><div class="achp"></div><div class="er"></div><div class="ls"><div class="em">Yükleniyor…</div></div><div class="dmo"></div></div>'
-      +'<div class="pgr" hidden><div class="st"></div><div class="achp"></div><div class="er"></div><div class="gls"></div></div></div>'
+      +'<div class="pgr" hidden><div class="st"></div><div class="achp"></div><div class="er"></div><div class="gls"></div><div class="dmo gaf"></div></div></div>'
       +(C&&C.isAdmin?'<button class="fab" data-a="new">+ Yeni sporcu</button>':'');
     document.body.appendChild(root);
     try{const t=sessionStorage.getItem('ab_tab');if(t==='g'||t==='u')tab=t}catch(e){}
@@ -2166,6 +2171,7 @@ setTab('bugun');initCloud();
       const t=e.target.closest('[data-t]');if(t){tab=t.dataset.t;try{sessionStorage.setItem('ab_tab',tab)}catch(x){}draw();root.scrollTo(0,0);return}
       const f=e.target.closest('[data-f]');if(f){flt=f.dataset.f;draw();return}
       const gf=e.target.closest('[data-gf]');if(gf){gflt=gf.dataset.gf;draw();return}
+      const af=e.target.closest('[data-af]');if(af){loadAfis(af);return}
       const dm=e.target.closest('[data-dm]');if(dm){dm.dataset.dm==='add'?addDemo(dm):delDemo(dm);return}
       const gdl=e.target.closest('[data-gdel]');if(gdl){const k=gdl.dataset.gdel,ids=groups().filter(g=>pairKey(g.d)===k&&(!gflt||g.br===gflt)).map(g=>g.id);if(!ids.length)return;
         const nm=pairName(k.split('-').map(Number));
@@ -2193,13 +2199,32 @@ setTab('bugun');initCloud();
   const segClick=g=>g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const on=!b.classList.contains('on');g.querySelectorAll('button').forEach(z=>z.classList.remove('on'));if(on)b.classList.add('on')});
 
 
+
+  /* ---------- Afiş programı ---------- */
+  const AFIS=[
+    ['Cimnastik',[1,3],'12:00','13:00','Ebeveynli Cimnastik (Baby GYM)'],['Cimnastik',[1,3],'13:00','14:00','Ebeveynli Cimnastik (Baby GYM)'],['Cimnastik',[1,3],'15:00','16:00','Ebeveynli Cimnastik (Baby GYM)'],
+    ['Cimnastik',[1,3],'16:00','17:00','3 Yaş'],['Cimnastik',[1,3],'17:00','18:00','6-11 Yaş Grup'],['Cimnastik',[1,3],'18:00','19:00','4-5 Yaş Özel Grup'],
+    ['Cimnastik',[1,3],'19:00','20:00','6-11 Yaş Grup'],['Cimnastik',[1,3],'20:00','21:00','4-5 Yaş Grup'],
+    ['Cimnastik',[5,6],'09:00','10:00','Performans Grubu'],['Cimnastik',[5,6],'10:00','11:00','7-11 Yaş Grubu'],['Cimnastik',[5,6],'11:00','12:00','4-5 Yaş Grubu'],
+    ['Cimnastik',[5,6],'12:00','13:00','3 Yaş'],['Cimnastik',[5,6],'13:00','14:00','Ebeveynli Cimnastik (Baby GYM)'],
+    ['Cimnastik',[0,2],'16:00','17:00','3-4 Yaş'],['Cimnastik',[0,2],'17:00','18:00','Özel Grup',1],['Cimnastik',[0,2],'18:00','19:00','6-11 Yaş'],
+    ['Kick Boks',[0,2,4],'19:00','20:00','Minikler'],['Kick Boks',[0,2,4],'20:00','21:00','Yetişkinler']];
+  const afisLoaded=()=>Object.keys(G).some(k=>/^af\d+$/.test(k));
+  async function loadAfis(btn){
+    if(!await ask('Afişlerdeki program yüklensin mi? '+AFIS.length+' saat grubu eklenecek (Cimnastik 16, Kick Boks 2).','Yükle'))return;
+    const now=new Date().toISOString(),pg={};
+    AFIS.forEach(([br,d,s,e,ad,dolu],k)=>{const o={br,d,s,e,ad,ca:now,ua:now};if(dolu)o.dolu=true;pg['af'+String(k+1).padStart(2,'0')]=o});
+    btn.disabled=true;btn.textContent='Yükleniyor…';
+    try{const {error}=await C.sb.rpc('merge_doc',{p_path:PATH,p_patch:{g:pg}});if(error)throw error;Object.assign(G,pg);draw();say('Program yüklendi: '+AFIS.length+' saat grubu')}
+    catch(e){btn.disabled=false;btn.textContent='Programı yükle';say('Yüklenemedi: '+errMsg(e))}
+  }
+
   /* ---------- Deneme verisi ---------- */
-  const DEMO=[
-    ['Ali Yıldız','e','Kick Boks',11],['Zeynep Kaya','k','Cimnastik',6],['Mehmet Demir','e','Kick Boks',13],['Elif Şahin','k','Cimnastik',8],
-    ['Yusuf Çelik','e','Kick Boks',10],['Defne Arslan','k','Cimnastik',4],['Ömer Koç','e','Kick Boks',12],['Azra Kurt','k','Cimnastik',7],
-    ['Emir Aydın','e','Cimnastik',5],['Ecrin Öztürk','k','Cimnastik',9],['Kerem Polat','e','Kick Boks',14],['Asel Erdoğan','k','Cimnastik',3],
-    ['Eymen Güneş','e','Kick Boks',9],['Nehir Aksoy','k','Kick Boks',12],['Alparslan Taş','e','Cimnastik',6],['Duru Yalçın','k','Cimnastik',10],
-    ['Miraç Kılıç','e','Kick Boks',8],['Eylül Bulut','k','Cimnastik',5],['Aras Kaplan','e','Kick Boks',11],['Masal Özdemir','k','Cimnastik',4]];
+  const DEK=['Ali','Mehmet','Yusuf','Ömer','Emir','Kerem','Eymen','Miraç','Aras','Alparslan','Mustafa','Ahmet','Hamza','Göktuğ','Batuhan','Efe','Kuzey','Poyraz','Çınar','Burak','Can','Deniz','Arda','Berk','Mert'];
+  const DKZ=['Zeynep','Elif','Defne','Azra','Ecrin','Asel','Nehir','Duru','Eylül','Masal','Elisa','Lina','Asya','Ada','Hira','Meryem','Ela','Ceren','İpek','Nil','Su','Beren','Yağmur','Damla','Selin'];
+  const DSOY=['Yıldız','Kaya','Demir','Şahin','Çelik','Arslan','Koç','Kurt','Aydın','Öztürk','Polat','Erdoğan','Güneş','Aksoy','Taş','Yalçın','Kılıç','Bulut','Kaplan','Özdemir','Doğan','Aslan','Çetin','Kara','Uçar'];
+  const DEMO=Array.from({length:50},(_,k)=>{const e=k%2===0,ad=(e?DEK:DKZ)[Math.floor(k/2)]+' '+DSOY[(k*7)%25];
+    const kb=k%5===1||k%5===3,yas=kb?(k%3===0?18+(k*3)%17:7+(k%7)):1+(k*5)%12;return [ad,e?'e':'k',kb?'Kick Boks':'Cimnastik',yas]});
   const DBABA=['Ahmet','Mustafa','Murat','Hasan','Emre','Burak','Serkan','Fatih','Osman','Kemal'],DANNE=['Ayşe','Fatma','Emine','Hatice','Zehra','Merve','Esra','Büşra','Seda','Gül'];
   const DOKUL=['Atatürk İlkokulu','Fatih Ortaokulu','Mimar Sinan İlkokulu','Kocatepe Ortaokulu','Yunus Emre İlkokulu'];
   const DSAG=['Yok','Yok','Yok','Astım (hafif)','Yok','Fıstık alerjisi','Yok','Yok','2023 kol kırığı','Yok'];
@@ -2212,12 +2237,19 @@ setTab('bugun');initCloud();
       const ph=()=>'05'+(30+Math.floor(r()*25))+String(1000000+Math.floor(r()*8999999)).slice(0,7);
       const tA=ph(),tB=ph(),kd=new Date(Date.now()-Math.floor(r()*200)*864e5).toISOString().slice(0,10);
       patch['demo'+String(k+1).padStart(2,'0')]={ad,cs,br,demo:true,tc:tcMake(r),kt:kd,dt:(y-yas)+'-'+m+'-'+d,dy:['Bayrampaşa','Gaziosmanpaşa','Eyüpsultan','Esenler'][k%4],
-        okul:yas<6?'Anaokulu':DOKUL[k%5]+' '+Math.min(8,yas-5)+'-'+'ABC'[k%3],baba:ba,anne:an,tA:tel(tA),tB:tel(tB),mail:norm(ba)+'.'+norm(soy).replace(/[^a-z]/g,'')+'@ornek.com',
+        okul:yas<4?'':yas<6?'Anaokulu':yas>17?'':DOKUL[k%5]+' '+Math.min(8,yas-5)+'-'+'ABC'[k%3],baba:ba,anne:an,tA:tel(tA),tB:tel(tB),mail:norm(ba)+'.'+norm(soy).replace(/[^a-z]/g,'')+'@ornek.com',
         adres:['Kocatepe','Altıntepsi','Yıldırım','Muratpaşa'][k%4]+' Mah. Deneme Sk. No:'+(k+3)+' Bayrampaşa / İstanbul',acilAd:ba+' (baba)',acilTel:tel(tB),kan:KAN[k%8],hst:DSAG[k%10],not:'Deneme kaydı',ca:now,ua:now};
+      if(yas>=18){const o=patch['demo'+String(k+1).padStart(2,'0')];o.baba='';o.anne='';o.acilAd='Eşi';delete o.baba;delete o.anne}
     });
+    /* gruplar varsa deneme üyeleri yaşa ve branşa uygun bir saate yerleştir */
+    const gp={},gs=groups();
+    const fits=(g,a)=>{const n=norm(gName(g));let m=/(\d+)\s*-\s*(\d+)/.exec(n);if(m)return a>=+m[1]&&a<=+m[2];if(/baby|ebeveyn/.test(n))return a<=2;if(/minik/.test(n))return a<15;if(/yetişkin/.test(n))return a>=15;if(/performans/.test(n))return a>=7&&a<=14;m=/(\d+)\s*yaş/.exec(n);if(m)return a===+m[1];return false};
+    Object.entries(patch).forEach(([id,o],k)=>{const a=age(o.dt);const ok=gs.filter(g=>g.br===o.br&&!g.dolu&&fits(g,a));if(!ok.length)return;const cnt=z=>(gp[z.id]?gp[z.id].m:(G[z.id].m||[])).length;const g=ok.reduce((a,b)=>cnt(b)<cnt(a)?b:a);
+      const n=gp[g.id]||(gp[g.id]=Object.assign({},G[g.id],{m:(G[g.id].m||[]).slice()}));n.m.push(id)});
+    if(Object.keys(gp).length){const ids=Object.keys(gp);const k0=ids[0];const g0=gp[k0];if(g0.m.length>1){const mid=g0.m[g0.m.length-1];const d=(g0.d||[]).slice();if(d.length){const extra=[0,1,2,3,4,5,6].find(z=>!d.includes(z));if(extra!=null){d[d.length-1]=extra;d.sort((a,b)=>a-b);g0.x=Object.assign({},g0.x||{},{[mid]:d})}}}}
     btn.disabled=true;btn.textContent='Ekleniyor…';
-    try{const {error}=await C.sb.rpc('merge_doc',{p_path:PATH,p_patch:{m:patch}});if(error)throw error;Object.assign(M,patch);draw()}
-    catch(e){btn.disabled=false;btn.textContent='20 deneme üye ekle';say('Eklenemedi: '+errMsg(e))}
+    try{const pp={m:patch};if(Object.keys(gp).length)pp.g=gp;const {error}=await C.sb.rpc('merge_doc',{p_path:PATH,p_patch:pp});if(error)throw error;Object.assign(M,patch);Object.assign(G,gp);draw();say('50 deneme üye eklendi'+(Object.keys(gp).length?', gruplara yerleştirildi':''))}
+    catch(e){btn.disabled=false;btn.textContent='50 deneme üye ekle';say('Eklenemedi: '+errMsg(e))}
   }
   async function delDemo(btn){
     const ids=list().filter(x=>x.demo).map(x=>x.id);if(!ids.length)return;
