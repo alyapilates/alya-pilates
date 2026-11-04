@@ -8,6 +8,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0a1020">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <script>try{var __k=localStorage.getItem("alya_skin");if(__k)document.documentElement.setAttribute("data-skin",__k)}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -354,7 +357,8 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.12';
+const APP_VER='1.13';
+try{if(/[?&]v=/.test(location.search))history.replaceState(null,'',location.pathname+location.hash)}catch(e){}
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
@@ -671,7 +675,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
         vb.classList.add('busy');vt.textContent='· Kontrol ediliyor…';
         try{
           const v=newV||await remoteVer();
-          if(v&&v!==APP_VER){vt.textContent='· Güncelleniyor…';try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}setTimeout(()=>location.reload(),300);return}
+          if(v&&v!==APP_VER){vt.textContent='· Güncelleniyor…';try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)))}catch(e){}setTimeout(()=>{location.replace(location.pathname+'?v='+encodeURIComponent(v)+'&t='+Date.now())},300);return}
           vb.classList.remove('busy','new');vt.textContent='· En güncel sürüm ✓';
         }catch(e){vb.classList.remove('busy');vt.textContent='· Bağlantı yok, tekrar dene'}
         setTimeout(()=>{if(!vb.classList.contains('busy')&&!newV)vt.textContent='· Güncelle'},2500);
