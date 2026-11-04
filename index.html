@@ -357,7 +357,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.20';
+const APP_VER='1.21';
 try{if(/[?&]v=/.test(location.search))history.replaceState(null,'',location.pathname+location.hash)}catch(e){}
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
@@ -2089,6 +2089,42 @@ setTab('bugun');initCloud();
 .yrm1:active{transform:scale(.9)}
 .ytb td.yna{background:none}
 #ab .ams{display:none}@media(max-width:359px){#ab .amw{display:none}#ab .ams{display:inline}}
+
+.ghnt{margin:10px auto 0;max-width:420px;font-size:13.5px;color:var(--mut);font-weight:600;line-height:1.4}
+.absh details.ptd{padding:0}
+.absh details.ptd>summary{list-style:none;display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.absh details.ptd>summary::-webkit-details-marker{display:none}
+.pth{flex:1;min-width:0;display:flex;align-items:center;gap:10px}
+.pth>i{flex:none;width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:13px;font-weight:800;background:var(--acc,#EE5A28);color:var(--onacc,#fff)}
+.pth b{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);font-weight:700}
+.pth small{display:block;font-size:13px;color:var(--ink);font-weight:700;margin-top:2px}
+.ptr{text-align:right}
+.ptr b{display:block;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:24px;line-height:1}
+.ptr small{display:block;font-size:11.5px;color:var(--mut);font-weight:600}
+.ptc{flex:none;font-size:22px;color:var(--mut);transition:transform .2s}
+details.ptd[open] .ptc{transform:rotate(90deg)}
+#pk{padding:0 14px 14px}
+.ptl{display:flex;flex-direction:column}
+.ptw{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.ptn{flex:1;min-width:0}
+.ptn b{display:block;font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptw.gwx .ptn b{color:#c46a00}
+.ptd2{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.ptd2 span{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:7px}
+.ptd2 .p1{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.ptd2 .p0{background:color-mix(in srgb,var(--bad) 15%,transparent);color:var(--bad)}
+.ptd2 .pu{background:var(--bg);color:var(--mut)}
+.pts2{flex:none;width:96px;text-align:right}
+.pts2>b{font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:20px}
+.pts2>b small{font-size:13px;color:var(--mut);font-weight:700}
+.ptb{height:6px;border-radius:999px;background:var(--bg);overflow:hidden;margin:4px 0}
+.ptb i{display:block;height:100%;background:var(--ok);border-radius:999px}
+.pts2>small{display:block;font-size:11px;color:var(--mut);font-weight:600;white-space:nowrap}
+.ptf{display:flex;flex-wrap:wrap;gap:6px 14px;padding-top:10px;border-top:1px solid var(--line);font-size:12.5px;font-weight:700;color:var(--mut)}
+.ptf span{display:inline-flex;align-items:center;gap:6px}
+.ptf i{width:10px;height:10px;border-radius:3px}
+.ptf .p1{background:var(--ok)}.ptf .p0{background:var(--bad)}.ptf .pu{background:var(--line)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ptw.gwx .ptn b{color:#f6b04d}}
 </style>
 <script>
 (function(){
@@ -2514,17 +2550,43 @@ setTab('bugun');initCloud();
     });
   })}
 
+
+  /* ---------- Haftalık puantaj ---------- */
+  let ptOpen=false;
+  function ptData(gid,g,ms){
+    const ws=yWeek[gid]||monday(new Date());let P=0,A=0,E=0;
+    const rows=ms.map(x=>{const ex=exOf(g,x.id),days=(ex||g.d||[]).slice().sort((a,b)=>a-b);
+      const cells=days.map(k=>{const iso=isoD(addD(ws,k));const v=yGet(gid,iso,x.id);return {k,v}});
+      const p=cells.filter(c=>c.v===1).length,a=cells.filter(c=>c.v===0).length;P+=p;A+=a;E+=cells.length;
+      return {x,ex,cells,p,a,n:cells.length}});
+    return {ws,rows,P,A,E};
+  }
+  function ptSum(gid,g,ms){
+    const d=ptData(gid,g,ms),we=addD(d.ws,6),pct=d.E?Math.round(d.P*100/d.E):0;
+    return '<span class="pth"><i>%</i><span><b>Haftalık puantaj</b><small>'+d.ws.getDate()+' '+AYK[d.ws.getMonth()]+' – '+we.getDate()+' '+AYK[we.getMonth()]+'</small></span></span><span class="ptr"><b>'+(d.E?'%'+pct:'–')+'</b><small>'+d.P+' / '+d.E+' ders</small></span><span class="ptc">›</span>';
+  }
+  function ptHtml(gid,g,ms){
+    const d=ptData(gid,g,ms);
+    if(!d.rows.length)return '<div class="em" style="padding:12px 4px">Bu grupta üye yok.</div>';
+    const rows=d.rows.slice().sort((a,b)=>(b.n?b.p/b.n:0)-(a.n?a.p/a.n:0)||String(a.x.ad).localeCompare(String(b.x.ad),'tr'));
+    return '<div class="ptl">'+rows.map(r=>{const pct=r.n?Math.round(r.p*100/r.n):0,un=r.n-r.p-r.a;
+      return '<div class="ptw'+(r.ex?' gwx':'')+'"><div class="ptn"><b>'+(r.ex?'⚠ ':'')+esc(r.x.ad)+'</b><div class="ptd2">'+r.cells.map(c=>'<span class="'+(c.v===1?'p1':c.v===0?'p0':'pu')+'">'+GUN[c.k]+'</span>').join('')+'</div></div>'
+        +'<div class="pts2"><b>'+r.p+'<small>/'+r.n+'</small></b><div class="ptb"><i style="width:'+pct+'%"></i></div><small>'+(r.a?r.a+' gelmedi':'')+(r.a&&un?' · ':'')+(un?un+' işaretsiz':'')+(!r.a&&!un?'Tam katılım':'')+'</small></div></div>'}).join('')+'</div>'
+      +'<div class="ptf"><span><i class="p1"></i>'+d.P+' geldi</span><span><i class="p0"></i>'+d.A+' gelmedi</span><span><i class="pu"></i>'+(d.E-d.P-d.A)+' işaretsiz</span></div>';
+  }
+
   function gDetail(id,refresh){
     const g=G[id];const old=document.getElementById('abgd');
     if(!g){if(old)old.remove();return}
     const keep=old&&old.dataset.id===id?old.scrollTop:0;
     const ms=(g.m||[]).map(i=>M[i]&&Object.assign({id:i},M[i])).filter(Boolean).sort((a,b)=>String(a.ad).localeCompare(String(b.ad),'tr'));
-    const body='<div class="ghero"><div class="ghd">'+(g.d||[]).slice().sort((a,b)=>a-b).map(i=>'<span>'+GUN[i]+'</span>').join('')+'</div><b>'+esc(td(g.s))+(g.e?' – '+esc(td(g.e)):'')+'</b><div class="ghn">'+esc(gName(g))+'</div><small><i class="gbr '+brc(g.br)+'">'+esc(g.br||'')+'</i>'+(ms.length?'<i class="gnm">'+ms.length+' üye</i>':'')+(exCount(g)?'<i class="gxw">⚠ '+exCount(g)+' istisna</i>':'')+(g.dolu?'<i class="gdl">Dolu</i>':'')+'</small></div>'
+    const body='<div class="ghero"><div class="ghd">'+(g.d||[]).slice().sort((a,b)=>a-b).map(i=>'<span>'+GUN[i]+'</span>').join('')+'</div><b>'+esc(td(g.s))+(g.e?' – '+esc(td(g.e)):'')+'</b><div class="ghn">'+esc(gName(g))+'</div><small><i class="gbr '+brc(g.br)+'">'+esc(g.br||'')+'</i>'+(ms.length?'<i class="gnm">'+ms.length+' üye</i>':'')+(exCount(g)?'<i class="gxw">⚠ '+exCount(g)+' istisna</i>':'')+(g.dolu?'<i class="gdl">Dolu</i>':'')+'</small>'+(g.not?'<div class="ghnt">'+esc(g.not)+'</div>':'')+'</div>'
       +'<div class="asc"><h3><i>✓</i>Yoklama</h3><div id="yk">'+yHtml(id,g,ms)+'</div>'+(C&&C.isAdmin?'<div class="yac"><button type="button" class="yad" data-ga="add">+ Üye ekle</button></div>':'')+'</div>'
-      +'<div class="asc"><h3><i>◷</i>Program</h3><div class="abrw"><span>Günler</span><b>'+esc(pairName(g.d))+'</b></div><div class="abrw"><span>Saat</span><b>'+esc(td(g.s))+(g.e?' – '+esc(td(g.e)):'')+'</b></div><div class="abrw"><span>Branş</span><b>'+esc(g.br||'')+'</b></div>'+(exCount(g)?'<div class="abrw gwx"><span>İstisna</span><b>⚠ '+exCount(g)+' üye farklı günlerde geliyor</b></div>':'')+(g.not?'<div class="abrw"><span>Not</span><b>'+esc(g.not)+'</b></div>':'')+'</div>';
+      +'<details class="asc ptd"'+(ptOpen?' open':'')+'><summary id="pts">'+ptSum(id,g,ms)+'</summary><div id="pk">'+ptHtml(id,g,ms)+'</div></details>';
     const o=sheet('abgd','Grup',body,C&&C.isAdmin?'<button class="dl" data-a="del">Sil</button><button class="pr" data-a="ed">Düzenle</button>':'');
     o.dataset.id=id;if(refresh){o.style.animation='none';o.scrollTop=keep}
-    const redraw=()=>{const y=o.querySelector('#yk');if(y)y.innerHTML=yHtml(id,G[id]||g,ms)};
+    const ptd=o.querySelector('.ptd');if(ptd)ptd.addEventListener('toggle',()=>{ptOpen=ptd.open});
+    const redraw=()=>{const gg=G[id]||g;const y=o.querySelector('#yk');if(y)y.innerHTML=yHtml(id,gg,ms);const pk=o.querySelector('#pk');if(pk)pk.innerHTML=ptHtml(id,gg,ms);const ps=o.querySelector('#pts');if(ps)ps.innerHTML=ptSum(id,gg,ms)};
     o.addEventListener('click',async e=>{
       const rm=e.target.closest('[data-rm]');if(rm){const mid=rm.dataset.rm,nm=(M[mid]&&M[mid].ad)||'Üye';
         if(!await ask(nm+' bu gruptan çıkarılsın mı? Üye kaydı silinmez.','Çıkar'))return;
