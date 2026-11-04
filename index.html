@@ -414,6 +414,15 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
 #lgf .lgb:hover{filter:brightness(1.08)}#lgf .lgb:active{transform:translateY(1px)}#lgf .lgb:disabled{opacity:.6;cursor:default}
 #lgf .lga{border:0;background:none;font:inherit;font-size:13px;color:rgba(255,255,255,.55);cursor:pointer;padding:6px;margin:-4px auto -6px;text-decoration:underline;text-underline-offset:3px}#lgf .lga:hover{color:#7fd0f5}
 #lgm{color:#ff9a8a;font-size:13px;min-height:18px;text-align:center}
+#lgf .brl{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+#lgf .brb{display:flex;align-items:center;gap:14px;width:100%;text-align:left;font:inherit;padding:16px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;transition:border-color .15s,background .15s,transform .1s}
+#lgf .brb:hover{border-color:rgba(255,255,255,.4)}#lgf .brb:active{transform:scale(.985)}
+#lgf .brb.p{border-color:#FF7A3C;background:linear-gradient(100deg,rgba(255,138,30,.32),rgba(238,90,40,.22) 55%,rgba(232,54,106,.18))}
+#lgf .brb .bi{flex:none;width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:24px;background:linear-gradient(135deg,#2BA3DC,#EE5A28)}
+#lgf .brb b{display:block;white-space:nowrap;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:24px;letter-spacing:.08em;text-transform:uppercase;line-height:1}
+#lgf .brb small{display:block;font-size:12.5px;color:rgba(255,255,255,.6);margin-top:4px}
+#lgf .brb .ar{margin-left:auto;font-size:22px;color:rgba(255,255,255,.5)}
+#lgf .brn{text-align:center;font-size:14px;color:rgba(255,255,255,.75);background:rgba(43,163,220,.14);border:1px solid rgba(43,163,220,.35);border-radius:14px;padding:12px}
 .ovl{position:fixed;inset:0;z-index:9998;background:rgba(10,16,32,.6);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}
 .ovl.pg{background:radial-gradient(1200px 600px at 80% -10%,rgba(238,90,40,.18) 0,transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(43,163,220,.18) 0,transparent 60%),var(--bg)}
 .ovl.dlg{z-index:10003;align-items:center}
@@ -634,7 +643,24 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
     return out;
   }
   const err=e=>{const x=new Error((e&&e.message)||'hata');x.code=(e&&e.code)||'error';return x};
+  /* Branş seçimi: uygulama her açıldığında giriş ekranından önce gelir */
+  function branchUI(){
+    return new Promise(resolve=>{
+      const o=document.createElement('div');o.id='lg';
+      o.innerHTML='<div id="lgf"><div class="lgr"><img class="lgl" alt="Alya Studio" src="'+logoSrc()+'"></div><div class="lgt">ALYA</div><div class="lgt2"><i></i>STUDIO<i></i></div><div class="lgs">Branş seçin</div>'
+        +'<div class="brl"><button type="button" class="brb p" data-b="pilates"><span class="bi">P</span><span><b>Pilates</b><small>Ders takip paneli</small></span><span class="ar">›</span></button>'
+        +'<button type="button" class="brb" data-b="ana"><span class="bi">A</span><span><b>Ana Branşlar</b><small>Diğer branşlar</small></span><span class="ar">›</span></button></div>'
+        +'<div class="brn" id="brn" hidden>Ana Branşlar bölümü hazırlanıyor, çok yakında burada.</div></div>';
+      document.body.appendChild(o);
+      o.addEventListener('click',e=>{
+        const t=e.target.closest('.brb');if(!t)return;
+        if(t.dataset.b==='pilates'){o.remove();resolve('pilates')}
+        else o.querySelector('#brn').hidden=false;
+      });
+    });
+  }
   window.sbConnect=async function(){
+    await branchUI();
     if(!window.supabase||!window.supabase.createClient)return null;
     const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
     window._sb=sb;
