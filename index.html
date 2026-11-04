@@ -357,7 +357,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.15';
+const APP_VER='1.17';
 try{if(/[?&]v=/.test(location.search))history.replaceState(null,'',location.pathname+location.hash)}catch(e){}
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
@@ -1890,9 +1890,9 @@ setTab('bugun');initCloud();
 /* gün çifti blokları (afiş düzeni) */
 #ab .gls{display:flex;flex-direction:column;gap:16px}
 #ab .gpk{background:var(--card);border:2px solid var(--acc,#EE5A28);border-radius:24px;overflow:hidden;box-shadow:0 8px 24px color-mix(in srgb,var(--acc,#EE5A28) 12%,transparent)}
-#ab .gpk.now{border-color:var(--acc,#EE5A28);box-shadow:0 10px 28px color-mix(in srgb,var(--acc,#EE5A28) 22%,transparent)}
+#ab .gpk.now{border-color:color-mix(in srgb,var(--acc) 55%,var(--ink));box-shadow:0 10px 28px color-mix(in srgb,var(--acc,#EE5A28) 22%,transparent)}
 #ab .gpk header{display:flex;align-items:center;gap:12px;padding:10px 12px 10px 10px;background:var(--acc,#EE5A28);color:var(--onacc,#fff)}
-#ab .gcal{flex:none;width:46px;height:46px;border-radius:50%;background:var(--onacc,#fff);color:var(--acc,#EE5A28);display:flex;align-items:center;justify-content:center}
+#ab .gcal{flex:none;width:46px;height:46px;border-radius:50%;background:var(--onacc,#fff);color:color-mix(in srgb,var(--acc) 55%,var(--ink));display:flex;align-items:center;justify-content:center}
 #ab .gcal svg{width:24px;height:24px}
 #ab .gpk header>div{flex:1;min-width:0}
 #ab .gpk header b{display:block;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:clamp(20px,6vw,26px);line-height:1;letter-spacing:.02em}
@@ -1933,7 +1933,7 @@ setTab('bugun');initCloud();
 /* grup formu */
 #abgf .gpre{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
 #abgf .gpre button,#abgf .gdur button{font:inherit;font-size:13.5px;font-weight:700;padding:10px 8px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
-#abgf .gpre button.on{border-color:var(--acc,#EE5A28);background:color-mix(in srgb,var(--acc,#EE5A28) 16%,transparent)}
+#abgf .gpre button.on{border-color:color-mix(in srgb,var(--acc) 55%,var(--ink));background:color-mix(in srgb,var(--acc,#EE5A28) 16%,transparent)}
 #abgf .gdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
 #abgf .gdays button{font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:16px;letter-spacing:.02em;padding:12px 0;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--mut);cursor:pointer}
 #abgf .gdays button.on{background:var(--acc,#EE5A28);border-color:transparent;color:var(--onacc,#fff);box-shadow:0 6px 14px color-mix(in srgb,var(--acc,#EE5A28) 30%,transparent)}
@@ -1955,7 +1955,7 @@ setTab('bugun');initCloud();
 #abgf .agt span{flex:none;width:48px;height:28px;border-radius:999px;background:var(--line);position:relative;transition:background .15s}
 #abgf .agt span:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25);transition:left .15s}
 #abgf .agt input:checked+span{background:var(--bad)}#abgf .agt input:checked+span:after{left:23px}
-#abgf h3 em{font-style:normal;color:var(--acc,#EE5A28);letter-spacing:.04em;text-transform:none}
+#abgf h3 em{font-style:normal;color:color-mix(in srgb,var(--acc) 55%,var(--ink));letter-spacing:.04em;text-transform:none}
 #abgf .gq{margin-bottom:8px}
 #abgf .gmk{display:flex;flex-direction:column;max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:14px}
 #abgf .gmi{flex-direction:row;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;color:var(--ink)}
@@ -2004,7 +2004,7 @@ setTab('bugun');initCloud();
 .ynv>div{flex:1;text-align:center}
 .ynv b{display:block;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:19px;letter-spacing:.03em}
 .ynv small{display:block;font-size:12px;color:var(--mut);font-weight:600;margin-top:1px}
-.ynv small a{color:var(--acc,#EE5A28);text-decoration:underline;cursor:pointer}
+.ynv small a{color:color-mix(in srgb,var(--acc) 55%,var(--ink));text-decoration:underline;cursor:pointer}
 .ynv button{flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:22px;line-height:1;cursor:pointer}
 .ytw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
 .ytb{width:100%;border-collapse:separate;border-spacing:0}
@@ -2012,7 +2012,7 @@ setTab('bugun');initCloud();
 .ytb th{font-weight:700;vertical-align:bottom;padding-bottom:8px}
 .ytb th b{display:block;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:17px;letter-spacing:.04em;text-transform:uppercase}
 .ytb th small{display:block;font-size:11px;color:var(--mut);font-weight:600;white-space:nowrap}
-.ytb th.ytd b{color:var(--acc,#EE5A28)}.ytb th.ytd small{color:var(--acc,#EE5A28)}
+.ytb th.ytd b{color:color-mix(in srgb,var(--acc) 55%,var(--ink))}.ytb th.ytd small{color:color-mix(in srgb,var(--acc) 55%,var(--ink))}
 .ytb th.yxc b{color:#c46a00}
 .ytb .yn{text-align:left;width:100%;min-width:120px;padding-left:0;cursor:pointer}
 .ytb th.yn{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.1em;cursor:default}
@@ -2048,7 +2048,7 @@ setTab('bugun');initCloud();
 .pkf button{flex:1;font:inherit;font-weight:700;font-size:14px;padding:9px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--mut);cursor:pointer}
 .pkf button.on{background:var(--acc,#EE5A28);border-color:transparent;color:var(--onacc,#fff)}
 .pkh{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-size:13px;font-weight:700;color:var(--mut)}
-.pkh button{font:inherit;font-size:13px;font-weight:700;border:0;background:none;color:var(--acc,#EE5A28);cursor:pointer;padding:6px 0}
+.pkh button{font:inherit;font-size:13px;font-weight:700;border:0;background:none;color:color-mix(in srgb,var(--acc) 55%,var(--ink));cursor:pointer;padding:6px 0}
 .pkl{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
 .pki{display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}
 .pki:last-child{border-bottom:0}
@@ -2070,7 +2070,7 @@ setTab('bugun');initCloud();
 .abak.mdk p{margin:0 0 8px;font-size:13px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.1em}
 .mdd{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px!important;margin-bottom:12px}
 .abak .mdd button{flex:none;font-size:15px;letter-spacing:.02em;padding:12px 0;border-radius:12px;background:var(--bg);color:var(--mut);border:1px solid var(--line)}
-.abak .mdd button.gd{border-color:var(--acc,#EE5A28);border-style:dashed}
+.abak .mdd button.gd{border-color:color-mix(in srgb,var(--acc) 55%,var(--ink));border-style:dashed}
 .abak .mdd button.on{background:var(--acc,#EE5A28);border:1px solid transparent;color:var(--onacc,#fff)}
 .abak>.mds{display:block}
 .mds{font-size:14px;font-weight:700;color:var(--ok);margin-bottom:12px;line-height:1.35}
@@ -2078,7 +2078,7 @@ setTab('bugun');initCloud();
 .abak .mdr{width:100%;margin-bottom:10px;font-family:inherit!important;text-transform:none!important;letter-spacing:0!important;font-size:14px!important;font-weight:700!important;padding:10px!important;background:var(--bg);color:var(--ink)}
 .abak .ok{background:var(--acc,#EE5A28);border-color:transparent;color:var(--onacc,#fff)}
 .abak .ok:disabled{opacity:.5}
-.abak .mdo{width:100%;margin-top:10px;border:0!important;background:none;color:var(--acc,#EE5A28);font-family:inherit!important;text-transform:none!important;letter-spacing:0!important;font-size:14px!important;font-weight:700!important;padding:8px!important}
+.abak .mdo{width:100%;margin-top:10px;border:0!important;background:none;color:color-mix(in srgb,var(--acc) 55%,var(--ink));font-family:inherit!important;text-transform:none!important;letter-spacing:0!important;font-size:14px!important;font-weight:700!important;padding:8px!important}
 
 .absh .ahd h2::before{background:var(--acc)}
 #ab .ttl b::before{content:"";display:inline-block;width:8px;height:26px;background:var(--acc);margin-right:10px;transform:skewX(-18deg);vertical-align:-3px;border-radius:1px}
@@ -2296,14 +2296,28 @@ setTab('bugun');initCloud();
         adres:['Kocatepe','Altıntepsi','Yıldırım','Muratpaşa'][k%4]+' Mah. Deneme Sk. No:'+(k+3)+' Bayrampaşa / İstanbul',acilAd:ba+' (baba)',acilTel:tel(tB),kan:KAN[k%8],hst:DSAG[k%10],not:'Deneme kaydı',ca:now,ua:now};
       if(yas>=18){const o=patch['demo'+String(k+1).padStart(2,'0')];o.baba='';o.anne='';o.acilAd='Eşi';delete o.baba;delete o.anne}
     });
-    /* gruplar varsa deneme üyeleri yaşa ve branşa uygun bir saate yerleştir */
-    const gp={},gs=groups();
-    const fits=(g,a)=>{const n=norm(gName(g));let m=/(\d+)\s*-\s*(\d+)/.exec(n);if(m)return a>=+m[1]&&a<=+m[2];if(/baby|ebeveyn/.test(n))return a<=2;if(/minik/.test(n))return a<15;if(/yetişkin/.test(n))return a>=15;if(/performans/.test(n))return a>=7&&a<=14;m=/(\d+)\s*yaş/.exec(n);if(m)return a===+m[1];return false};
-    Object.entries(patch).forEach(([id,o],k)=>{const a=age(o.dt);const ok=gs.filter(g=>g.br===o.br&&!g.dolu&&fits(g,a));if(!ok.length)return;const cnt=z=>(gp[z.id]?gp[z.id].m:(G[z.id].m||[])).length;const g=ok.reduce((a,b)=>cnt(b)<cnt(a)?b:a);
-      const n=gp[g.id]||(gp[g.id]=Object.assign({},G[g.id],{m:(G[g.id].m||[]).slice()}));n.m.push(id)});
-    if(Object.keys(gp).length){const ids=Object.keys(gp);const k0=ids[0];const g0=gp[k0];if(g0.m.length>1){const mid=g0.m[g0.m.length-1];const d=(g0.d||[]).slice();if(d.length){const extra=[0,1,2,3,4,5,6].find(z=>!d.includes(z));if(extra!=null){d[d.length-1]=extra;d.sort((a,b)=>a-b);g0.x=Object.assign({},g0.x||{},{[mid]:d})}}}}
+    /* gruplar varsa: deneme üyeleri yaşa/branşa göre yerleştir, boş saat bırakma, istisna ve yoklama üret */
+    const gp={},gs=groups(),py={};
+    const rng=g=>{const n=norm(gName(g));let m=/(\d+)\s*-\s*(\d+)/.exec(n);if(m)return [+m[1],+m[2]];if(/baby|ebeveyn/.test(n))return [0,2];if(/minik/.test(n))return [5,14];if(/yetişkin/.test(n))return [15,99];if(/performans/.test(n))return [7,14];m=/(\d+)\s*yaş/.exec(n);if(m)return [+m[1],+m[1]];return [3,11]};
+    const dist=(g,a)=>{const [lo,hi]=rng(g);return a<lo?lo-a:a>hi?a-hi:0};
+    const ng=g=>gp[g.id]||(gp[g.id]=Object.assign({},G[g.id],{m:(G[g.id].m||[]).slice()}));
+    const cnt=g=>(gp[g.id]?gp[g.id].m:(G[g.id].m||[])).length;
+    const dm=Object.entries(patch).map(([id,o])=>({id,o,a:age(o.dt)}));
+    if(gs.length){
+      /* 1) her üye en uygun ve en az dolu saate */
+      dm.forEach(x=>{const c=gs.filter(g=>g.br===x.o.br);if(!c.length)return;const best=Math.min(...c.map(g=>dist(g,x.a)));const ok=c.filter(g=>dist(g,x.a)===best);const g=ok.reduce((p,q)=>cnt(q)<cnt(p)?q:p);ng(g).m.push(x.id)});
+      /* 2) boş kalan saatleri yaşa en yakın üyelerle doldur (dolu gruba 8, diğerlerine en az 5) */
+      gs.forEach(g=>{const want=g.dolu?8:5;if(cnt(g)>=want)return;const c=dm.filter(x=>x.o.br===g.br&&!ng(g).m.includes(x.id)).sort((p,q)=>dist(g,p.a)-dist(g,q.a));for(const x of c){if(cnt(g)>=want)break;ng(g).m.push(x.id)}});
+      /* 3) istisna: her 3 saatten birinde bir öğrenci farklı günde geliyor */
+      Object.values(gp).forEach((n,k)=>{if(k%3!==0)return;const mid=n.m.filter(i=>patch[i])[1]||n.m.filter(i=>patch[i])[0];if(!mid)return;const d=(n.d||[]).slice().sort((a,b)=>a-b);if(!d.length||d.length===7)return;
+        const last=d[d.length-1],alt=[last-1,last+1,last-2,last+2,(last+3)%7].find(z=>z>=0&&z<7&&!d.includes(z));if(alt==null)return;n.x=Object.assign({},n.x||{},{[mid]:d.slice(0,-1).concat(alt).sort((a,b)=>a-b)})});
+      /* 4) yoklama: son 3 hafta + bu haftanın geçmiş günleri */
+      const tdy=isoD(new Date()),ws0=addD(monday(new Date()),-21);
+      Object.entries(gp).forEach(([gid,n])=>{for(let w=0;w<4;w++)for(let k=0;k<7;k++){const dt=addD(ws0,w*7+k),iso=isoD(dt);if(iso>tdy)continue;
+        const key=yKey(gid,iso);n.m.filter(i=>patch[i]).forEach(mid=>{const days=(n.x&&n.x[mid])||n.d||[];if(!days.includes(k))return;const v=r()<0.84?1:0;(py[key]=py[key]||Object.assign({},Y[key]||{}))[mid]=v})}});
+    }
     btn.disabled=true;btn.textContent='Ekleniyor…';
-    try{const pp={m:patch};if(Object.keys(gp).length)pp.g=gp;const {error}=await C.sb.rpc('merge_doc',{p_path:PATH,p_patch:pp});if(error)throw error;Object.assign(M,patch);Object.assign(G,gp);draw();say('50 deneme üye eklendi'+(Object.keys(gp).length?', gruplara yerleştirildi':''))}
+    try{const pp={m:patch};if(Object.keys(gp).length)pp.g=gp;if(Object.keys(py).length)pp.y=py;const {error}=await C.sb.rpc('merge_doc',{p_path:PATH,p_patch:pp});if(error)throw error;Object.assign(M,patch);Object.assign(G,gp);Object.assign(Y,py);draw();say('50 deneme üye eklendi'+(Object.keys(gp).length?', dersler ve yoklamalar dolduruldu':''))}
     catch(e){btn.disabled=false;btn.textContent='50 deneme üye ekle';say('Eklenemedi: '+errMsg(e))}
   }
   async function delDemo(btn){
@@ -2311,8 +2325,9 @@ setTab('bugun');initCloud();
     if(!await ask(ids.length+' deneme üye silinsin mi? Gerçek kayıtlara dokunulmaz.'))return;
     const pm={};ids.forEach(i=>pm[i]=DEL);
     const pg={};groups().forEach(g=>{const m=(g.m||[]).filter(i=>!ids.includes(i));if(m.length!==(g.m||[]).length){const n=Object.assign({},g);delete n.id;if(m.length)n.m=m;else delete n.m;if(n.x){ids.forEach(i=>delete n.x[i]);if(!Object.keys(n.x).length)delete n.x}pg[g.id]=n}});
+    const py={};Object.entries(Y).forEach(([k,v])=>{if(!Object.keys(v).some(i=>ids.includes(i)))return;const n={};Object.entries(v).forEach(([i,z])=>{if(!ids.includes(i))n[i]=z});py[k]=Object.keys(n).length?n:DEL});
     btn.disabled=true;btn.textContent='Siliniyor…';
-    try{const p={m:pm};if(Object.keys(pg).length)p.g=pg;const {error}=await C.sb.rpc('merge_doc',{p_path:PATH,p_patch:p});if(error)throw error;ids.forEach(i=>delete M[i]);Object.keys(pg).forEach(k=>G[k]=pg[k]);draw()}
+    try{const p={m:pm};if(Object.keys(pg).length)p.g=pg;if(Object.keys(py).length)p.y=py;const {error}=await C.sb.rpc('merge_doc',{p_path:PATH,p_patch:p});if(error)throw error;ids.forEach(i=>delete M[i]);Object.keys(pg).forEach(k=>G[k]=pg[k]);Object.entries(py).forEach(([k,v])=>{if(v===DEL)delete Y[k];else Y[k]=v});draw();say('Deneme üyeler silindi')}
     catch(e){btn.disabled=false;btn.textContent=ids.length+' deneme üyeyi sil';say('Silinemedi: '+errMsg(e))}
   }
 
