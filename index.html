@@ -354,7 +354,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.6';
+const APP_VER='1.7';
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
@@ -1965,6 +1965,33 @@ setTab('bugun');initCloud();
 #abgf .gmi small{display:block;font-size:12px;color:var(--mut);font-weight:600}
 #abgf .msg{color:var(--bad);font-size:13.5px;font-weight:600;text-align:center;min-height:18px;margin-top:4px}
 .absh .em{text-align:center;color:var(--mut);font-size:14px;line-height:1.5}
+
+.abbg.dm{background:rgba(106,117,133,.15);color:var(--mut)}
+#ab .dmo{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:18px;padding:10px 12px;border:1px dashed var(--line);border-radius:14px;font-size:12.5px;color:var(--mut);font-weight:600}
+#ab .dmo:empty{display:none}
+#ab .dmo button{font:inherit;font-size:13px;font-weight:700;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+#ab .dmo button.dl{color:var(--bad);border-color:rgba(192,57,43,.3)}
+.gxw{font-style:normal;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;background:rgba(201,131,26,.16);color:#b36b00}
+.gwx b{color:#c46a00}
+.gwx small em,.gmr.gwx small em{font-style:normal;font-weight:700;color:#c46a00}
+.gmr.gwx{background:linear-gradient(90deg,rgba(245,166,35,.14),transparent);border-radius:12px;padding-left:6px;margin:0 -6px}
+.abrw.gwx span{color:#c46a00}.abrw.gwx span small{display:block;font-size:11.5px;color:var(--mut);font-weight:600}
+#abgf .gmw{display:flex;align-items:center;border-bottom:1px solid var(--line)}
+#abgf .gmw:last-child{border-bottom:0}
+#abgf .gmw.on{background:rgba(238,90,40,.08)}
+#abgf .gmw.gwx{background:rgba(245,166,35,.16)}
+#abgf .gmw .gmi{flex:1;min-width:0;border-bottom:0;background:none}
+#abgf .gmi b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#abgf .gxb{flex:none;margin-right:10px;font:inherit;font-size:12.5px;font-weight:700;padding:7px 10px;border-radius:10px;border:1px solid rgba(201,131,26,.45);background:var(--card);color:#b36b00;cursor:pointer}
+#abgf .gxd{padding:10px 12px 12px;background:rgba(245,166,35,.1);border-bottom:1px solid var(--line)}
+#abgf .gxd>span{display:block;font-size:12.5px;font-weight:700;color:#b36b00;margin-bottom:8px}
+#abgf .gxdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+#abgf .gxdays button{font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:15px;padding:9px 0;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--mut);cursor:pointer}
+#abgf .gxdays button.on{background:#F5A623;border-color:#F5A623;color:#16202e}
+#abgf .gxf{display:flex;gap:6px;margin-top:8px}
+#abgf .gxf button{flex:1;font:inherit;font-size:13px;font-weight:700;padding:9px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+#abgf .gxf button.ok{background:#16202e;color:#fff;border-color:#16202e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .gwx b,:root:not([data-theme="light"]) .gwx small em,:root:not([data-theme="light"]) .abrw.gwx span{color:#f6b04d}:root:not([data-theme="light"]) #abgf .gxf button.ok{background:#f6b04d;color:#16202e;border-color:#f6b04d}}
 </style>
 <script>
 (function(){
@@ -2001,7 +2028,9 @@ setTab('bugun');initCloud();
   const groups=()=>vals(G);
   const branches=()=>{const s=new Set(BRANS);list().forEach(x=>x.br&&s.add(x.br));groups().forEach(x=>x.br&&s.add(x.br));return [...s]};
   const pairKey=d=>(d||[]).slice().sort((a,b)=>a-b).join('-');
-  const pairName=d=>(d||[]).slice().sort((a,b)=>a-b).map(i=>GUNF[i]).join(' – ');
+  const pairName=d=>{const s=(d||[]).slice().sort((a,b)=>a-b);return s.length===7?'Her gün':s.map(i=>GUNF[i]).join(' – ')};
+  const exOf=(g,mid)=>{const x=g.x&&g.x[mid];return Array.isArray(x)&&x.length&&pairKey(x)!==pairKey(g.d)?x:null};
+  const exCount=g=>(g.m||[]).filter(i=>M[i]&&exOf(g,i)).length;
   const gName=g=>g.ad||(g.br||'Grup');
   const memGroups=id=>groups().filter(g=>(g.m||[]).includes(id));
 
@@ -2036,13 +2065,20 @@ setTab('bugun');initCloud();
     const br=branches();
     root.querySelector('.pu .st').innerHTML='<div><b>'+all.length+'</b><span>Sporcu</span></div><div><b>'+all.filter(x=>String(x.kt||'').slice(0,7)===y).length+'</b><span>Bu ay kayıt</span></div><div><b>'+br.length+'</b><span>Branş</span></div>';
     root.querySelector('.pu .achp').innerHTML=['',...br].map(b=>'<button type="button" data-f="'+esc(b)+'" class="'+(flt===b?'on':'')+'">'+(b?esc(b):'Tümü')+'</button>').join('');
+    drawDemo();
     root.querySelector('.pu .ls').innerHTML=ls.length?ls.map(x=>{
       const a=age(x.dt),p=x.tB||x.tA||x.acilTel;
       const sub=[x.br,a!=null?a+' yaş':'',x.okul].filter(Boolean).map(esc).join(' · ')||'Bilgi eksik';
-      return '<div class="it" data-id="'+esc(x.id)+'"><div class="abav'+(x.cs==='k'?' kz':'')+'">'+esc(ini(x.ad))+'</div><div class="tx"><b>'+esc(x.ad||'İsimsiz')+'</b><small>'+(x.hst&&!/^\s*yok\s*$/i.test(x.hst)?'<span class="abbg r">Sağlık notu</span>':'')+sub+'</small></div>'+(p?'<a class="cl" href="tel:'+esc(dig(p))+'" aria-label="Ara" data-stop="1">✆</a>':'')+'</div>'}).join('')
+      return '<div class="it" data-id="'+esc(x.id)+'"><div class="abav'+(x.cs==='k'?' kz':'')+'">'+esc(ini(x.ad))+'</div><div class="tx"><b>'+esc(x.ad||'İsimsiz')+'</b><small>'+(x.hst&&!/^\s*yok\s*$/i.test(x.hst)?'<span class="abbg r">Sağlık notu</span>':'')+(x.demo?'<span class="abbg dm">Deneme</span>':'')+sub+'</small></div>'+(p?'<a class="cl" href="tel:'+esc(dig(p))+'" aria-label="Ara" data-stop="1">✆</a>':'')+'</div>'}).join('')
       :(all.length?'<div class="em"><b>Eşleşen sporcu yok</b>Aramayı ya da branş filtresini değiştir.</div>':'<div class="em"><b>Henüz sporcu kaydı yok</b>'+(C&&C.isAdmin?'Alttaki “Yeni sporcu” ile ilk kaydı oluştur.':'Kayıtlar yönetici tarafından eklenir.')+'</div>');
   }
 
+  function drawDemo(){
+    const d=root.querySelector('.dmo');if(!d)return;
+    if(!(C&&C.isAdmin&&C.sb)){d.innerHTML='';return}
+    const n=list().filter(x=>x.demo).length;
+    d.innerHTML='<span>Deneme verisi</span>'+(n?'<button type="button" class="dl" data-dm="del">'+n+' deneme üyeyi sil</button>':'<button type="button" data-dm="add">20 deneme üye ekle</button>');
+  }
   function drawG(){
     const all=groups(),di=dayIdx();
     const ls=all.filter(g=>!gflt||g.br===gflt);
@@ -2050,15 +2086,15 @@ setTab('bugun');initCloud();
     root.querySelector('.pgr .st').innerHTML='<div><b>'+all.length+'</b><span>Grup</span></div><div><b>'+all.filter(g=>(g.d||[]).includes(di)).length+'</b><span>Bugün ders</span></div><div><b>'+Math.max(0,ids.size-inG.size)+'</b><span>Grupsuz üye</span></div>';
     root.querySelector('.pgr .achp').innerHTML=['',...branches()].map(b=>'<button type="button" data-gf="'+esc(b)+'" class="'+(gflt===b?'on':'')+'">'+(b?esc(b):'Tümü')+'</button>').join('');
     const by={};ls.forEach(g=>{const k=pairKey(g.d);(by[k]=by[k]||[]).push(g)});
-    const keys=Object.keys(by).sort((a,b)=>{const x=a.split('-').map(Number),y=b.split('-').map(Number);return x[0]-y[0]||x[1]-y[1]});
+    const keys=Object.keys(by).sort((a,b)=>{const x=a.split('-').map(Number),y=b.split('-').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){if(x[i]==null)return -1;if(y[i]==null)return 1;if(x[i]!==y[i])return x[i]-y[i]}return 0});
     const box=root.querySelector('.pgr .gls');
     if(!keys.length){box.innerHTML=all.length?'<div class="em"><b>Bu branşta grup yok</b>Filtreyi değiştir.</div>':'<div class="em"><b>Henüz grup yok</b>'+(C&&C.isAdmin?'Alttaki “Yeni grup” ile gün çiftini ve saatini belirleyerek ilk grubu oluştur.':'Gruplar yönetici tarafından eklenir.')+'</div>';return}
     box.innerHTML=keys.map(k=>{
       const d=k.split('-').map(Number),now=d.includes(di);
       const rows=by[k].sort((a,b)=>(hm(a.s)||0)-(hm(b.s)||0)).map((g,i)=>{
         const c=RENK[i%RENK.length],n=(g.m||[]).filter(x=>M[x]).length;
-        return '<div class="grw" data-g="'+esc(g.id)+'">'+clock(c)+'<div class="gtx"><b style="color:'+c+'">'+esc(td(g.s))+(g.e?' – '+esc(td(g.e)):'')+'</b><span>'+esc(gName(g))+'</span><small><i class="gbr '+brc(g.br)+'">'+esc(g.br||'')+'</i>'+(n?'<i class="gnm">'+n+' üye</i>':'')+(g.dolu?'<i class="gdl">Dolu</i>':'')+'</small></div><span class="gar">›</span></div>'}).join('');
-      return '<section class="gpk'+(now?' now':'')+'"><header><span class="gcal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><g fill="currentColor"><rect x="6.5" y="13" width="3" height="2.5" rx=".6"/><rect x="10.5" y="13" width="3" height="2.5" rx=".6"/><rect x="14.5" y="13" width="3" height="2.5" rx=".6"/><rect x="6.5" y="16.5" width="3" height="2.5" rx=".6"/><rect x="10.5" y="16.5" width="3" height="2.5" rx=".6"/></g></svg></span><div><b>'+esc(up(d.map(i=>GUNF[i]).join(' - ')))+'</b><small>Günleri'+(now?' · <em>Bugün ders var</em>':'')+'</small></div>'+(C&&C.isAdmin?'<button type="button" class="gadd" data-gp="'+k+'" aria-label="Bu günlere grup ekle">+</button>':'')+'</header><div class="gbd">'+rows+'</div></section>'}).join('');
+        return '<div class="grw" data-g="'+esc(g.id)+'">'+clock(c)+'<div class="gtx"><b style="color:'+c+'">'+esc(td(g.s))+(g.e?' – '+esc(td(g.e)):'')+'</b><span>'+esc(gName(g))+'</span><small><i class="gbr '+brc(g.br)+'">'+esc(g.br||'')+'</i>'+(n?'<i class="gnm">'+n+' üye</i>':'')+(exCount(g)?'<i class="gxw">⚠ '+exCount(g)+' istisna</i>':'')+(g.dolu?'<i class="gdl">Dolu</i>':'')+'</small></div><span class="gar">›</span></div>'}).join('');
+      return '<section class="gpk'+(now?' now':'')+'"><header><span class="gcal"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><g fill="currentColor"><rect x="6.5" y="13" width="3" height="2.5" rx=".6"/><rect x="10.5" y="13" width="3" height="2.5" rx=".6"/><rect x="14.5" y="13" width="3" height="2.5" rx=".6"/><rect x="6.5" y="16.5" width="3" height="2.5" rx=".6"/><rect x="10.5" y="16.5" width="3" height="2.5" rx=".6"/></g></svg></span><div><b>'+esc(up(d.length===7?'Her gün':d.map(i=>GUNF[i]).join(' - ')))+'</b><small>'+(d.length===7?'Haftanın her günü':'Günleri')+(now?' · <em>Bugün ders var</em>':'')+'</small></div>'+(C&&C.isAdmin?'<button type="button" class="gadd" data-gp="'+k+'" aria-label="Bu günlere grup ekle">+</button>':'')+'</header><div class="gbd">'+rows+'</div></section>'}).join('');
   }
 
   function open(ctx){
@@ -2066,7 +2102,7 @@ setTab('bugun');initCloud();
     root=document.createElement('div');root.id='ab';
     root.innerHTML='<div class="w"><div class="atop"><div class="ttl"><b>Alya Akademi</b><span>Sporcu takibi</span></div><button class="ib" data-a="br" title="Branş değiştir">⇄ Branş</button>'+(C&&C.profile?'<button class="ib aav" data-a="pr" aria-label="Profil">☰</button>':'')+'</div>'
       +'<div class="atab" role="tablist"><button type="button" data-t="u" class="on">Üyeler</button><button type="button" data-t="g">Gruplar</button></div>'
-      +'<div class="pu"><div class="st"></div><input class="q" type="search" placeholder="İsim, TC veya telefon ara" autocomplete="off"><div class="achp"></div><div class="er"></div><div class="ls"><div class="em">Yükleniyor…</div></div></div>'
+      +'<div class="pu"><div class="st"></div><input class="q" type="search" placeholder="İsim, TC veya telefon ara" autocomplete="off"><div class="achp"></div><div class="er"></div><div class="ls"><div class="em">Yükleniyor…</div></div><div class="dmo"></div></div>'
       +'<div class="pgr" hidden><div class="st"></div><div class="achp"></div><div class="er"></div><div class="gls"></div></div></div>'
       +(C&&C.isAdmin?'<button class="fab" data-a="new">+ Yeni sporcu</button>':'');
     document.body.appendChild(root);
@@ -2077,6 +2113,7 @@ setTab('bugun');initCloud();
       const t=e.target.closest('[data-t]');if(t){tab=t.dataset.t;try{sessionStorage.setItem('ab_tab',tab)}catch(x){}draw();root.scrollTo(0,0);return}
       const f=e.target.closest('[data-f]');if(f){flt=f.dataset.f;draw();return}
       const gf=e.target.closest('[data-gf]');if(gf){gflt=gf.dataset.gf;draw();return}
+      const dm=e.target.closest('[data-dm]');if(dm){dm.dataset.dm==='add'?addDemo(dm):delDemo(dm);return}
       const gp=e.target.closest('[data-gp]');if(gp){gForm(null,gp.dataset.gp.split('-').map(Number));return}
       const a=e.target.closest('[data-a]');
       if(a){const k=a.dataset.a;if(k==='new')(tab==='u'?form():gForm());else if(k==='br')location.reload();else if(k==='pr')C.profile();return}
@@ -2100,6 +2137,43 @@ setTab('bugun');initCloud();
   }
   const segClick=g=>g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const on=!b.classList.contains('on');g.querySelectorAll('button').forEach(z=>z.classList.remove('on'));if(on)b.classList.add('on')});
 
+
+  /* ---------- Deneme verisi ---------- */
+  const DEMO=[
+    ['Ali Yıldız','e','Kick Boks',11],['Zeynep Kaya','k','Cimnastik',6],['Mehmet Demir','e','Kick Boks',13],['Elif Şahin','k','Cimnastik',8],
+    ['Yusuf Çelik','e','Kick Boks',10],['Defne Arslan','k','Cimnastik',4],['Ömer Koç','e','Kick Boks',12],['Azra Kurt','k','Cimnastik',7],
+    ['Emir Aydın','e','Cimnastik',5],['Ecrin Öztürk','k','Cimnastik',9],['Kerem Polat','e','Kick Boks',14],['Asel Erdoğan','k','Cimnastik',3],
+    ['Eymen Güneş','e','Kick Boks',9],['Nehir Aksoy','k','Kick Boks',12],['Alparslan Taş','e','Cimnastik',6],['Duru Yalçın','k','Cimnastik',10],
+    ['Miraç Kılıç','e','Kick Boks',8],['Eylül Bulut','k','Cimnastik',5],['Aras Kaplan','e','Kick Boks',11],['Masal Özdemir','k','Cimnastik',4]];
+  const DBABA=['Ahmet','Mustafa','Murat','Hasan','Emre','Burak','Serkan','Fatih','Osman','Kemal'],DANNE=['Ayşe','Fatma','Emine','Hatice','Zehra','Merve','Esra','Büşra','Seda','Gül'];
+  const DOKUL=['Atatürk İlkokulu','Fatih Ortaokulu','Mimar Sinan İlkokulu','Kocatepe Ortaokulu','Yunus Emre İlkokulu'];
+  const DSAG=['Yok','Yok','Yok','Astım (hafif)','Yok','Fıstık alerjisi','Yok','Yok','2023 kol kırığı','Yok'];
+  function tcMake(r){const a=[1+Math.floor(r()*9)];for(let i=0;i<8;i++)a.push(Math.floor(r()*10));const o=a[0]+a[2]+a[4]+a[6]+a[8],e=a[1]+a[3]+a[5]+a[7];a.push(((o*7-e)%10+10)%10);a.push(a.reduce((x,y)=>x+y,0)%10);return a.join('')}
+  async function addDemo(btn){
+    let s=7;const r=()=>(s=(s*16807)%2147483647)/2147483647;
+    const y=new Date().getFullYear(),now=new Date().toISOString(),patch={};
+    DEMO.forEach(([ad,cs,br,yas],k)=>{
+      const soy=ad.split(' ')[1],ba=DBABA[k%10],an=DANNE[(k*3)%10],d=String(1+Math.floor(r()*28)).padStart(2,'0'),m=String(1+Math.floor(r()*12)).padStart(2,'0');
+      const ph=()=>'05'+(30+Math.floor(r()*25))+String(1000000+Math.floor(r()*8999999)).slice(0,7);
+      const tA=ph(),tB=ph(),kd=new Date(Date.now()-Math.floor(r()*200)*864e5).toISOString().slice(0,10);
+      patch['demo'+String(k+1).padStart(2,'0')]={ad,cs,br,demo:true,tc:tcMake(r),kt:kd,dt:(y-yas)+'-'+m+'-'+d,dy:['Bayrampaşa','Gaziosmanpaşa','Eyüpsultan','Esenler'][k%4],
+        okul:yas<6?'Anaokulu':DOKUL[k%5]+' '+Math.min(8,yas-5)+'-'+'ABC'[k%3],baba:ba,anne:an,tA:tel(tA),tB:tel(tB),mail:norm(ba)+'.'+norm(soy).replace(/[^a-z]/g,'')+'@ornek.com',
+        adres:['Kocatepe','Altıntepsi','Yıldırım','Muratpaşa'][k%4]+' Mah. Deneme Sk. No:'+(k+3)+' Bayrampaşa / İstanbul',acilAd:ba+' (baba)',acilTel:tel(tB),kan:KAN[k%8],hst:DSAG[k%10],not:'Deneme kaydı',ca:now,ua:now};
+    });
+    btn.disabled=true;btn.textContent='Ekleniyor…';
+    try{const {error}=await C.sb.rpc('merge_doc',{p_path:PATH,p_patch:{m:patch}});if(error)throw error;Object.assign(M,patch);draw()}
+    catch(e){btn.disabled=false;btn.textContent='20 deneme üye ekle';alert('Eklenemedi: '+((e&&e.message)||'hata'))}
+  }
+  async function delDemo(btn){
+    const ids=list().filter(x=>x.demo).map(x=>x.id);if(!ids.length)return;
+    if(!confirm(ids.length+' deneme üye silinsin mi? Gerçek kayıtlara dokunulmaz.'))return;
+    const pm={};ids.forEach(i=>pm[i]=null);
+    const pg={};groups().forEach(g=>{const m=(g.m||[]).filter(i=>!ids.includes(i));if(m.length!==(g.m||[]).length){const n=Object.assign({},g);delete n.id;if(m.length)n.m=m;else delete n.m;if(n.x){ids.forEach(i=>delete n.x[i]);if(!Object.keys(n.x).length)delete n.x}pg[g.id]=n}});
+    btn.disabled=true;btn.textContent='Siliniyor…';
+    try{const p={m:pm};if(Object.keys(pg).length)p.g=pg;const {error}=await C.sb.rpc('merge_doc',{p_path:PATH,p_patch:p});if(error)throw error;ids.forEach(i=>delete M[i]);Object.keys(pg).forEach(k=>G[k]=pg[k]);draw()}
+    catch(e){btn.disabled=false;alert('Silinemedi: '+((e&&e.message)||'hata'))}
+  }
+
   /* ---------- Üye detay / form ---------- */
   function detail(id,refresh){
     const x=M[id];const old=document.getElementById('abd');
@@ -2110,7 +2184,7 @@ setTab('bugun');initCloud();
     const sec=(i,t,h)=>h?'<div class="asc"><h3><i>'+i+'</i>'+t+'</h3>'+h+'</div>':'';
     const mg=memGroups(id).sort((p,r)=>pairKey(p.d).localeCompare(pairKey(r.d))||(hm(p.s)||0)-(hm(r.s)||0));
     const body='<div class="abhero"><div class="abav'+(x.cs==='k'?' kz':'')+'">'+esc(ini(x.ad))+'</div><div><b>'+esc(x.ad||'İsimsiz')+'</b><small>'+(x.br?'<span class="abbg">'+esc(x.br)+'</span>':'')+(a!=null?'<span class="abbg b">'+a+' yaş</span>':'')+(x.kan?'<span class="abbg r">'+esc(x.kan)+'</span>':'')+'</small></div></div>'
-      +sec('◷','Grupları',mg.map(g=>'<div class="abrw gl" data-g="'+esc(g.id)+'"><span>'+esc(pairName(g.d))+'</span><b>'+esc(td(g.s))+(g.e?'–'+esc(td(g.e)):'')+' · '+esc(gName(g))+' ›</b></div>').join(''))
+      +sec('◷','Grupları',mg.map(g=>{const ex=exOf(g,id);return '<div class="abrw gl'+(ex?' gwx':'')+'" data-g="'+esc(g.id)+'"><span>'+(ex?'⚠ '+esc(pairName(ex))+'<small>grup: '+esc(pairName(g.d))+'</small>':esc(pairName(g.d)))+'</span><b>'+esc(td(g.s))+(g.e?'–'+esc(td(g.e)):'')+' · '+esc(gName(g))+' ›</b></div>'}).join(''))
       +sec('1','Sporcu bilgileri',row('T.C. Kimlik No',esc(x.tc))+row('Kayıt tarihi',esc(fd(x.kt)))+row('Cinsiyet',x.cs==='e'?'Erkek':x.cs==='k'?'Kız':'')+row('Doğum yeri',esc(x.dy))+row('Doğum tarihi',esc(fd(x.dt)))+row('Okul ve sınıf',esc(x.okul)))
       +sec('2','Aile ve iletişim',row('Baba adı',esc(x.baba))+row('Anne adı',esc(x.anne))+ph('Anne tel',x.tA)+ph('Baba tel',x.tB)+row('E-posta',x.mail?'<a href="mailto:'+esc(x.mail)+'">'+esc(x.mail)+'</a>':'')+row('Ev adresi',esc(x.adres)))
       +sec('3','Acil durum ve sağlık',row('Acil kişi',esc(x.acilAd))+ph('Acil tel',x.acilTel)+row('Kan grubu',esc(x.kan))+row('Hastalık / ameliyat',esc(x.hst)))
@@ -2190,10 +2264,9 @@ setTab('bugun');initCloud();
     const g=G[id];const old=document.getElementById('abgd');
     if(!g){if(old)old.remove();return}
     const ms=(g.m||[]).map(i=>M[i]&&Object.assign({id:i},M[i])).filter(Boolean).sort((a,b)=>String(a.ad).localeCompare(String(b.ad),'tr'));
-    const dur=(hm(g.e)!=null&&hm(g.s)!=null)?hm(g.e)-hm(g.s):null;
     const body='<div class="ghero"><div class="ghd">'+(g.d||[]).slice().sort((a,b)=>a-b).map(i=>'<span>'+GUN[i]+'</span>').join('')+'</div><b>'+esc(td(g.s))+(g.e?' – '+esc(td(g.e)):'')+'</b><div class="ghn">'+esc(gName(g))+'</div><small><i class="gbr '+brc(g.br)+'">'+esc(g.br||'')+'</i>'+(g.dolu?'<i class="gdl">Dolu</i>':'')+'</small></div>'
-      +'<div class="asc"><h3><i>◷</i>Program</h3><div class="abrw"><span>Günler</span><b>'+esc(pairName(g.d))+'</b></div><div class="abrw"><span>Saat</span><b>'+esc(td(g.s))+(g.e?' – '+esc(td(g.e)):'')+(dur>0?' ('+dur+' dk)':'')+'</b></div><div class="abrw"><span>Branş</span><b>'+esc(g.br||'')+'</b></div>'+(g.not?'<div class="abrw"><span>Not</span><b>'+esc(g.not)+'</b></div>':'')+'</div>'
-      +'<div class="asc"><h3><i>'+ms.length+'</i>Üyeler</h3>'+(ms.length?'<div class="gml">'+ms.map(x=>{const a=age(x.dt);return '<div class="gmr" data-id="'+esc(x.id)+'"><div class="abav'+(x.cs==='k'?' kz':'')+'">'+esc(ini(x.ad))+'</div><div><b>'+esc(x.ad)+'</b><small>'+[a!=null?a+' yaş':'',x.br].filter(Boolean).map(esc).join(' · ')+'</small></div></div>'}).join('')+'</div>':'<div class="em" style="padding:14px 8px">Bu gruba henüz üye eklenmedi.'+(C&&C.isAdmin?' “Düzenle” ile ekleyebilirsin.':'')+'</div>')+'</div>';
+      +'<div class="asc"><h3><i>◷</i>Program</h3><div class="abrw"><span>Günler</span><b>'+esc(pairName(g.d))+'</b></div><div class="abrw"><span>Saat</span><b>'+esc(td(g.s))+(g.e?' – '+esc(td(g.e)):'')+'</b></div><div class="abrw"><span>Branş</span><b>'+esc(g.br||'')+'</b></div>'+(exCount(g)?'<div class="abrw gwx"><span>İstisna</span><b>⚠ '+exCount(g)+' üye farklı günlerde geliyor</b></div>':'')+(g.not?'<div class="abrw"><span>Not</span><b>'+esc(g.not)+'</b></div>':'')+'</div>'
+      +'<div class="asc"><h3><i>'+ms.length+'</i>Üyeler</h3>'+(ms.length?'<div class="gml">'+ms.map(x=>{const a=age(x.dt);return (()=>{const ex=exOf(g,x.id);return '<div class="gmr'+(ex?' gwx':'')+'" data-id="'+esc(x.id)+'"><div class="abav'+(x.cs==='k'?' kz':'')+'">'+esc(ini(x.ad))+'</div><div><b>'+(ex?'⚠ ':'')+esc(x.ad)+'</b><small>'+(ex?'<em>'+esc(pairName(ex))+' geliyor</em> · ':'')+[a!=null?a+' yaş':'',x.br].filter(Boolean).map(esc).join(' · ')+'</small></div></div>'})()}).join('')+'</div>':'<div class="em" style="padding:14px 8px">Bu gruba henüz üye eklenmedi.'+(C&&C.isAdmin?' “Düzenle” ile ekleyebilirsin.':'')+'</div>')+'</div>';
     const o=sheet('abgd','Grup',body,C&&C.isAdmin?'<button class="dl" data-a="del">Sil</button><button class="pr" data-a="ed">Düzenle</button>':'');
     o.dataset.id=id;if(refresh)o.style.animation='none';
     o.addEventListener('click',async e=>{
@@ -2206,17 +2279,17 @@ setTab('bugun');initCloud();
 
   function gForm(id,preDays){
     const g=id?Object.assign({},G[id]):{br:gflt&&BRANS.includes(gflt)?gflt:BRANS[1],d:preDays||[],s:'',e:''};
-    let days=(g.d||[]).slice().sort((a,b)=>a-b),sel=new Set(g.m||[]),mq='';
+    let days=(g.d||[]).slice().sort((a,b)=>a-b),sel=new Set(g.m||[]),mq='',xo='';const ex={};Object.entries(g.x||{}).forEach(([k,v])=>{if(Array.isArray(v)&&v.length)ex[k]=v.slice()});
     const brs=branches();
     const body='<form id="abgf" autocomplete="off">'
-      +'<div class="asc"><h3><i>1</i>Gün çifti</h3>'
+      +'<div class="asc"><h3><i>1</i>Günler</h3>'
         +'<div class="gpre">'+CIFT.map(p=>'<button type="button" data-p="'+p.join('-')+'">'+GUNF[p[0]]+' – '+GUNF[p[1]]+'</button>').join('')+'</div>'
         +'<div class="gdays">'+GUN.map((d,i)=>'<button type="button" data-d="'+i+'">'+d+'</button>').join('')+'</div>'
         +'<div class="hint" id="gdh"></div></div>'
       +'<div class="asc"><h3><i>2</i>Saat</h3><div class="g gtime">'
         +'<label>Başlangıç<input name="s" type="time" step="300" value="'+esc(g.s||'')+'"></label>'
         +'<label>Bitiş<input name="e" type="time" step="300" value="'+esc(g.e||'')+'"></label>'
-        +'</div><div class="gdur">'+[45,60,90].map(n=>'<button type="button" data-dur="'+n+'">'+n+' dk</button>').join('')+'</div><div class="hint" id="gth"></div></div>'
+        +'</div><div class="hint" id="gth"></div></div>'
       +'<div class="asc"><h3><i>3</i>Grup</h3><div class="g">'
         +'<label class="f2">Branş<div class="aseg" data-k="br">'+brs.map(b=>'<button type="button" data-v="'+esc(b)+'" class="'+(g.br===b?'on':'')+'">'+esc(b)+'</button>').join('')+'</div></label>'
         +'<label class="f2">Grup adı<input name="ad" list="abgl" value="'+esc(g.ad||'')+'" placeholder="Örn. 6-11 Yaş Grup"></label>'
@@ -2235,31 +2308,40 @@ setTab('bugun');initCloud();
       F.querySelectorAll('[data-d]').forEach(b=>b.classList.toggle('on',days.includes(+b.dataset.d)));
       const k=days.slice().sort((a,b)=>a-b).join('-');
       F.querySelectorAll('[data-p]').forEach(b=>b.classList.toggle('on',b.dataset.p===k));
-      dh.className='hint'+(days.length===2?'':' bad');
-      dh.textContent=days.length===2?pairName(days):days.length===1?'Bir gün daha seç ('+GUNF[days[0]]+' seçili)':'İki gün seç';
+      dh.className='hint'+(days.length?'':' bad');
+      dh.textContent=days.length?pairName(days)+(days.length>1&&days.length<7?' ('+days.length+' gün)':''):'En az bir gün seç';
     };
-    F.querySelector('.gpre').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(b){days=b.dataset.p.split('-').map(Number);drawDays()}});
+    F.querySelector('.gpre').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(b){days=b.dataset.p.split('-').map(Number);drawDays();drawMem()}});
     F.querySelector('.gdays').addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b)return;const d=+b.dataset.d;
-      if(days.includes(d))days=days.filter(x=>x!==d);else{days.push(d);if(days.length>2)days.shift()}drawDays()});
+      if(days.includes(d))days=days.filter(x=>x!==d);else days.push(d);days.sort((a,b)=>a-b);drawDays();drawMem()});
     const S=F.elements.s,E=F.elements.e;
     const chkTime=()=>{const s=hm(S.value),e=hm(E.value);let t='',bad=false;
-      if(s!=null&&e!=null){if(e<=s){t='Bitiş saati başlangıçtan sonra olmalı.';bad=true}else{t=(e-s)+' dakika';
-        const k=pairKey(days),cl=groups().filter(x=>x.id!==id&&pairKey(x.d)===k&&x.br===curBr()&&hm(x.s)!=null&&hm(x.s)<e&&(hm(x.e)!=null?hm(x.e):hm(x.s)+60)>s);
-        if(cl.length){t+=' · Aynı saatte '+cl.length+' grup daha var: '+cl.map(x=>gName(x)).join(', ');bad=true}}}
+      if(s!=null&&e!=null){if(e<=s){t='Bitiş saati başlangıçtan sonra olmalı.';bad=true}else{
+        const cl=groups().filter(x=>x.id!==id&&(x.d||[]).some(d=>days.includes(d))&&x.br===curBr()&&hm(x.s)!=null&&hm(x.s)<e&&(hm(x.e)!=null?hm(x.e):hm(x.s)+60)>s);
+        if(cl.length){t='Aynı saatte '+cl.length+' grup daha var: '+cl.map(x=>gName(x)).join(', ');bad=true}}}
       th.textContent=t;th.className='hint'+(bad?' bad':'')};
     S.addEventListener('change',()=>{const s=hm(S.value);if(s!=null&&(hm(E.value)==null||hm(E.value)<=s))E.value=tm(s+60);chkTime()});
     E.addEventListener('change',chkTime);
-    F.querySelector('.gdur').addEventListener('click',e=>{const b=e.target.closest('[data-dur]');if(!b)return;const s=hm(S.value);if(s==null){S.focus();th.textContent='Önce başlangıç saatini seç.';th.className='hint bad';return}E.value=tm(s+(+b.dataset.dur));chkTime()});
     const mc=o.querySelector('#gmc'),mk=F.querySelector('.gmk');
     const drawMem=()=>{
       const br=curBr(),t=norm(mq);
       let ls=list().filter(x=>!t||norm(x.ad).includes(t));
       ls.sort((a,b)=>(sel.has(b.id)-sel.has(a.id))||((b.br===br)-(a.br===br))||String(a.ad).localeCompare(String(b.ad),'tr'));
-      mk.innerHTML=ls.length?ls.map(x=>{const a=age(x.dt),og=memGroups(x.id).filter(z=>z.id!==id).length;return '<label class="gmi'+(sel.has(x.id)?' on':'')+'"><input type="checkbox" data-m="'+esc(x.id)+'"'+(sel.has(x.id)?' checked':'')+'><span class="gck"></span><div><b>'+esc(x.ad)+'</b><small>'+[x.br,a!=null?a+' yaş':'',og?og+' grupta daha':''].filter(Boolean).map(esc).join(' · ')+'</small></div></label>'}).join('')
+      const gk=pairKey(days);
+      mk.innerHTML=ls.length?ls.map(x=>{const a=age(x.dt),og=memGroups(x.id).filter(z=>z.id!==id).length,on=sel.has(x.id),xd=ex[x.id]&&pairKey(ex[x.id])!==gk?ex[x.id]:null;
+        return '<div class="gmw'+(on?' on':'')+(xd?' gwx':'')+'"><label class="gmi'+(on?' on':'')+'"><input type="checkbox" data-m="'+esc(x.id)+'"'+(on?' checked':'')+'><span class="gck"></span><div><b>'+(xd?'⚠ ':'')+esc(x.ad)+'</b><small>'+(xd?'<em>'+esc(pairName(xd))+' geliyor</em> · ':'')+[x.br,a!=null?a+' yaş':'',og?og+' grupta daha':''].filter(Boolean).map(esc).join(' · ')+'</small></div></label>'
+          +(on&&days.length?'<button type="button" class="gxb" data-xb="'+esc(x.id)+'">'+(xd?'Günleri':'İstisna')+'</button>':'')+'</div>'
+          +(on&&xo===x.id?'<div class="gxd"><span>'+esc(String(x.ad).split(' ')[0])+' hangi günler geliyor?</span><div class="gxdays">'+GUN.map((d,i)=>'<button type="button" data-xd="'+i+'" data-xm="'+esc(x.id)+'" class="'+((xd||days).includes(i)?'on':'')+'">'+d+'</button>').join('')+'</div><div class="gxf"><button type="button" data-xr="'+esc(x.id)+'">Grup günlerine döndür</button><button type="button" class="ok" data-xc="1">Tamam</button></div></div>':'')}).join('')
         :'<div class="em" style="padding:14px 8px">'+(list().length?'Eşleşen üye yok.':'Önce Üyeler sekmesinden sporcu kaydı oluştur.')+'</div>';
       mc.textContent=sel.size?'· '+sel.size+' seçili':'';
     };
-    mk.addEventListener('change',e=>{const c=e.target.closest('[data-m]');if(!c)return;if(c.checked)sel.add(c.dataset.m);else sel.delete(c.dataset.m);c.closest('.gmi').classList.toggle('on',c.checked);mc.textContent=sel.size?'· '+sel.size+' seçili':''});
+    mk.addEventListener('change',e=>{const c=e.target.closest('[data-m]');if(!c)return;if(c.checked)sel.add(c.dataset.m);else{sel.delete(c.dataset.m);if(xo===c.dataset.m)xo=''}drawMem()});
+    mk.addEventListener('click',e=>{
+      const xb=e.target.closest('[data-xb]');if(xb){xo=xo===xb.dataset.xb?'':xb.dataset.xb;drawMem();return}
+      const xd=e.target.closest('[data-xd]');if(xd){const m=xd.dataset.xm,d=+xd.dataset.xd;let cur=(ex[m]||days).slice();cur=cur.includes(d)?cur.filter(z=>z!==d):cur.concat(d);cur.sort((a,b)=>a-b);if(!cur.length||pairKey(cur)===pairKey(days))delete ex[m];else ex[m]=cur;drawMem();return}
+      const xr=e.target.closest('[data-xr]');if(xr){delete ex[xr.dataset.xr];xo='';drawMem();return}
+      if(e.target.closest('[data-xc]')){xo='';drawMem()}
+    });
     F.querySelector('.gq').addEventListener('input',e=>{mq=e.target.value.trim();drawMem()});
     F.querySelector('[data-k=br]').addEventListener('click',()=>setTimeout(()=>{drawMem();chkTime()},0));
     F.querySelector('.gdays').addEventListener('click',chkTime);F.querySelector('.gpre').addEventListener('click',chkTime);
@@ -2267,7 +2349,7 @@ setTab('bugun');initCloud();
     F.addEventListener('submit',e=>{e.preventDefault();o.querySelector('[data-a=sv]').click()});
     o.querySelector('[data-a=sv]').onclick=async e=>{
       const b=e.currentTarget;msg.textContent='';
-      if(days.length!==2){msg.textContent='Grup için iki gün seç.';F.querySelector('.gdays').scrollIntoView({block:'center',behavior:'smooth'});return}
+      if(!days.length){msg.textContent='Grup için en az bir gün seç.';F.querySelector('.gdays').scrollIntoView({block:'center',behavior:'smooth'});return}
       const s=hm(S.value),en=hm(E.value);
       if(s==null){msg.textContent='Başlangıç saatini seç.';S.focus();return}
       if(en!=null&&en<=s){msg.textContent='Bitiş saati başlangıçtan sonra olmalı.';E.focus();return}
@@ -2277,6 +2359,7 @@ setTab('bugun');initCloud();
       const ad=F.elements.ad.value.trim(),nt=F.elements.not.value.trim();if(ad)n.ad=ad;if(nt)n.not=nt;
       if(F.elements.dolu.checked)n.dolu=true;
       const m=[...sel].filter(i=>M[i]);if(m.length)n.m=m;
+      const xs={};m.forEach(i=>{if(ex[i]&&ex[i].length&&pairKey(ex[i])!==pairKey(n.d))xs[i]=ex[i]});if(Object.keys(xs).length)n.x=xs;
       const old=id&&G[id];n.ca=(old&&old.ca)||new Date().toISOString();n.ua=new Date().toISOString();
       b.disabled=true;b.textContent='Kaydediliyor…';
       const nid=id||uid();
