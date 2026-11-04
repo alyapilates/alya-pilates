@@ -354,7 +354,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.11';
+const APP_VER='1.12';
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
@@ -2032,6 +2032,31 @@ setTab('bugun');initCloud();
 .abak .sd{background:var(--bg);color:var(--ink)}.abak .dl{background:#c0392b;border-color:#c0392b;color:#fff}
 #abtoast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);z-index:10050;max-width:calc(100% - 32px);background:#16202e;color:#fff;padding:11px 16px;border-radius:14px;font:600 14px "Barlow",system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
 #abtoast.on{opacity:1;transform:translate(-50%,0)}
+
+.yac{display:flex;gap:8px;margin-top:12px}
+.yac button{flex:1;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:17px;letter-spacing:.08em;text-transform:uppercase;padding:12px;border-radius:14px;cursor:pointer}
+.yac .yad{border:0;background:linear-gradient(100deg,#FF8A1E,#EE5A28);color:#fff;box-shadow:0 6px 16px rgba(238,90,40,.28)}
+.yac .yrm{border:1px solid rgba(192,57,43,.35);background:var(--bg);color:var(--bad)}
+.pkt{position:sticky;top:calc(60px + env(safe-area-inset-top,0px));z-index:2;background:var(--bg);padding-bottom:8px}
+.pkq{width:100%;box-sizing:border-box;-webkit-appearance:none;appearance:none;font:inherit;font-size:16px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.pkq:focus{outline:none;border-color:#2BA3DC;box-shadow:0 0 0 3px rgba(43,163,220,.2)}
+.pkf{display:flex;gap:6px;margin-top:8px}
+.pkf button{flex:1;font:inherit;font-weight:700;font-size:14px;padding:9px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--mut);cursor:pointer}
+.pkf button.on{background:linear-gradient(100deg,#FF8A1E,#EE5A28);border-color:transparent;color:#fff}
+.pkh{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-size:13px;font-weight:700;color:var(--mut)}
+.pkh button{font:inherit;font-size:13px;font-weight:700;border:0;background:none;color:#EE5A28;cursor:pointer;padding:6px 0}
+.pkl{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.pki{display:flex;align-items:center;gap:12px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}
+.pki:last-child{border-bottom:0}
+.pki.on{background:rgba(238,90,40,.08)}
+.pki input{display:none}
+.pki .gck{flex:none;width:24px;height:24px;border-radius:8px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center}
+.pki.on .gck{background:#EE5A28;border-color:#EE5A28}
+.pki.on .gck:after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.pki .abav{width:38px;height:38px;border-radius:12px;font-size:16px}
+.pkx{flex:1;min-width:0}
+.pkx b{display:block;font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pkx small{display:block;font-size:12.5px;color:var(--mut);font-weight:600}
 </style>
 <script>
 (function(){
@@ -2385,18 +2410,61 @@ setTab('bugun');initCloud();
     return nav+'<div class="ytw"><table class="ytb"><thead>'+head+'</thead><tbody>'+rows+foot+'</tbody></table></div>';
   }
 
+
+  /* ---------- Üye seçici (çoklu) ---------- */
+  function pick(o){return new Promise(res=>{
+    let sel=new Set(),q='',all=!o.br;
+    const sh=sheet('abpk',o.title,'<div class="pkt"><input class="pkq" type="search" placeholder="Üye ara" autocomplete="off">'+(o.br?'<div class="pkf"><button type="button" data-pf="b" class="on">'+esc(o.br)+'</button><button type="button" data-pf="a">Tüm branşlar</button></div>':'')+'<div class="pkh"><span class="pkn"></span><button type="button" data-pa="1">Tümünü seç</button></div></div><div class="pkl"></div>',
+      '<button class="sd" data-pc="1">Vazgeç</button><button class="'+(o.danger?'dl':'pr')+'" data-pok="1" disabled>'+esc(o.ok)+'</button>');
+    const L=sh.querySelector('.pkl'),N=sh.querySelector('.pkn'),OK=sh.querySelector('[data-pok]'),SA=sh.querySelector('[data-pa]');
+    const shown=()=>{const t=norm(q);return o.items.filter(x=>(all||x.br===o.br)&&(!t||norm(x.ad).includes(t)))};
+    const upd=()=>{N.textContent=sel.size?sel.size+' kişi seçildi':'Kişi seç';OK.disabled=!sel.size;OK.textContent=o.ok+(sel.size?' ('+sel.size+')':'');const s=shown();SA.textContent=s.length&&s.every(x=>sel.has(x.id))?'Seçimi kaldır':'Tümünü seç';SA.hidden=!s.length};
+    const draw=()=>{const s=shown();
+      L.innerHTML=s.length?s.map(x=>{const a=age(x.dt),og=memGroups(x.id).length;return '<label class="pki'+(sel.has(x.id)?' on':'')+'"><input type="checkbox" data-pm="'+esc(x.id)+'"'+(sel.has(x.id)?' checked':'')+'><span class="gck"></span><div class="abav'+(x.cs==='k'?' kz':'')+'">'+esc(ini(x.ad))+'</div><div class="pkx"><b>'+esc(x.ad)+'</b><small>'+[x.br,a!=null?a+' yaş':'',o.showGroups&&og?og+' grupta':'',o.showGroups&&!og?'Grupsuz':''].filter(Boolean).map(esc).join(' · ')+'</small></div></label>'}).join('')
+        :'<div class="em" style="padding:30px 10px">'+esc(o.empty||'Kimse yok.')+'</div>';upd()};
+    L.addEventListener('change',e=>{const c=e.target.closest('[data-pm]');if(!c)return;c.checked?sel.add(c.dataset.pm):sel.delete(c.dataset.pm);c.closest('.pki').classList.toggle('on',c.checked);upd()});
+    sh.querySelector('.pkq').addEventListener('input',e=>{q=e.target.value.trim();draw()});
+    sh.addEventListener('click',e=>{
+      const f=e.target.closest('[data-pf]');if(f){all=f.dataset.pf==='a';sh.querySelectorAll('[data-pf]').forEach(z=>z.classList.toggle('on',z===f));draw();return}
+      if(e.target.closest('[data-pa]')){const s=shown(),every=s.every(x=>sel.has(x.id));s.forEach(x=>every?sel.delete(x.id):sel.add(x.id));draw();return}
+      if(e.target.closest('[data-pc]')||e.target.closest('[data-x]')){sh.remove();res(null);return}
+      if(e.target.closest('[data-pok]')){sh.remove();res([...sel])}
+    });
+    draw();
+  })}
+  async function gSetMembers(id,ids){
+    const g=Object.assign({},G[id]);delete g.id;
+    if(ids.length)g.m=ids;else delete g.m;
+    if(g.x){Object.keys(g.x).forEach(k=>{if(!ids.includes(k))delete g.x[k]});if(!Object.keys(g.x).length)delete g.x}
+    g.ua=new Date().toISOString();
+    await put('g',id,g);
+  }
+
   function gDetail(id,refresh){
     const g=G[id];const old=document.getElementById('abgd');
     if(!g){if(old)old.remove();return}
     const keep=old&&old.dataset.id===id?old.scrollTop:0;
     const ms=(g.m||[]).map(i=>M[i]&&Object.assign({id:i},M[i])).filter(Boolean).sort((a,b)=>String(a.ad).localeCompare(String(b.ad),'tr'));
     const body='<div class="ghero"><div class="ghd">'+(g.d||[]).slice().sort((a,b)=>a-b).map(i=>'<span>'+GUN[i]+'</span>').join('')+'</div><b>'+esc(td(g.s))+(g.e?' – '+esc(td(g.e)):'')+'</b><div class="ghn">'+esc(gName(g))+'</div><small><i class="gbr '+brc(g.br)+'">'+esc(g.br||'')+'</i>'+(ms.length?'<i class="gnm">'+ms.length+' üye</i>':'')+(exCount(g)?'<i class="gxw">⚠ '+exCount(g)+' istisna</i>':'')+(g.dolu?'<i class="gdl">Dolu</i>':'')+'</small></div>'
-      +'<div class="asc"><h3><i>✓</i>Yoklama</h3><div id="yk">'+yHtml(id,g,ms)+'</div></div>'
+      +'<div class="asc"><h3><i>✓</i>Yoklama</h3><div id="yk">'+yHtml(id,g,ms)+'</div>'+(C&&C.isAdmin?'<div class="yac"><button type="button" class="yad" data-ga="add">+ Üye ekle</button>'+(ms.length?'<button type="button" class="yrm" data-ga="rm">Üye çıkar</button>':'')+'</div>':'')+'</div>'
       +'<div class="asc"><h3><i>◷</i>Program</h3><div class="abrw"><span>Günler</span><b>'+esc(pairName(g.d))+'</b></div><div class="abrw"><span>Saat</span><b>'+esc(td(g.s))+(g.e?' – '+esc(td(g.e)):'')+'</b></div><div class="abrw"><span>Branş</span><b>'+esc(g.br||'')+'</b></div>'+(exCount(g)?'<div class="abrw gwx"><span>İstisna</span><b>⚠ '+exCount(g)+' üye farklı günlerde geliyor</b></div>':'')+(g.not?'<div class="abrw"><span>Not</span><b>'+esc(g.not)+'</b></div>':'')+'</div>';
     const o=sheet('abgd','Grup',body,C&&C.isAdmin?'<button class="dl" data-a="del">Sil</button><button class="pr" data-a="ed">Düzenle</button>':'');
     o.dataset.id=id;if(refresh){o.style.animation='none';o.scrollTop=keep}
     const redraw=()=>{const y=o.querySelector('#yk');if(y)y.innerHTML=yHtml(id,G[id]||g,ms)};
     o.addEventListener('click',async e=>{
+      const ga=e.target.closest('[data-ga]');if(ga){
+        const cur=(G[id].m||[]).filter(i=>M[i]);
+        if(ga.dataset.ga==='add'){
+          const items=list().filter(x=>!cur.includes(x.id)).sort((a,b)=>String(a.ad).localeCompare(String(b.ad),'tr'));
+          const r=await pick({title:'Üye ekle',br:g.br,items,ok:'Ekle',showGroups:1,empty:'Eklenecek üye yok.'});if(!r||!r.length)return;
+          try{await gSetMembers(id,cur.concat(r));draw();gDetail(id,true);say(r.length+' üye eklendi')}catch(er){say('Eklenemedi: '+errMsg(er))}
+        }else{
+          const items=cur.map(i=>Object.assign({id:i},M[i])).sort((a,b)=>String(a.ad).localeCompare(String(b.ad),'tr'));
+          const r=await pick({title:'Üye çıkar',items,ok:'Çıkar',danger:1,empty:'Grupta üye yok.'});if(!r||!r.length)return;
+          if(!await ask(r.length+' üye bu gruptan çıkarılsın mı? Üye kayıtları silinmez.','Çıkar'))return;
+          try{await gSetMembers(id,cur.filter(i=>!r.includes(i)));draw();gDetail(id,true);say(r.length+' üye çıkarıldı')}catch(er){say('Çıkarılamadı: '+errMsg(er))}
+        }
+        return}
       const yw=e.target.closest('[data-yw]');if(yw){const n=+yw.dataset.yw,cur=yWeek[id]||monday(new Date());yWeek[id]=n?addD(cur,7*n):monday(new Date());redraw();return}
       const yc=e.target.closest('[data-yc]');if(yc){if(yc.disabled)return;const [mid,date]=yc.dataset.yc.split('|');const v=yGet(id,date,mid);const nv=v==null?1:v===1?0:null;ySet(id,date,mid,nv);redraw();const st=o.querySelector('#ysv');if(st)st.textContent='Kaydediliyor…';return}
       const mr=e.target.closest('[data-id]');if(mr&&mr.closest('#yk')){detail(mr.dataset.id);return}
