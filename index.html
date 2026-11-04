@@ -354,7 +354,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.3';
+const APP_VER='1.4';
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
@@ -1852,12 +1852,6 @@ setTab('bugun');initCloud();
 #abf .aseg button{flex:1;padding:10px;border-radius:12px;font-size:14px}
 #abf .hint{font-size:12px;font-weight:600;min-height:0}
 #abf .hint.bad{color:var(--warn)}
-#abf .cns{font-size:13px;line-height:1.5;color:var(--mut);background:var(--bg);border-radius:12px;padding:10px 12px;margin:10px 0}
-#abf .atg{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:14.5px;font-weight:700;color:var(--ink);flex-direction:row}
-#abf .atg input{display:none}
-#abf .atg span{flex:none;width:48px;height:28px;border-radius:999px;background:var(--line);position:relative;transition:background .15s}
-#abf .atg span:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25);transition:left .15s}
-#abf .atg input:checked+span{background:var(--ok)}#abf .atg input:checked+span:after{left:23px}
 .absh .ft{position:fixed;left:0;right:0;bottom:0;z-index:4;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 30%)}
 .absh .ft .w{display:flex;gap:8px}
 .absh .ft button{flex:1;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:19px;letter-spacing:.1em;text-transform:uppercase;padding:14px;border-radius:16px;border:0;cursor:pointer}
@@ -1918,7 +1912,7 @@ setTab('bugun');initCloud();
     if(!root)return;
     const all=list(),y=today().slice(0,7);
     let ls=all.filter(x=>!flt||x.br===flt);
-    if(q){const t=norm(q),d=dig(q);ls=ls.filter(x=>norm(x.ad).includes(t)||norm(x.veli).includes(t)||(d.length>=3&&[x.tc,x.tA,x.tB,x.acilTel].some(p=>dig(p).includes(d))))}
+    if(q){const t=norm(q),d=dig(q);ls=ls.filter(x=>norm(x.ad).includes(t)||(d.length>=3&&[x.tc,x.tA,x.tB,x.acilTel].some(p=>dig(p).includes(d))))}
     ls.sort((a,b)=>String(a.ad||'').localeCompare(String(b.ad||''),'tr'));
     const br=branches();
     root.querySelector('.st').innerHTML='<div><b>'+all.length+'</b><span>Sporcu</span></div><div><b>'+all.filter(x=>String(x.kt||'').slice(0,7)===y).length+'</b><span>Bu ay kayıt</span></div><div><b>'+br.length+'</b><span>Branş</span></div>';
@@ -1972,7 +1966,6 @@ setTab('bugun');initCloud();
       +sec('1','Sporcu bilgileri',row('T.C. Kimlik No',esc(x.tc))+row('Kayıt tarihi',esc(fd(x.kt)))+row('Cinsiyet',x.cs==='e'?'Erkek':x.cs==='k'?'Kız':'')+row('Doğum yeri',esc(x.dy))+row('Doğum tarihi',esc(fd(x.dt)))+row('Okul ve sınıf',esc(x.okul)))
       +sec('2','Aile ve iletişim',row('Baba adı',esc(x.baba))+row('Anne adı',esc(x.anne))+ph('Anne tel',x.tA)+ph('Baba tel',x.tB)+row('E-posta',x.mail?'<a href="mailto:'+esc(x.mail)+'">'+esc(x.mail)+'</a>':'')+row('Ev adresi',esc(x.adres)))
       +sec('3','Acil durum ve sağlık',row('Acil kişi',esc(x.acilAd))+ph('Acil tel',x.acilTel)+row('Kan grubu',esc(x.kan))+row('Hastalık / ameliyat',esc(x.hst)))
-      +sec('4','Veli izni',row('Velisi',esc(x.veli))+row('İzin formu',x.izin?'<span style="color:var(--ok)">✓ İmzalandı</span>':'<span style="color:var(--warn)">İmzalanmadı</span>'))
       +sec('✎','Not',x.not?'<div style="font-size:14.5px;line-height:1.5;white-space:pre-wrap">'+esc(x.not)+'</div>':'');
     const o=sheet('abd','Sporcu',body,C&&C.isAdmin?'<button class="dl" data-a="del">Sil</button><button class="pr" data-a="ed">Düzenle</button>':'');
     o.dataset.id=id;
@@ -2011,11 +2004,6 @@ setTab('bugun');initCloud();
         +'<label class="f2">Kan grubu<div class="kg" data-k="kan">'+KAN.map(k=>'<button type="button" data-v="'+k+'" class="'+(x.kan===k?'on':'')+'">'+k+'</button>').join('')+'</div></label>'
         +'<label class="f2">Daha önce geçirdiği hastalık / ameliyat<textarea name="hst" rows="2" placeholder="Yoksa “Yok” yaz">'+v('hst')+'</textarea></label>'
       +'</div></div>'
-      +'<div class="asc"><h3><i>4</i>Veli izni</h3><div class="g">'
-        +inp('veli','Velisinin adı soyadı',{full:1,a:'autocapitalize="words"'})
-      +'</div><div class="cns">Velisi, sporcunun ALYA Spor Kulübü Spor Akademisinde spor yapmasına, derslere katılmasına, ders sırasında fotoğraf/video çekilmesine ve resmi hesaplardan paylaşılmasına izin verir; sporcunun spor yapmasına engel sağlık sorunu olmadığını beyan eder.</div>'
-        +'<label class="atg"><input type="checkbox" name="izin"'+(x.izin?' checked':'')+'><span></span>Veli izin formu imzalandı</label>'
-      +'</div>'
       +'<div class="asc"><h3><i>✎</i>Not</h3><div class="g"><label class="f2" style="color:transparent;gap:0"><textarea name="not" rows="2" placeholder="Örn. WhatsApp grubuna eklenecek">'+v('not')+'</textarea></label></div></div>'
       +'<datalist id="abbl">'+branches().map(b=>'<option value="'+esc(b)+'">').join('')+'</datalist>'
       +'<div class="msg" id="abm"></div></form>';
@@ -2033,9 +2021,8 @@ setTab('bugun');initCloud();
     F.addEventListener('submit',e=>{e.preventDefault();o.querySelector('[data-a=sv]').click()});
     o.querySelector('[data-a=sv]').onclick=async e=>{
       const b=e.currentTarget;msg.textContent='';
-      const n={};['ad','tc','br','kt','dy','dt','okul','baba','anne','tA','tB','mail','adres','acilAd','acilTel','hst','veli','not'].forEach(k=>{const val=String(F.elements[k].value||'').trim();if(val)n[k]=k==='tc'?dig(val):val});
+      const n={};['ad','tc','br','kt','dy','dt','okul','baba','anne','tA','tB','mail','adres','acilAd','acilTel','hst','not'].forEach(k=>{const val=String(F.elements[k].value||'').trim();if(val)n[k]=k==='tc'?dig(val):val});
       const s1=F.querySelector('[data-k=cs] .on'),s2=F.querySelector('[data-k=kan] .on');if(s1)n.cs=s1.dataset.v;if(s2)n.kan=s2.dataset.v;
-      if(F.elements.izin.checked)n.izin=true;
       if(!n.ad){msg.textContent='Sporcunun adı soyadı gerekli.';F.elements.ad.focus();return}
       if(n.tc&&n.tc.length!==11){msg.textContent='TC Kimlik No 11 haneli olmalı.';tcI.focus();return}
       if(n.mail&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(n.mail)){msg.textContent='E-posta adresi hatalı görünüyor.';F.elements.mail.focus();return}
