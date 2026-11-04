@@ -354,7 +354,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.4';
+const APP_VER='1.5';
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
@@ -425,13 +425,14 @@ window.claude=window.claude||{use:async k=>k==='downloads'?{save:async({filename
 #lgf .brv.busy i{background:transparent;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;width:10px;height:10px;box-shadow:none;animation:brvs .7s linear infinite}
 @keyframes brvp{50%{box-shadow:0 0 0 6px rgba(255,122,60,.15)}}@keyframes brvs{to{transform:rotate(360deg)}}
 #lgf .brl{display:flex;flex-direction:column;gap:12px;margin-top:4px}
-#lgf .brb{display:flex;align-items:center;gap:14px;width:100%;text-align:left;font:inherit;padding:16px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;transition:border-color .15s,background .15s,transform .1s}
+#lgf .brb{display:flex;align-items:center;gap:clamp(10px,3.5vw,14px);width:100%;text-align:left;font:inherit;padding:16px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;transition:border-color .15s,background .15s,transform .1s}
 #lgf .brb:hover{border-color:rgba(255,255,255,.4)}#lgf .brb:active{transform:scale(.985)}
 #lgf .brb.p{border-color:#FF7A3C;background:linear-gradient(100deg,rgba(255,138,30,.32),rgba(238,90,40,.22) 55%,rgba(232,54,106,.18))}
 #lgf .brb .bi{flex:none;width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:24px;background:linear-gradient(135deg,#2BA3DC,#EE5A28)}
-#lgf .brb b{display:block;white-space:nowrap;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:clamp(19px,6vw,24px);letter-spacing:.08em;text-transform:uppercase;line-height:1}
+#lgf .brb b{display:block;white-space:normal;font-family:"Barlow Condensed","Barlow",sans-serif;font-weight:800;font-size:clamp(19px,5.6vw,24px);letter-spacing:.08em;text-transform:uppercase;line-height:1}
 #lgf .brb small{display:block;font-size:12.5px;color:rgba(255,255,255,.6);margin-top:4px}
-#lgf .brb .ar{margin-left:auto;font-size:22px;color:rgba(255,255,255,.5)}
+#lgf .brb>span:nth-child(2){flex:1;min-width:0}
+#lgf .brb .ar{flex:none;margin-left:auto;font-size:22px;color:rgba(255,255,255,.5)}
 .ovl{position:fixed;inset:0;z-index:9998;background:rgba(10,16,32,.6);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow:auto}
 .ovl.pg{background:radial-gradient(1200px 600px at 80% -10%,rgba(238,90,40,.18) 0,transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(43,163,220,.18) 0,transparent 60%),var(--bg)}
 .ovl.dlg{z-index:10003;align-items:center}
@@ -1801,7 +1802,7 @@ setTab('bugun');initCloud();
 #ab .w{max-width:720px;margin:0 auto}
 #ab .atop{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 #ab .ttl{flex:1;min-width:0}
-#ab .ttl b{display:block;font-family:"Barlow Condensed","Barlow",sans-serif;font-style:italic;font-weight:800;font-size:clamp(24px,8vw,34px);line-height:.95;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;background:linear-gradient(90deg,#EE5A28,#FF8A1E 45%,#2BA3DC);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+#ab .ttl b{display:block;font-family:"Barlow Condensed","Barlow",sans-serif;font-style:italic;font-weight:800;font-size:clamp(20px,6.4vw,34px);padding-right:.12em;line-height:.95;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;background:linear-gradient(90deg,#EE5A28,#FF8A1E 45%,#2BA3DC);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 #ab .ttl span{display:block;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--mut);margin-top:3px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #ab .ib{flex:none;height:40px;min-width:40px;padding:0 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 #ab .ib.aav{padding:0;width:40px;border:0;color:#fff;font-family:"Barlow Condensed",sans-serif;font-size:19px;background:linear-gradient(135deg,#2BA3DC,#EE5A28)}
@@ -1842,14 +1843,18 @@ setTab('bugun');initCloud();
 .absh .asc{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;margin-bottom:12px}
 .absh .asc>h3{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);font-weight:700}
 .absh .asc>h3 i{font-style:normal;width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;background:linear-gradient(135deg,#2BA3DC,#EE5A28);letter-spacing:0}
-#abf .g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#abf .g{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
 #abf .g .f2{grid-column:1/-1}
-@media(max-width:420px){#abf .g{grid-template-columns:1fr}}
-#abf label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:700;color:var(--mut)}
-#abf input,#abf textarea{width:100%;font:inherit;font-size:16px;font-weight:500;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+@media(min-width:600px){#abf .g{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#abf label{display:flex;flex-direction:column;gap:5px;min-width:0;font-size:12.5px;font-weight:700;color:var(--mut)}
+#abf input,#abf textarea{display:block;width:100%;min-width:0;max-width:100%;-webkit-appearance:none;appearance:none;font:inherit;font-size:16px;font-weight:500;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
 #abf textarea{resize:vertical;min-height:70px}
+#abf input[type=date]{min-height:46px;text-align:left;line-height:1.2}
+#abf input[type=date]::-webkit-date-and-time-value{text-align:left}
+#abf input[type=date]::-webkit-calendar-picker-indicator{opacity:.6}
+#ab .q{-webkit-appearance:none;appearance:none}
 #abf .aseg,#abf .kg{display:flex;flex-wrap:wrap;gap:6px}
-#abf .aseg button{flex:1;padding:10px;border-radius:12px;font-size:14px}
+#abf .aseg button{flex:1;min-width:0;padding:10px;border-radius:12px;font-size:14px}
 #abf .hint{font-size:12px;font-weight:600;min-height:0}
 #abf .hint.bad{color:var(--warn)}
 .absh .ft{position:fixed;left:0;right:0;bottom:0;z-index:4;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 30%)}
@@ -1878,7 +1883,7 @@ setTab('bugun');initCloud();
 (function(){
   const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const PATH='ab/sporcular';
-  const BRANS=['Kick Boks'];
+  const BRANS=['Kick Boks','Cimnastik'];
   const KAN=['A Rh+','A Rh-','B Rh+','B Rh-','AB Rh+','AB Rh-','0 Rh+','0 Rh-'];
   const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
   const fd=s=>s&&/^\d{4}-\d{2}-\d{2}$/.test(s)?s.slice(8)+'.'+s.slice(5,7)+'.'+s.slice(0,4):(s||'');
