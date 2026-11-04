@@ -357,7 +357,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.19';
+const APP_VER='1.20';
 try{if(/[?&]v=/.test(location.search))history.replaceState(null,'',location.pathname+location.hash)}catch(e){}
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
@@ -667,7 +667,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
         +'<button type="button" class="brb" data-b="ana"><span class="bi">A</span><span><b>Ana Branşlar</b><small>Diğer branşlar</small></span><span class="ar">›</span></button></div>'+'<button type="button" class="brv" id="brv"><i></i><span>Sürüm <b>v'+APP_VER+'</b></span><em>· Güncelle</em></button></div>';
       document.body.appendChild(o);
       const vb=o.querySelector('#brv'),vt=vb.querySelector('em');
-      const remoteVer=async()=>{const r=await fetch(location.pathname,{cache:'reload'});if(!r.ok)throw 0;const m=(await r.text()).match(/APP_VER='([^']+)'/);return m?m[1]:null};
+      const remoteVer=async()=>{const r=await fetch(location.pathname+'?chk='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;try{fetch(location.pathname,{cache:'reload'}).catch(()=>{})}catch(e){}const m=(await r.text()).match(/APP_VER='([^']+)'/);return m?m[1]:null};
       let newV=null;
       remoteVer().then(v=>{if(v&&v!==APP_VER){newV=v;vb.classList.add('new');vt.textContent='· v'+v+' hazır, güncelle'}}).catch(()=>{});
       vb.onclick=async()=>{
