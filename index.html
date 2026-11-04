@@ -354,7 +354,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.8';
+const APP_VER='1.9';
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
@@ -2024,10 +2024,6 @@ setTab('bugun');initCloud();
 .ytb tr.yft td{border-bottom:0;font-size:12.5px;color:var(--mut);padding-top:9px}
 .ytb tr.yft td b{color:var(--ink);font-size:15px}
 .ytb tr.yft td.yn{font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:11.5px;cursor:default}
-.ylg{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:10px;font-size:12.5px;color:var(--mut);font-weight:600}
-.ylg span{display:inline-flex;align-items:center;gap:6px}
-.ylg .ybx{width:20px;height:20px;border-radius:6px;font-size:11px;border-width:1.5px;cursor:default}
-.ylg em{margin-left:auto;font-style:normal;color:var(--ok);font-weight:700}
 
 .abask{position:fixed;inset:0;z-index:10040;background:rgba(10,16,32,.55);display:flex;align-items:center;justify-content:center;padding:20px;animation:abin .15s ease-out}
 .abak{width:100%;max-width:360px;background:var(--card);color:var(--ink);border-radius:22px;padding:20px;box-shadow:0 24px 60px rgba(0,0,0,.35);font-family:"Barlow",system-ui,sans-serif}
@@ -2355,8 +2351,7 @@ setTab('bugun');initCloud();
         +cd.map(c=>{if(!days.includes(c.k))return '<td class="yna">–</td>';const v=yGet(gid,c.iso,x.id),fut=c.iso>tdy;
           return '<td><button type="button" class="ybx'+(v===1?' y1':v===0?' y0':'')+'"'+(fut||!(C&&C.isAdmin)?' disabled':'')+' data-yc="'+esc(x.id)+'|'+c.iso+'" aria-label="'+esc(x.ad)+' '+GUNF[c.k]+'">'+(v===1?'✓':v===0?'✕':'')+'</button></td>'}).join('')+'</tr>'}).join('');
     const foot='<tr class="yft"><td class="yn">Gelen</td>'+cd.map(c=>{const exp=ms.filter(x=>(exOf(g,x.id)||g.d||[]).includes(c.k));const n=exp.filter(x=>yGet(gid,c.iso,x.id)===1).length;return '<td><b>'+n+'</b>/'+exp.length+'</td>'}).join('')+'</tr>';
-    return nav+'<div class="ytw"><table class="ytb"><thead>'+head+'</thead><tbody>'+rows+foot+'</tbody></table></div>'
-      +'<div class="ylg"><span><i class="ybx y1">✓</i>Geldi</span><span><i class="ybx y0">✕</i>Gelmedi</span><span><i class="ybx"></i>İşaretsiz</span><em id="ysv"></em></div>';
+    return nav+'<div class="ytw"><table class="ytb"><thead>'+head+'</thead><tbody>'+rows+foot+'</tbody></table></div>';
   }
 
   function gDetail(id,refresh){
