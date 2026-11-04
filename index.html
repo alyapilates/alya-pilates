@@ -357,7 +357,7 @@ html[data-skin="okyanus"]:root body{background-image:radial-gradient(720px 440px
 
 <script>
 /* === Supabase katmanı (GitHub sürümü) — build.py tarafından eklenir === */
-const APP_VER='1.21';
+const APP_VER='1.22';
 try{if(/[?&]v=/.test(location.search))history.replaceState(null,'',location.pathname+location.hash)}catch(e){}
 const SB_URL='https://npiwcjrkpkbbjjppusve.supabase.co',SB_KEY='sb_publishable_Wh3iwrcun4HvaTbWt73Tgw_Jp_Vh8x6';
 function dlBlob(blob,filename){
@@ -481,7 +481,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
   function loginUI(sb){
     return new Promise(async resolve=>{
       const o=document.createElement('div');o.id='lg';
-      o.innerHTML='<form id="lgf" autocomplete="on"><div class="lgr"><img class="lgl" alt="Alya Studio" src="'+logoSrc()+'"></div><div class="lgt">ALYA</div><div class="lgt2"><i></i>'+BRN+'<i></i></div><div class="lgs">Ders takip paneli</div><div class="lgu" id="lgu"></div><div class="lgp"><input id="lgp" type="password" placeholder="Şifre" maxlength="8" autocomplete="current-password" required><button type="button" id="lgw">Göster</button></div><button class="lgb" type="submit" id="lgb">Giriş yap</button><div id="lgm" role="alert"></div><button type="button" class="lga" id="lga">Yönetici girişi</button></form>';
+      o.innerHTML='<form id="lgf" autocomplete="on"><div class="lgr"><img class="lgl" alt="Alya Studio" src="'+logoSrc()+'"></div><div class="lgt">ALYA</div><div class="lgt2"><i></i>'+BRN+'<i></i></div><div class="lgs">Ders takip paneli</div><div class="lgu" id="lgu"></div><div class="lgp"><input id="lgp" type="password" placeholder="Şifre" maxlength="8" autocomplete="current-password" required><button type="button" id="lgw">Göster</button></div><button class="lgb" type="submit" id="lgb">Giriş yap</button><div id="lgm" role="alert"></div></form>';
       document.body.appendChild(o);
       const f=o.querySelector('#lgf'),m=o.querySelector('#lgm'),b=o.querySelector('#lgb'),box=o.querySelector('#lgu'),pw=o.querySelector('#lgp');
       let sel='';
@@ -492,7 +492,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
         list=adminMode?all.filter(x=>x.is_admin):all;sel='';
         f.classList.toggle('adm',adminMode);
         o.querySelector('.lgs').textContent=adminMode?'Yönetici girişi':(BRN==='PİLATES'?'Ders takip paneli':'Sporcu takip paneli');
-        o.querySelector('#lga').textContent=adminMode?'← Kullanıcı girişi':'Yönetici girişi';
+        
         m.textContent='';pw.value='';
       if(list.length){
         box.innerHTML=list.map(x=>'<button type="button" data-u="'+esc(x.username)+'"><span class="av">'+esc(ini(x.name))+'</span>'+esc(x.name)+'</button>').join('');
@@ -504,7 +504,7 @@ html.ro #tkd input,html.ro #tkd textarea,html.ro #tkd select{pointer-events:none
       }
       };
       box.addEventListener('click',e=>{const t=e.target.closest('button');if(t)pick(t.dataset.u)});
-      o.querySelector('#lga').onclick=()=>{adminMode=!adminMode;render()};
+      
       render();
       try{if(sessionStorage.getItem('alya_kicked')){sessionStorage.removeItem('alya_kicked');m.textContent='Hesabına başka bir cihazdan giriş yapıldı, bu cihazdan çıkış yapıldı.'}}catch(e){}
       o.querySelector('#lgw').onclick=e=>{const s=pw.type==='password';pw.type=s?'text':'password';e.target.textContent=s?'Gizle':'Göster'};
