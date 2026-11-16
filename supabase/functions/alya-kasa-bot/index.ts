@@ -5,14 +5,14 @@
 //   TELEGRAM_TOKEN   BotFather'ın verdiği token
 //   WEBHOOK_SECRET   Telegram'ın her istekte gönderdiği gizli anahtar (rastgele bir metin)
 //   ALLOWED_IDS      İzinli Telegram kullanıcı numaraları, virgülle (ör. 123456,789012)
-//   TEST_MODE        "1" ise kayıtlar deneme kasasına (kasa/deneme) yazılır
+//   TEST_MODE        "0" yapılınca gerçek kasaya yazar; yoksa/başka değerse deneme kasasına (kasa/deneme)
 // SUPABASE_URL ve SUPABASE_SERVICE_ROLE_KEY Supabase tarafından otomatik verilir.
 
 const env = (k: string) => (globalThis as any).Deno?.env.get(k) ?? "";
 const TG = () => "https://api.telegram.org/bot" + env("TELEGRAM_TOKEN");
 const SB = () => env("SUPABASE_URL");
 const KEY = () => env("SUPABASE_SERVICE_ROLE_KEY");
-const TEST = () => env("TEST_MODE") === "1";
+const TEST = () => env("TEST_MODE") !== "0"; // güvenli varsayılan: deneme kasası
 const KASA = () => (TEST() ? "kasa/deneme" : "kasa/islemler");
 const ALLOWED = () => env("ALLOWED_IDS").split(",").map((s) => s.trim()).filter(Boolean);
 
@@ -254,6 +254,7 @@ async function onCallback(q: any) {
 
 async function onSave(q: any) {
   const uid = q.from?.id, msg = q.message;
+  if (!ALLOWED().includes(String(uid))) { await tg("answerCallbackQuery", { callback_query_id: q.id, text: "Bu botu kullanma iznin yok.", show_alert: true }); return; }
   const s = await getSt(uid);
   if (!s || !msg || s.mid !== msg.message_id || s.step !== "onay") { await tg("answerCallbackQuery", { callback_query_id: q.id, text: "Bu menünün süresi doldu. /kasa yaz.", show_alert: true }); return; }
   const by = [q.from.first_name, q.from.last_name].filter(Boolean).join(" ") || String(uid);
@@ -271,7 +272,7 @@ async function onSave(q: any) {
 
 export async function handle(req: Request): Promise<Response> {
   if (req.method !== "POST") return new Response("ok");
-  if (env("WEBHOOK_SECRET") && req.headers.get("x-telegram-bot-api-secret-token") !== env("WEBHOOK_SECRET")) return new Response("yetkisiz", { status: 401 });
+  if (!env("WEBHOOK_SECRET") || req.headers.get("x-telegram-bot-api-secret-token") !== env("WEBHOOK_SECRET")) return new Response("yetkisiz", { status: 401 });
   let u: any = {};
   try { u = await req.json(); } catch { return new Response("ok"); }
   try {
