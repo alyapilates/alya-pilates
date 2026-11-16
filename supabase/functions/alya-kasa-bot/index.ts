@@ -3,7 +3,7 @@
 //
 // Gerekli gizli değerler (Supabase → Edge Functions → Secrets):
 //   TELEGRAM_TOKEN   BotFather'ın verdiği token
-//   WEBHOOK_SECRET   Telegram'ın her istekte gönderdiği gizli anahtar (rastgele bir metin)
+//   (Webhook gizli anahtarı token'dan otomatik türetilir; kurulum: bu fonksiyonun adresini ?kur=1 ile tarayıcıda aç)
 //   ALLOWED_IDS      İzinli Telegram kullanıcı numaraları, virgülle (ör. 123456,789012)
 //   TEST_MODE        "0" yapılınca gerçek kasaya yazar; yoksa/başka değerse deneme kasasına (kasa/deneme)
 // SUPABASE_URL ve SUPABASE_SERVICE_ROLE_KEY Supabase tarafından otomatik verilir.
@@ -270,9 +270,31 @@ async function onSave(q: any) {
   }
 }
 
+// Telegram'ın her istekte gönderdiği gizli anahtar: token'dan türetilir (kimse ayrıca girmek zorunda kalmaz)
+async function hookSecret(): Promise<string> {
+  const t = env("TELEGRAM_TOKEN");
+  if (!t) return "";
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("alya-kasa:" + t));
+  return Array.from(new Uint8Array(b)).map((x) => x.toString(16).padStart(2, "0")).join("").slice(0, 48);
+}
+const html = (t: string) => new Response("<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width'><body style='font:18px system-ui;padding:24px'>" + t, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+
 export async function handle(req: Request): Promise<Response> {
-  if (req.method !== "POST") return new Response("ok");
-  if (!env("WEBHOOK_SECRET") || req.headers.get("x-telegram-bot-api-secret-token") !== env("WEBHOOK_SECRET")) return new Response("yetkisiz", { status: 401 });
+  if (req.method !== "POST") {
+    // kurulum: tarayıcıda ...alya-kasa-bot?kur=1 açılınca Telegram'ı bu adrese bağlar
+    const u = new URL(req.url);
+    if (u.searchParams.get("kur") === "1") {
+      if (!env("TELEGRAM_TOKEN")) return html("❌ TELEGRAM_TOKEN henüz Supabase Secrets'a eklenmemiş.");
+      const self = env("SUPABASE_URL") + "/functions/v1/alya-kasa-bot";
+      const r = await tg("setWebhook", { url: self, secret_token: await hookSecret(), allowed_updates: ["message", "callback_query"], drop_pending_updates: true });
+      await tg("setMyCommands", { commands: [{ command: "kasa", description: "Kasaya gelir / gider gir" }, { command: "iptal", description: "Yarım kalan girişi iptal et" }] });
+      const me = await tg("getMe", {});
+      return html(r.ok ? "✅ Bağlandı. Telegram'da <b>@" + ((me.result && me.result.username) || "bot") + "</b> ile sohbeti açıp <b>/kasa</b> yaz." + (TEST() ? "<br><br>🧪 Deneme modunda: kayıtlar gerçek kasaya yazılmaz." : "") : "❌ Bağlanamadı: " + String(r.description || "token hatalı olabilir"));
+    }
+    return new Response("ok");
+  }
+  const sec = await hookSecret();
+  if (!sec || req.headers.get("x-telegram-bot-api-secret-token") !== sec) return new Response("yetkisiz", { status: 401 });
   let u: any = {};
   try { u = await req.json(); } catch { return new Response("ok"); }
   try {
