@@ -69,7 +69,7 @@ async function roster(k: string): Promise<{ id: string; ad: string }[]> {
   if (k === "cim" || k === "kick") {
     const d = await getDoc("ab/sporcular");
     live(d.m).forEach(([id, v]: any) => {
-      const b = nrm(v.br);
+      const b = nrm([v.br, v.br2].filter(Boolean).join(" "));
       if (k === "cim" ? /cimnastik|jimnastik/.test(b) : /kick|boks/.test(b)) out.push({ id: "ab:" + id, ad: String(v.ad || "") });
     });
   } else if (k === "pil" || k === "ms") {
@@ -160,10 +160,12 @@ async function save(s: St, by: string): Promise<string> {
 async function onMessage(m: any) {
   const uid = m.from?.id, chat = m.chat?.id, text = String(m.text || "").trim();
   if (!uid || !chat || !text) return;
-  const cmd = text.split(/[\s@]/)[0].toLowerCase();
+  // komut: /kasa, @kasa ya da sadece "kasa" (/kasa@botadi biçimi de olur)
+  const first = text.split(/\s+/)[0].toLocaleLowerCase("tr-TR");
+  const cmd = /^[\/@]?kasa(@\w+)?$/.test(first) ? "/kasa" : /^[\/@]?(iptal|start)(@\w+)?$/.test(first) ? "/" + first.replace(/^[\/@]/, "").split("@")[0] : first;
 
   if (!ALLOWED().includes(String(uid))) {
-    if (cmd.startsWith("/")) await tg("sendMessage", { chat_id: chat, text: "Bu botu kullanma iznin yok.\nTelegram numaran: " + uid + "\n(Yöneticiye bu numarayı ilet.)" });
+    if (cmd.startsWith("/") || first.startsWith("@")) await tg("sendMessage", { chat_id: chat, text: "Bu botu kullanma iznin yok.\nTelegram numaran: " + uid + "\n(Yöneticiye bu numarayı ilet.)" });
     return;
   }
   const by = [m.from.first_name, m.from.last_name].filter(Boolean).join(" ") || String(uid);
